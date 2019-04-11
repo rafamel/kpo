@@ -36,11 +36,11 @@ export default async function getFile(
       : path.join(directory || cwd, opts.file));
 
   return file
-    ? getExplicitFile(file, directory)
-    : getDefaultFile(directory || cwd, Boolean(directory));
+    ? getExplicit(file, directory)
+    : getDefault(directory || cwd, Boolean(directory));
 }
 
-export async function getExplicitFile(
+export async function getExplicit(
   file: string,
   directory?: string
 ): Promise<IGetFile> {
@@ -53,7 +53,7 @@ export async function getExplicitFile(
   return { file, directory: directory || path.parse(file).dir };
 }
 
-export async function getDefaultFile(
+export async function getDefault(
   directory: string,
   strict: boolean
 ): Promise<IGetFile> {
