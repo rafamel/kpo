@@ -10,6 +10,8 @@
     "run",
     "cli"
   ],
+  "main": "pkg/dist-node/index.js",
+  "types": "pkg/dist-types/index.d.ts",
   "scripts": {
     "prepublishOnly": "exit 1",
     "preversion": "nps private.preversion",
@@ -55,9 +57,6 @@
     "@babel/preset-env": "^7.4.3",
     "@babel/preset-typescript": "^7.1.0",
     "@pika/pack": "^0.3.6",
-    "@pika/plugin-build-node": "^0.3.14",
-    "@pika/plugin-build-web": "^0.3.14",
-    "@pika/plugin-standard-pkg": "^0.3.14",
     "@types/find-up": "^2.1.1",
     "@types/jest": "^24.0.9",
     "@types/pify": "^3.0.2",
@@ -114,25 +113,6 @@
     }
   },
   "@pika/pack": {
-    "pipeline": [
-      [
-        "@pika/plugin-standard-pkg",
-        {
-          "exclude": [
-            "__mocks__/**/*",
-            "__tests__/**/*"
-          ]
-        }
-      ],
-      [
-        "@pika/plugin-build-node",
-        {
-          "minNodeVersion": "8"
-        }
-      ],
-      [
-        "@pika/plugin-build-web"
-      ]
-    ]
+    "pipeline": []
   }
 }
