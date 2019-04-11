@@ -59,6 +59,7 @@
     "@pika/pack": "^0.3.6",
     "@types/find-up": "^2.1.1",
     "@types/jest": "^24.0.9",
+    "@types/lodash.clone": "^4.5.6",
     "@types/pify": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^1.6.0",
     "@typescript-eslint/parser": "^1.6.0",
@@ -100,7 +101,9 @@
   },
   "dependencies": {
     "find-up": "^3.0.0",
-    "pify": "^4.0.1"
+    "lodash.clone": "^4.5.0",
+    "pify": "^4.0.1",
+    "spawn-command": "0.0.2-1"
   },
   "husky": {
     "hooks": {
