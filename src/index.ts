@@ -1,1 +1,1 @@
-export default function main(): void {}
+export * from './types';
