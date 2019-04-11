@@ -3,18 +3,20 @@ import ensure from './ensure';
 import clone from 'lodash.clone';
 import { ChildProcess, SpawnOptions } from 'child_process';
 import { DEFAULT_STDIO } from '~/constants';
+import logger from '~/utils/logger';
 
 export interface IExec {
   ps: ChildProcess;
   promise: Promise<void>;
 }
 
-export default function exec(command: string, options: SpawnOptions): IExec {
+export default function exec(command: string, options?: SpawnOptions): IExec {
   const opts: SpawnOptions = options ? Object.assign({}, options) : {};
 
   if (!opts.stdio) opts.stdio = DEFAULT_STDIO;
   if (!opts.env) opts.env = clone(process.env);
 
+  logger.debug('Executing: ' + command);
   const ps = sc(command, opts);
   return {
     ps,
