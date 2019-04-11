@@ -28,7 +28,7 @@ export async function exists(file: string): Promise<void> {
   await ensure.rejection(() => {
     return new Promise((resolve, reject) => {
       fs.access(file, fs.constants.F_OK, (err) => {
-        return err ? reject(Error(`${file} doesn't exist`)) : resolve(file);
+        return err ? reject(Error(`${file} doesn't exist`)) : resolve();
       });
     });
   });
