@@ -58,7 +58,9 @@
     "@pika/plugin-build-node": "^0.3.14",
     "@pika/plugin-build-web": "^0.3.14",
     "@pika/plugin-standard-pkg": "^0.3.14",
+    "@types/find-up": "^2.1.1",
     "@types/jest": "^24.0.9",
+    "@types/pify": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^1.6.0",
     "@typescript-eslint/parser": "^1.6.0",
     "@zerollup/ts-transform-paths": "^1.7.1",
@@ -97,7 +99,10 @@
     "typedoc": "^0.14.2",
     "typescript": "^3.4.2"
   },
-  "dependencies": {},
+  "dependencies": {
+    "find-up": "^3.0.0",
+    "pify": "^4.0.1"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "cross-env COMMIT=# nps validate"
