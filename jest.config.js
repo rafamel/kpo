@@ -12,7 +12,6 @@ module.exports = {
   modulePathIgnorePatterns: [
     '<rootDir>/pkg',
     '<rootDir>/src/@types',
-    '<rootDir>/src/bin',
     '<rootDir>/src/.*/__mocks__'
   ],
   moduleFileExtensions: EXT_ARR.concat(['json']),
