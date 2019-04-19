@@ -1,27 +1,27 @@
 /* eslint-disable no-console */
-import up from 'read-pkg-up';
+import { loadPackage, flags, safePairs } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
-import chalk from 'chalk';
 import arg from 'arg';
-import { flags, safePairs, log } from 'cli-belt';
+import chalk from 'chalk';
 import run from './run';
 
 export default async function main(argv: string[]): Promise<void> {
-  const { pkg } = await up();
-  if (pkg.name) process.title = pkg.name;
+  const pkg = await loadPackage(__dirname, { title: true });
 
   const help = indent`
-    ${pkg.description ? chalk.bold.green(pkg.description) : ''}
+    ${pkg.description ? chalk.bold.yellow(pkg.description) : ''}
 
     Usage:
       $ kpo [options] [scope] [tasks]
       $ kpo [:command] [options] [arguments]
 
     Options:
-      --log <level>  Logging level
-      -s, --silent   Silent fail -exits with code 0 on error
-      -h, --help     Show help
-      -v, --version  Show version number
+      --log <level>           Logging level
+      --node <environment>    Sets node environment, shorthand for -e NODE_ENV=
+      -e, --env <value>       Environment variables
+      -s, --silent            Silent fail -exits with code 0 on error
+      -h, --help              Show help
+      -v, --version           Show version number
 
     Commands:
       :run           Default command -it can be omitted
@@ -32,10 +32,16 @@ export default async function main(argv: string[]): Promise<void> {
       :raise         Raise tasks to package
       :prompt        Run a command for each possible user input choice
       :link          Link packages
+
+    Examples:
+      $ kpo foo bar baz
+      $ kpo -e NODE_ENV=development -e BABEL_ENV=browser :run foo bar baz
   `;
 
   const types = {
     '--log': String,
+    '--node': String,
+    '--env': [String] as [StringConstructor],
     '--silent': Boolean,
     '--help': Boolean,
     '--version': Boolean
@@ -46,32 +52,39 @@ export default async function main(argv: string[]): Promise<void> {
   Object.assign(types, aliases);
   const cmd = arg(types, { argv, permissive: false, stopAtPositional: true });
 
-  // TODO manage silent and log
-  if (cmd['--help']) return log(help);
-  if (cmd['--version']) return log(pkg.version);
-  if (!cmd._.length) return log(help, { exit: 1 });
+  if (cmd['--help']) return console.log(help);
+  if (cmd['--version']) return console.log(pkg.version);
+  if (!cmd._.length) return console.log(help, { exit: 1 });
 
   const args = cmd._.slice(1);
+  const char = cmd._[0][0];
+
   // TODO
-  switch (cmd._[0]) {
-    case ':':
-    case ':cmd':
-      return console.log('TODO :cmd');
-    case ':series':
-      return console.log('TODO :series');
-    case ':parallel':
-      return console.log('TODO :parallel');
-    case ':list':
-      return console.log('TODO :list');
-    case ':raise':
-      return console.log('TODO :raise');
-    case ':prompt':
-      return console.log('TODO :prompt');
-    case ':link':
-      return console.log('TODO :link');
-    case ':run':
-      return run(args);
-    default:
-      return cmd._[0] === '@' ? console.log('TODO @scopes') : run(cmd._);
+  if (char === '@') {
+    return console.log('TODO @scopes');
+  } else if (char === ':') {
+    switch (cmd._[0]) {
+      case ':':
+      case ':cmd':
+        return console.log('TODO :cmd');
+      case ':series':
+        return console.log('TODO :series');
+      case ':parallel':
+        return console.log('TODO :parallel');
+      case ':list':
+        return console.log('TODO :list');
+      case ':raise':
+        return console.log('TODO :raise');
+      case ':prompt':
+        return console.log('TODO :prompt');
+      case ':link':
+        return console.log('TODO :link');
+      case ':run':
+        return run(args);
+      default:
+        throw Error('Unknown command ' + cmd._[0]);
+    }
+  } else {
+    return run(cmd._);
   }
 }
