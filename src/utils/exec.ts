@@ -1,9 +1,9 @@
 import sc from 'spawn-command';
-import ensure from './ensure';
 import clone from 'lodash.clone';
 import { ChildProcess, SpawnOptions } from 'child_process';
 import { DEFAULT_STDIO } from '~/constants';
 import logger from '~/utils/logger';
+import { rejects } from 'errorish';
 
 export interface IExec {
   ps: ChildProcess;
@@ -20,13 +20,11 @@ export default function exec(command: string, options?: SpawnOptions): IExec {
   const ps = sc(command, opts);
   return {
     ps,
-    promise: new Promise((resolve, reject) => {
+    promise: new Promise((resolve: (arg: void) => void, reject) => {
       ps.on('close', (code: number) => {
         return code ? reject(Error(`Failed: ${command}`)) : resolve();
       });
-      ps.on('error', (err: any) => {
-        return reject(ensure.error(err));
-      });
-    })
+      ps.on('error', (err: any) => reject(err));
+    }).catch(rejects)
   };
 }

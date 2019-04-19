@@ -117,10 +117,11 @@
     "arg": "^4.1.0",
     "cli-belt": "^0.3.0",
     "common-tags": "^1.8.0",
+    "errorish": "^0.1.0",
     "find-up": "^3.0.0",
+    "fs-extra": "^7.0.1",
     "lodash.clone": "^4.5.0",
     "loglevel": "^1.6.1",
-    "pify": "^4.0.1",
     "read-pkg-up": "^5.0.0",
     "spawn-command": "0.0.2-1"
   },

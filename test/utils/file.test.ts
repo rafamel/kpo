@@ -1,10 +1,14 @@
 import path from 'path';
-import _findUp from 'find-up';
+import up from 'find-up';
 import { find, exists } from '~/utils/file';
+import { IOfType } from '~/types';
 
 jest.mock('find-up');
-const findUp: any = _findUp;
-findUp.mockImplementation(() => 'foo/bar.js');
+const mocks: IOfType<jest.Mock<any, any>> = {
+  up
+} as any;
+beforeEach(() => Object.values(mocks).forEach((mock) => mock.mockClear()));
+mocks.up.mockImplementation(() => 'foo/bar.js');
 
 const at = (str?: string): string => {
   return path.join(__dirname, '../fixtures', str || '');
@@ -13,34 +17,35 @@ const at = (str?: string): string => {
 describe(`find`, () => {
   describe(`!strict`, () => {
     test(`succeeds`, async () => {
-      findUp.mockClear();
       await expect(find('foo', 'bar/baz')).resolves.toBe('foo/bar.js');
       await expect(find(['bar'], 'foobar', false)).resolves.toBe('foo/bar.js');
-      expect(findUp).toHaveBeenCalledTimes(2);
-      expect(findUp).toHaveBeenNthCalledWith(1, 'foo', { cwd: 'bar/baz' });
-      expect(findUp).toHaveBeenNthCalledWith(2, ['bar'], { cwd: 'foobar' });
+      expect(mocks.up).toHaveBeenCalledTimes(2);
+      expect(mocks.up).toHaveBeenNthCalledWith(1, 'foo', {
+        cwd: 'bar/baz'
+      });
+      expect(mocks.up).toHaveBeenNthCalledWith(2, ['bar'], {
+        cwd: 'foobar'
+      });
     });
     test(`fails`, async () => {
-      findUp.mockImplementation(() => Promise.reject(Error()));
+      mocks.up.mockImplementation(() => Promise.reject(Error()));
       await expect(find('foo', 'bar')).rejects.toBeInstanceOf(Error);
       await expect(find('foo', 'bar', false)).rejects.toBeInstanceOf(Error);
-      findUp.mockImplementation(() => 'foo/bar.js');
+      mocks.up.mockImplementation(() => 'foo/bar.js');
     });
   });
   describe(`strict`, () => {
     test(`succeeds w/ single file`, async () => {
-      findUp.mockClear();
       await expect(find('kpo.scripts.js', at('js'), true)).resolves.toBe(
         at('js/kpo.scripts.js')
       );
-      expect(findUp).not.toHaveBeenCalled();
+      expect(mocks.up).not.toHaveBeenCalled();
     });
     test(`succeeds w/ array`, async () => {
-      findUp.mockClear();
       await expect(
         find(['foo.bar.js', 'kpo.scripts.js'], at('js'), true)
       ).resolves.toBe(at('js/kpo.scripts.js'));
-      expect(findUp).not.toHaveBeenCalled();
+      expect(mocks.up).not.toHaveBeenCalled();
     });
     test(`succeeds on non existent file`, async () => {
       await expect(
@@ -62,12 +67,19 @@ describe(`find`, () => {
 
 describe(`exists`, () => {
   test(`succeeds w/ file`, async () => {
-    await expect(exists(at('js/kpo.scripts.js'))).resolves.toBeUndefined();
+    await expect(exists(at('js/kpo.scripts.js'))).resolves.toBe(true);
+    await expect(exists(at('js/kpo.scripts.js'), { fail: true })).resolves.toBe(
+      true
+    );
   });
   test(`succeeds w/ dir`, async () => {
-    await expect(exists(at('js'))).resolves.toBeUndefined();
+    await expect(exists(at('js'))).resolves.toBe(true);
+    await expect(exists(at('js'), { fail: true })).resolves.toBe(true);
   });
   test(`fails`, async () => {
-    await expect(exists(at('foo'))).rejects.toBeInstanceOf(Error);
+    await expect(exists(at('foo'))).resolves.toBe(false);
+    await expect(exists(at('foo'), { fail: true })).rejects.toBeInstanceOf(
+      Error
+    );
   });
 });

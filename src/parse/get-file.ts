@@ -1,7 +1,6 @@
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
-import ensure from '~/utils/ensure';
-import pify from 'pify';
+import { rejects } from 'errorish';
 import { FILE_NAME } from '~/constants';
 import { find, exists } from '~/utils/file';
 
@@ -49,7 +48,7 @@ export async function getExplicit(
   if (!validExt) return Promise.reject(Error(`Extension ${ext} is not valid`));
 
   // Ensure file exists
-  await exists(file);
+  await exists(file, { fail: true });
   return { file, directory: directory || path.parse(file).dir };
 }
 
@@ -90,7 +89,7 @@ export async function getFromPackage(
   if (!at) return null;
 
   let dir = path.parse(at).dir;
-  const buffer = await ensure.rejection(() => pify(fs.readFile)(at));
+  const buffer = await fs.readFile(at).catch(rejects);
   const pkg = JSON.parse(buffer.toString());
 
   if (!pkg.kpo || !pkg.kpo.path) return null;
@@ -100,6 +99,6 @@ export async function getFromPackage(
     : path.join(dir, pkg.kpo.path);
 
   // Ensure file exists
-  await exists(file);
+  await exists(file, { fail: true });
   return { file, directory: dir };
 }
