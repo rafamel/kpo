@@ -3,6 +3,8 @@ import { loadPackage, flags, safePairs } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import chalk from 'chalk';
+import state from '~/state';
+import { TLogger, IOfType } from '~/types';
 import run from './run';
 
 export default async function main(argv: string[]): Promise<void> {
@@ -16,10 +18,12 @@ export default async function main(argv: string[]): Promise<void> {
       $ kpo [:command] [options] [arguments]
 
     Options:
-      --log <level>           Logging level
-      --node <environment>    Sets node environment, shorthand for -e NODE_ENV=
+      -f, --file <path>       Configuration file
+      -d, --dir <path>        Project directory
       -e, --env <value>       Environment variables
       -s, --silent            Silent fail -exits with code 0 on error
+      --log <level>           Logging level
+      --node <value>          Sets node environment, shorthand for -e NODE_ENV=
       -h, --help              Show help
       -v, --version           Show version number
 
@@ -30,7 +34,6 @@ export default async function main(argv: string[]): Promise<void> {
       :parallel      Run commands in parallel within a project context
       :list          List available tasks
       :raise         Raise tasks to package
-      :prompt        Run a command for each possible user input choice
       :link          Link packages
 
     Examples:
@@ -39,10 +42,12 @@ export default async function main(argv: string[]): Promise<void> {
   `;
 
   const types = {
-    '--log': String,
-    '--node': String,
+    '--file': String,
+    '--dir': String,
     '--env': [String] as [StringConstructor],
     '--silent': Boolean,
+    '--log': String,
+    '--node': String,
     '--help': Boolean,
     '--version': Boolean
   };
@@ -58,6 +63,23 @@ export default async function main(argv: string[]): Promise<void> {
 
   const args = cmd._.slice(1);
   const char = cmd._[0][0];
+
+  state.base({
+    file: cmd['--file'],
+    directory: cmd['--dir'],
+    silent: cmd['--silent'],
+    log: cmd['--log'] as TLogger,
+    env: (cmd['--env'] || [])
+      .concat(cmd['--node'] ? `NODE_ENV=${cmd['--node']}` : [])
+      .reduce((acc: IOfType<string>, str) => {
+        const arr = str.split('=');
+        if (arr.length !== 2) {
+          throw Error(`Environment variables must have format VARIABLE=value`);
+        }
+        acc[arr[0]] = arr[1];
+        return acc;
+      }, {})
+  });
 
   // TODO
   if (char === '@') {
@@ -75,8 +97,6 @@ export default async function main(argv: string[]): Promise<void> {
         return console.log('TODO :list');
       case ':raise':
         return console.log('TODO :raise');
-      case ':prompt':
-        return console.log('TODO :prompt');
       case ':link':
         return console.log('TODO :link');
       case ':run':
