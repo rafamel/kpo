@@ -39,7 +39,9 @@ test(`Fails on spawn process error`, async () => {
   });
 
   const { promise } = exec('foo bar --baz');
-  await expect(promise).rejects.toBeInstanceOf(Error);
+  await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(
+    `"Failed: foo bar --baz"`
+  );
   expect(mocks.spawn.mock.calls[0][1].includes('foo bar --baz')).toBe(true);
 });
 test(`passes options`, async () => {

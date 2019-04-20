@@ -1,8 +1,8 @@
 import path from 'path';
-import readFile from '~/parse/read-file';
+import readFile from '~/parse/load/read-file';
 
 const at = (str?: string): string => {
-  return path.join(__dirname, '../fixtures', str || '');
+  return path.join(__dirname, '../../fixtures', str || '');
 };
 
 const to = { foo: 'bar', baz: 'foobar' };

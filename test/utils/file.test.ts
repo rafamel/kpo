@@ -29,8 +29,8 @@ describe(`find`, () => {
     });
     test(`fails`, async () => {
       mocks.up.mockImplementation(() => Promise.reject(Error()));
-      await expect(find('foo', 'bar')).rejects.toBeInstanceOf(Error);
-      await expect(find('foo', 'bar', false)).rejects.toBeInstanceOf(Error);
+      await expect(find('foo', 'bar')).rejects.toThrowError();
+      await expect(find('foo', 'bar', false)).rejects.toThrowError();
       mocks.up.mockImplementation(() => 'foo/bar.js');
     });
   });
@@ -55,16 +55,15 @@ describe(`find`, () => {
     test(`fails on non existent dir`, async () => {
       await expect(
         find(['foo.bar.js', 'bar.foo.js'], at('foo'), true)
-      ).rejects.toBeInstanceOf(Error);
+      ).rejects.toThrowError();
     });
     test(`fails if dir is a file`, async () => {
       await expect(
         find(['foo.bar.js', 'bar.foo.js'], at('js/kpo.scripts.js'), true)
-      ).rejects.toBeInstanceOf(Error);
+      ).rejects.toThrowError();
     });
   });
 });
-
 describe(`exists`, () => {
   test(`succeeds w/ file`, async () => {
     await expect(exists(at('js/kpo.scripts.js'))).resolves.toBe(true);
@@ -78,8 +77,6 @@ describe(`exists`, () => {
   });
   test(`fails`, async () => {
     await expect(exists(at('foo'))).resolves.toBe(false);
-    await expect(exists(at('foo'), { fail: true })).rejects.toBeInstanceOf(
-      Error
-    );
+    await expect(exists(at('foo'), { fail: true })).rejects.toThrowError();
   });
 });
