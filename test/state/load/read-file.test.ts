@@ -1,5 +1,5 @@
 import path from 'path';
-import readFile from '~/parse/load/read-file';
+import readFile from '~/state/load/read-file';
 
 const at = (str?: string): string => {
   return path.join(__dirname, '../../fixtures', str || '');
