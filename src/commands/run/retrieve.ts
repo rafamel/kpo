@@ -27,7 +27,11 @@ function kpoRetrieveTask(name: string, kpo: IScripts | null): TScript {
   let task: TScript;
 
   try {
-    task = get(kpo, name, true);
+    let item = get(kpo, name, true);
+    if (typeof item === 'object' && item !== null) {
+      if (item.hasOwnProperty('default')) item = item.default;
+    }
+    task = item;
   } catch (err) {
     throw new Errorish(`Task ${name} couldn't be found`, null, err);
   }
