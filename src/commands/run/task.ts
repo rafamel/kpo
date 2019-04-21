@@ -3,6 +3,7 @@ import logger from '~/utils/logger';
 import chalk from 'chalk';
 import retrieveTask from './retrieve';
 import exec from '~/utils/exec';
+import open from '~/utils/open';
 
 export default async function runTask(
   name: string,
@@ -10,9 +11,9 @@ export default async function runTask(
   pkg: IOfType<any> | null
 ): Promise<void> {
   const task = retrieveTask(name, kpo, pkg);
-
   logger.info('Running task: ' + chalk.bold.green(name));
   await trunk(task);
+  logger.debug('Done with task: ' + name);
 }
 
 export async function trunk(task: TScript): Promise<void> {
@@ -22,16 +23,23 @@ export async function trunk(task: TScript): Promise<void> {
   }
   if (typeof task === 'string') {
     logger.debug('Command exec: ' + task);
-    return exec(task).promise;
+    return (await exec(task)).promise;
   }
   if (typeof task === 'function') {
     logger.debug('Run function' + task.name ? ` ${task.name}` : '');
-    return trunk(await task());
+    let res: TScript;
+    try {
+      res = await task();
+    } catch (err) {
+      throw open.ensure(err);
+    }
+    return trunk(res);
   }
   if (Array.isArray(task)) {
     for (let sub of task) {
       await trunk(sub);
     }
+    return;
   }
   throw Error(`Task wasn't a TScript`);
 }

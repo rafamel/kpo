@@ -3,13 +3,14 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { IScripts } from '~/types';
 import { rejects } from 'errorish';
+import open from '~/utils/open';
 
 export default async function readFile(file: string): Promise<IScripts> {
   const { ext } = path.parse(file);
 
   switch (ext) {
     case '.js':
-      return require(file);
+      return open.throws(() => require(file));
     case '.json':
       return fs.readJSON(file).catch(rejects);
     case '.yml':
