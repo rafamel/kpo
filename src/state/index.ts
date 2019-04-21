@@ -1,5 +1,6 @@
 import load, { ILoad } from './load';
 import { get } from 'slimconf';
+import mergewith from 'lodash.mergewith';
 import { IOptions, IOfType } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import hash from 'object-hash';
@@ -12,15 +13,19 @@ export const states = {
     silent: false,
     log: DEFAULT_LOG_LEVEL
   } as IOptions,
-  scope: {} as Partial<IOptions>
+  scope: {} as IOptions
 };
 
+let state: IOptions = {};
+merge();
+
 const cache: IOfType<ILoad> = {};
-let state: IOptions = Object.assign({}, states.base);
 
 export default {
   base(options: IOptions): void {
-    Object.assign(states.base, options);
+    mergewith(states.base, options, (obj, src) => {
+      if (obj === 'undefined') return src;
+    });
     merge();
   },
   scope(options: IOptions): void {
@@ -40,6 +45,7 @@ export default {
 };
 
 function merge(): void {
-  const env = Object.assign({}, states.base.env, states.scope.env);
-  state = Object.assign({}, states.base, states.scope, { env });
+  state = Object.assign({}, states.base, states.scope, {
+    env: Object.assign({}, states.base.env, states.scope.env)
+  });
 }
