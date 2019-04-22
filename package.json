@@ -120,6 +120,7 @@
     "fs-extra": "^7.0.1",
     "lodash.mergewith": "^4.6.1",
     "loglevel": "^1.6.1",
+    "manage-path": "^2.0.0",
     "promist": "^0.5.3",
     "slimconf": "^0.9.0",
     "spawn-command": "0.0.2-1",

@@ -23,7 +23,7 @@ export async function trunk(task: TScript): Promise<void> {
   }
   if (typeof task === 'string') {
     logger.debug('Command exec: ' + task);
-    return (await exec(task)).promise;
+    return exec(task);
   }
   if (typeof task === 'function') {
     logger.debug('Run function' + task.name ? ` ${task.name}` : '');
