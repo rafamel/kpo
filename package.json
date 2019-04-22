@@ -124,7 +124,8 @@
     "loglevel": "^1.6.1",
     "promist": "^0.5.3",
     "slimconf": "^0.9.0",
-    "spawn-command": "0.0.2-1"
+    "spawn-command": "0.0.2-1",
+    "string-argv": "^0.3.0"
   },
   "husky": {
     "hooks": {
