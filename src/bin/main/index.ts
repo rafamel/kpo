@@ -5,7 +5,7 @@ import arg from 'arg';
 import chalk from 'chalk';
 import state from '~/state';
 import { TLogger, IOfType } from '~/types';
-import run from './run';
+import run from '~/commands/run';
 
 export default async function main(argv: string[]): Promise<void> {
   const pkg = await loadPackage(__dirname, { title: true });
