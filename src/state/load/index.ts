@@ -20,7 +20,7 @@ export interface ILoad {
 export default async function load(opts: ILoadOpts): Promise<ILoad> {
   const { kpo, pkg } = await getFile(opts);
 
-  let dir = path.parse(pkg || kpo || '').dir;
+  let dir = path.parse(pkg || kpo || process.cwd()).dir;
 
   if (kpo) logger.debug('kpo configuration file found at: ' + kpo);
   if (pkg) logger.debug('package.json found at: ' + pkg);
