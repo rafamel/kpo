@@ -1,10 +1,14 @@
 import load, { ILoad } from './load';
 import { get } from 'slimconf';
 import mergewith from 'lodash.mergewith';
-import { IOptions, IOfType } from '~/types';
+import { IOptions } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
-import hash from 'object-hash';
+import { lazy } from 'promist';
+
+export interface IConfig {
+  load: ILoad;
+}
 
 export const states = {
   base: {
@@ -17,10 +21,9 @@ export const states = {
   scope: {} as IOptions
 };
 
+let config: Promise<IConfig>;
 let state: IOptions = {};
 merge();
-
-const cache: IOfType<ILoad> = {};
 
 export default {
   base(options: IOptions): void {
@@ -36,12 +39,8 @@ export default {
   get(path: keyof IOptions): any {
     return get(state, path, false);
   },
-  async load(): Promise<ILoad> {
-    const opts = { file: state.file, directory: state.directory };
-    const key = hash(opts);
-    if (cache.hasOwnProperty(key)) return cache[key];
-
-    return (cache[key] = await load(opts));
+  load(): Promise<ILoad> {
+    return config.then((x) => x.load);
   }
 };
 
@@ -50,4 +49,16 @@ function merge(): void {
     env: Object.assign({}, states.base.env, states.scope.env)
   });
   if (state.log) setLevel(state.log);
+  config = lazy((resolve) => resolve(getConfig()));
+}
+
+async function getConfig(): Promise<IConfig> {
+  const res = await load({
+    file: state.file,
+    directory: state.directory
+  });
+
+  return {
+    load: res
+  };
 }
