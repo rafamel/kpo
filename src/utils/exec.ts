@@ -1,5 +1,4 @@
 import sc from 'spawn-command';
-import clone from 'lodash.clone';
 import { ChildProcess, SpawnOptions } from 'child_process';
 import { DEFAULT_STDIO } from '~/constants';
 import logger from '~/utils/logger';
@@ -14,7 +13,7 @@ export default function exec(command: string, options?: SpawnOptions): IExec {
   const opts: SpawnOptions = options ? Object.assign({}, options) : {};
 
   if (!opts.stdio) opts.stdio = DEFAULT_STDIO;
-  if (!opts.env) opts.env = clone(process.env);
+  if (!opts.env) opts.env = Object.assign({}, process.env);
 
   logger.debug('Executing: ' + command);
   const ps = sc(command, opts);
