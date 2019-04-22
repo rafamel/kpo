@@ -3,6 +3,7 @@ import { get } from 'slimconf';
 import mergewith from 'lodash.mergewith';
 import { IOptions, IOfType } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
+import { setLevel } from '~/utils/logger';
 import hash from 'object-hash';
 
 export const states = {
@@ -48,4 +49,5 @@ function merge(): void {
   state = Object.assign({}, states.base, states.scope, {
     env: Object.assign({}, states.base.env, states.scope.env)
   });
+  if (state.log) setLevel(state.log);
 }
