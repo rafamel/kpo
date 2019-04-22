@@ -5,9 +5,11 @@ import { IOptions } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
 import { lazy } from 'promist';
+import up from 'find-up';
 
 export interface IConfig {
   load: ILoad;
+  paths: string[];
 }
 
 export const states = {
@@ -41,6 +43,9 @@ export default {
   },
   load(): Promise<ILoad> {
     return config.then((x) => x.load);
+  },
+  paths(): Promise<string[]> {
+    return config.then((x) => x.paths);
   }
 };
 
@@ -59,6 +64,10 @@ async function getConfig(): Promise<IConfig> {
   });
 
   return {
-    load: res
+    load: res,
+    // TODO add root path
+    paths: [await up('node_modules/.bin', { cwd: res.directory })].filter(
+      (path, i, arr) => path && arr.indexOf(path) === i
+    ) as string[]
   };
 }
