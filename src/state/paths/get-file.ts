@@ -9,16 +9,13 @@ export interface IGetFile {
   pkg: string | null;
 }
 
-/**
- * - if no `file` or `directory` are passed, it will **recurse up** from `cwd` to find both the `package.json` and `kpo.scripts` files. If the `package.json` is found closer to `cwd` or no `kpo.scripts` is found, then its `kpo.path` key will be used -if found- to locate the `kpo.scripts` file.
- * - if only `file` is passed, it will get the `kpo.scripts` on that location, and **recurse up** to find a `package.json`.
- * - if a `file` and a `directory` are passed, it will get the `kpo.scripts` on `file` location, and only use a `package.json` if it's found in `directory`.
- * - if only a `directory` is passed, it will try to find both the `kpo.script` and `package.json` files on `directory`; if no `kpo.scripts` is found exactly on directory, it will fall back to the `kpo.path` in `package.json` -if found.
- */
-export default async function getFile(opts: {
-  file?: string;
-  directory?: string;
-}): Promise<IGetFile> {
+export default async function getFile(
+  opts: {
+    file?: string;
+    directory?: string;
+  },
+  strict: boolean
+): Promise<IGetFile> {
   const cwd = process.cwd();
 
   const directory =
@@ -34,13 +31,14 @@ export default async function getFile(opts: {
       : path.join(directory || cwd, opts.file));
 
   return file
-    ? getExplicit(file, directory)
-    : getDefault(directory || cwd, Boolean(directory));
+    ? getExplicit(file, directory, strict)
+    : getDefault(directory || cwd, strict);
 }
 
 export async function getExplicit(
   file: string,
-  directory?: string
+  directory: string | undefined,
+  strict: boolean
 ): Promise<IGetFile> {
   const { ext } = path.parse(file);
   const validExt = ['.js', '.json', '.yml', '.yaml'].includes(ext);
@@ -52,7 +50,7 @@ export async function getExplicit(
   const dir = directory || path.parse(file).dir;
   return {
     kpo: file,
-    pkg: await getPackage(dir, Boolean(directory))
+    pkg: await getPackage(dir, strict)
   };
 }
 
@@ -61,17 +59,18 @@ export async function getDefault(
   strict: boolean
 ): Promise<IGetFile> {
   let dir = path.join(path.parse(directory).dir, path.parse(directory).base);
-  let at: string | null | undefined = await find(
+
+  let kpo: string | null | undefined = await find(
     ['.js', '.json', '.yml', '.yaml'].map((ext) => FILE_NAME + ext),
     directory,
     strict
   );
 
   // If file found in dir, return
-  if (at) {
-    if (path.parse(at).dir === dir) {
+  if (kpo) {
+    if (path.parse(kpo).dir === dir) {
       return {
-        kpo: at,
+        kpo,
         pkg: await getPackage(dir, strict)
       };
     }
@@ -80,11 +79,11 @@ export async function getDefault(
   // Otherwise, check whether there is a package.json w/ kpo.path
   // closer to directory
   const pkg = await getPackage(dir, strict);
-  if (pkg && (!at || pkg.length > path.parse(at).dir.length)) {
-    at = await getFromPackage(pkg);
+  if (pkg && (!kpo || pkg.length > path.parse(kpo).dir.length)) {
+    kpo = await getFromPackage(pkg);
   }
 
-  return { kpo: at, pkg };
+  return { kpo: kpo, pkg };
 }
 
 export async function getFromPackage(
