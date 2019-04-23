@@ -1,6 +1,5 @@
 import { IScripts, IOfType, TScript } from '~/types';
 import { get } from 'slimconf';
-import { Errorish } from 'errorish';
 
 export default function retrieveTask(
   name: string,
@@ -22,7 +21,7 @@ export default function retrieveTask(
 }
 
 function kpoRetrieveTask(name: string, kpo: IScripts | null): TScript {
-  if (!kpo) return null;
+  if (!kpo) throw Error(`Task ${name} couldn't be found`);
 
   let task: TScript;
 
@@ -32,8 +31,8 @@ function kpoRetrieveTask(name: string, kpo: IScripts | null): TScript {
       if (item.hasOwnProperty('default')) item = item.default;
     }
     task = item;
-  } catch (err) {
-    throw new Errorish(`Task ${name} couldn't be found`, null, err);
+  } catch (_) {
+    throw Error(`Task ${name} couldn't be found`);
   }
 
   return task;
