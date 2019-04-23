@@ -1,38 +1,51 @@
 import paths, { IPaths } from './paths';
 import mergewith from 'lodash.mergewith';
-import { IBaseOptions, IScopeOptions, TOptions } from '~/types';
+import { IBaseOptions, IScopeOptions } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
 import { lazy } from 'promist';
 import load, { ILoaded } from './load';
+import scope from './scope';
 
 export const states = {
   base: {
-    file: undefined,
-    directory: undefined,
+    file: null,
+    directory: null,
     env: {},
     silent: false,
     log: DEFAULT_LOG_LEVEL
   } as IBaseOptions,
-  scope: {} as IScopeOptions
+
+  options: {} as IScopeOptions,
+
+  internal: {
+    scopes: ['self'] as string[]
+  }
 };
 
+export type TState = IBaseOptions & IScopeOptions & typeof states.internal;
+
 let promise: Promise<IPaths>;
-let state: TOptions = {};
+let state: TState = Object.assign({}, states.internal);
 merge();
 
 export default {
-  base(options: IBaseOptions): void {
+  setBase(options: IBaseOptions): void {
     mergewith(states.base, options, (obj, src) => {
       if (obj === 'undefined') return src;
     });
     merge();
   },
-  scope(options: IScopeOptions): void {
-    states.scope = options;
+  setOptions(options: IScopeOptions = {}): void {
+    states.options = options;
     merge();
   },
-  get(key: keyof TOptions): any {
+  async setScope(name: string): Promise<void> {
+    const scopeName = await scope(name);
+    if (scopeName) states.internal.scopes.push(scopeName);
+    this.setOptions();
+  },
+  get(key: keyof TState): any {
     return state[key];
   },
   paths(): Promise<IPaths> {
@@ -45,8 +58,8 @@ export default {
 
 function merge(): void {
   // merge base and scope
-  state = Object.assign({}, states.base, states.scope, {
-    env: Object.assign({}, states.base.env, states.scope.env)
+  state = Object.assign({}, states.base, states.options, states.internal, {
+    env: Object.assign({}, states.base.env, states.options.env)
   });
 
   // ensure base own properties are of base
@@ -58,6 +71,11 @@ function merge(): void {
 
   // Set config lazy promise
   promise = lazy((resolve) => {
-    resolve(paths({ file: state.file, directory: state.directory }));
+    resolve(
+      paths({
+        file: state.file || undefined,
+        directory: state.directory || undefined
+      })
+    );
   });
 }

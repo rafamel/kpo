@@ -21,8 +21,6 @@ export interface IScripts {
   [key: string]: TScript | TScript[] | IScripts;
 }
 
-export type TOptions = IBaseOptions & IScopeOptions;
-
 export interface ICoreOptions {
   env?: IOfType<string>;
   silent?: boolean;
@@ -30,8 +28,8 @@ export interface ICoreOptions {
 }
 
 export interface IBaseOptions extends ICoreOptions {
-  file?: string;
-  directory?: string;
+  file?: string | null;
+  directory?: string | null;
 }
 
 export interface IScopeOptions extends ICoreOptions {
