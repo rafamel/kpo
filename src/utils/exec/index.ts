@@ -1,5 +1,4 @@
-import sc from 'spawn-command';
-import { SpawnOptions, ChildProcess } from 'child_process';
+import { spawn, SpawnOptions, ChildProcess } from 'child_process';
 import { DEFAULT_STDIO } from '~/constants';
 import logger from '~/utils/logger';
 import { rejects } from 'errorish';
@@ -19,12 +18,13 @@ export default async function exec(
 ): Promise<void> {
   const opts: SpawnOptions = Object.assign({}, options);
 
+  opts.shell = true;
   if (!opts.stdio) opts.stdio = DEFAULT_STDIO;
   if (!opts.env) opts.env = await getEnv();
 
   logger.debug('Executing: ' + command);
   const id = uuid();
-  const ps = sc(command, opts);
+  const ps = spawn(command, opts);
   processes[id] = ps;
 
   return new Promise((resolve: (arg: void) => void, reject) => {
