@@ -60,7 +60,7 @@ export async function getDefault(
   directory: string,
   strict: boolean
 ): Promise<IGetFile> {
-  let dir = path.parse(directory).dir;
+  let dir = path.join(path.parse(directory).dir, path.parse(directory).base);
   let at: string | null | undefined = await find(
     ['.js', '.json', '.yml', '.yaml'].map((ext) => FILE_NAME + ext),
     directory,
@@ -69,7 +69,7 @@ export async function getDefault(
 
   // If file found in dir, return
   if (at) {
-    if ((path.parse(at).dir = dir)) {
+    if (path.parse(at).dir === dir) {
       return {
         kpo: at,
         pkg: await getPackage(dir, strict)
