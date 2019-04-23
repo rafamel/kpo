@@ -6,6 +6,7 @@ import chalk from 'chalk';
 import state from '~/state';
 import { TLogger, IOfType } from '~/types';
 import run from '~/commands/run';
+import logger from '~/utils/logger';
 
 export default async function main(argv: string[]): Promise<void> {
   const pkg = await loadPackage(__dirname, { title: true });
@@ -59,12 +60,12 @@ export default async function main(argv: string[]): Promise<void> {
 
   if (cmd['--help']) return console.log(help);
   if (cmd['--version']) return console.log(pkg.version);
-  if (!cmd._.length) return console.log(help, { exit: 1 });
+  if (!cmd._.length) {
+    console.log(help + '\n');
+    throw Error(`kpo requires a command`);
+  }
 
-  const args = cmd._.slice(1);
-  const char = cmd._[0][0];
-
-  state.base({
+  state.setBase({
     file: cmd['--file'],
     directory: cmd['--dir'],
     silent: cmd['--silent'],
@@ -81,11 +82,27 @@ export default async function main(argv: string[]): Promise<void> {
       }, {})
   });
 
+  let first = cmd._.shift();
+  while (!first || first[0] === '@') {
+    if (!first) {
+      console.log(help + '\n');
+      throw Error(`kpo requires a command`);
+    }
+
+    const command = first.split(':');
+    const scope = command.shift() as string;
+
+    await state.setScope(scope === '@' ? 'root' : scope.slice(1));
+
+    first = command.length
+      ? `:${command.join(':')}`
+      : (cmd._.shift() as string);
+  }
+  logger.info('Scope: ' + chalk.bold('@' + state.get('scopes').join(' @')));
+
   // TODO
-  if (char === '@') {
-    return console.log('TODO @scopes');
-  } else if (char === ':') {
-    switch (cmd._[0]) {
+  if (first[0] === ':') {
+    switch (first) {
       case ':':
       case ':cmd':
         return console.log('TODO :cmd');
@@ -100,11 +117,11 @@ export default async function main(argv: string[]): Promise<void> {
       case ':link':
         return console.log('TODO :link');
       case ':run':
-        return run(args);
+        return run(cmd._);
       default:
-        throw Error('Unknown command ' + cmd._[0]);
+        throw Error('Unknown command ' + first);
     }
   } else {
-    return run(cmd._);
+    return run([first].concat(cmd._));
   }
 }
