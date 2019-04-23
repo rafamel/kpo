@@ -1,9 +1,17 @@
 import sc from 'spawn-command';
-import { SpawnOptions } from 'child_process';
+import { SpawnOptions, ChildProcess } from 'child_process';
 import { DEFAULT_STDIO } from '~/constants';
 import logger from '~/utils/logger';
 import { rejects } from 'errorish';
 import getEnv from './get-env';
+import onExit from 'signal-exit';
+import uuid from 'uuid/v4';
+import { IOfType } from '~/types';
+
+export const processes: IOfType<ChildProcess> = {};
+
+// Kill all dangling child processes on main process exit
+onExit(() => Object.values(processes).forEach((p) => p.kill()));
 
 export default async function exec(
   command: string,
@@ -15,12 +23,18 @@ export default async function exec(
   if (!opts.env) opts.env = await getEnv();
 
   logger.debug('Executing: ' + command);
+  const id = uuid();
   const ps = sc(command, opts);
+  processes[id] = ps;
 
   return new Promise((resolve: (arg: void) => void, reject) => {
     ps.on('close', (code: number) => {
+      delete processes[id];
       return code ? reject(Error(`Failed: ${command}`)) : resolve();
     });
-    ps.on('error', (err: any) => reject(err));
+    ps.on('error', (err: any) => {
+      delete processes[id];
+      return reject(err);
+    });
   }).catch(rejects);
 }
