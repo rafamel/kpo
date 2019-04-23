@@ -3,7 +3,7 @@ import logger from '~/utils/logger';
 import chalk from 'chalk';
 import retrieveTask from './retrieve';
 import exec from '~/utils/exec';
-import open from '~/utils/open';
+import { open } from '~/utils/errors';
 
 export default async function runTask(
   name: string,

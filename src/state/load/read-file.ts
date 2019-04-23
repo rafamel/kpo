@@ -3,7 +3,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { IScripts } from '~/types';
 import { rejects } from 'errorish';
-import open from '~/utils/open';
+import { open } from '~/utils/errors';
 
 export default async function readFile(file: string): Promise<IScripts> {
   const { ext } = path.parse(file);
