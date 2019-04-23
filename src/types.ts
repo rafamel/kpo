@@ -36,5 +36,5 @@ export interface IBaseOptions extends ICoreOptions {
 
 export interface IScopeOptions extends ICoreOptions {
   root?: string;
-  children?: string[];
+  children?: IOfType<string>;
 }

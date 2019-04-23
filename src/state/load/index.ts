@@ -1,36 +1,24 @@
-import path from 'path';
 import fs from 'fs-extra';
-import getFile from './get-file';
-import readFile from './read-file';
-import { IOfType, IScripts } from '~/types';
-import logger from '~/utils/logger';
+import { IScripts, IOfType } from '~/types';
 import { rejects } from 'errorish';
+import { IBasePaths } from '~/state/paths';
+import hash from 'object-hash';
+import readFile from './read-file';
 
-export interface ILoadOpts {
-  file?: string;
-  directory?: string;
-}
-
-export interface ILoad {
+export interface ILoaded {
   kpo: IScripts | null;
   pkg: IOfType<any> | null;
-  directory: string;
 }
 
-export default async function load(opts: ILoadOpts): Promise<ILoad> {
-  const { kpo, pkg } = await getFile(opts);
-
-  let dir = path.parse(pkg || kpo || process.cwd()).dir;
-
-  if (kpo) logger.debug('kpo configuration file found at: ' + kpo);
-  if (pkg) logger.debug('package.json found at: ' + pkg);
-  if (!kpo && !pkg) {
-    throw Error(`No file or package.json was found in directory`);
+const cache: IOfType<ILoaded> = {};
+export default async function load(paths: IBasePaths): Promise<ILoaded> {
+  const key = hash(paths);
+  if (!cache.hasOwnProperty(key)) {
+    cache[key] = {
+      kpo: paths.kpo ? await readFile(paths.kpo) : null,
+      pkg: paths.pkg ? await fs.readJSON(paths.pkg).catch(rejects) : null
+    };
   }
 
-  return {
-    kpo: kpo ? await readFile(kpo) : null,
-    pkg: pkg ? await fs.readJSON(pkg).catch(rejects) : null,
-    directory: dir
-  };
+  return cache[key];
 }

@@ -9,7 +9,7 @@ export default async function getEnv(): Promise<IOfType<string | undefined>> {
     state.get('env')
   );
   const alter = manage(env);
-  alter.unshift(await state.paths());
+  alter.unshift(await state.paths().then((paths) => paths.bin));
 
   return env;
 }

@@ -1,15 +1,10 @@
-import load, { ILoad } from './load';
+import paths, { IPaths } from './paths';
 import mergewith from 'lodash.mergewith';
 import { IBaseOptions, IScopeOptions, TOptions } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
 import { lazy } from 'promist';
-import up from 'find-up';
-
-export interface IConfig {
-  load: ILoad;
-  paths: string[];
-}
+import load, { ILoaded } from './load';
 
 export const states = {
   base: {
@@ -22,7 +17,7 @@ export const states = {
   scope: {} as IScopeOptions
 };
 
-let config: Promise<IConfig>;
+let promise: Promise<IPaths>;
 let state: TOptions = {};
 merge();
 
@@ -40,11 +35,11 @@ export default {
   get(key: keyof TOptions): any {
     return state[key];
   },
-  load(): Promise<ILoad> {
-    return config.then((x) => x.load);
+  paths(): Promise<IPaths> {
+    return promise;
   },
-  paths(): Promise<string[]> {
-    return config.then((x) => x.paths);
+  load(): Promise<ILoaded> {
+    return promise.then((paths) => load(paths));
   }
 };
 
@@ -62,20 +57,7 @@ function merge(): void {
   if (state.log) setLevel(state.log);
 
   // Set config lazy promise
-  config = lazy((resolve) => resolve(getConfig()));
-}
-
-async function getConfig(): Promise<IConfig> {
-  const res = await load({
-    file: state.file,
-    directory: state.directory
+  promise = lazy((resolve) => {
+    resolve(paths({ file: state.file, directory: state.directory }));
   });
-
-  return {
-    load: res,
-    // TODO add root path
-    paths: [await up('node_modules/.bin', { cwd: res.directory })].filter(
-      (path, i, arr) => path && arr.indexOf(path) === i
-    ) as string[]
-  };
 }
