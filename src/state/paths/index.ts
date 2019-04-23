@@ -33,16 +33,20 @@ export default async function paths(opts: IPathsOpts): Promise<IPaths> {
     directory: state.get('root') || path.join(base.directory, '../')
   }).catch(async (err) => {
     return state.get('root')
-      ? wrap.rejects(err, { message: "@root couldn't be retrieved" })
+      ? wrap.rejects(err, {
+          message: `root scope couldn't be retrieved: ${state.get('root')}`
+        })
       : null;
   });
 
   return {
     ...base,
     // add also root bin path
-    bin: base.bin
-      .concat(root ? root.bin : [])
-      .filter((x, i, arr) => arr.indexOf(x) === i),
+    bin: [base.bin[0]]
+      .concat(root ? root.bin[0] : [])
+      .concat(base.bin.slice(1))
+      .concat(root ? root.bin.slice(1) : [])
+      .filter((x, i, arr) => x && arr.indexOf(x) === i),
     root,
     children: {}
   };
@@ -62,8 +66,11 @@ export async function trunk(opts: IPathsOpts): Promise<IBasePaths> {
     kpo: kpo,
     pkg: pkg,
     directory: dir,
-    bin: [await up('node_modules/.bin', { cwd: dir })].filter(
-      Boolean
-    ) as string[]
+    bin: await getBin(dir)
   };
+}
+
+export async function getBin(dir: string): Promise<string[]> {
+  const bin = await up('node_modules/.bin', { cwd: dir });
+  return bin ? [bin].concat(await getBin(path.join(dir, '../'))) : [];
 }
