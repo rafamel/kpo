@@ -1,5 +1,4 @@
 import load, { ILoad } from './load';
-import { get } from 'slimconf';
 import mergewith from 'lodash.mergewith';
 import { IBaseOptions, IScopeOptions, TOptions } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
@@ -38,8 +37,8 @@ export default {
     states.scope = options;
     merge();
   },
-  get(path: keyof TOptions): any {
-    return get(state, path, false);
+  get(key: keyof TOptions): any {
+    return state[key];
   },
   load(): Promise<ILoad> {
     return config.then((x) => x.load);
