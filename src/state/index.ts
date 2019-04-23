@@ -1,7 +1,7 @@
 import load, { ILoad } from './load';
 import { get } from 'slimconf';
 import mergewith from 'lodash.mergewith';
-import { IOptions } from '~/types';
+import { IBaseOptions, IScopeOptions, TOptions } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
 import { lazy } from 'promist';
@@ -19,26 +19,26 @@ export const states = {
     env: {},
     silent: false,
     log: DEFAULT_LOG_LEVEL
-  } as IOptions,
-  scope: {} as IOptions
+  } as IBaseOptions,
+  scope: {} as IScopeOptions
 };
 
 let config: Promise<IConfig>;
-let state: IOptions = {};
+let state: TOptions = {};
 merge();
 
 export default {
-  base(options: IOptions): void {
+  base(options: IBaseOptions): void {
     mergewith(states.base, options, (obj, src) => {
       if (obj === 'undefined') return src;
     });
     merge();
   },
-  scope(options: IOptions): void {
+  scope(options: IScopeOptions): void {
     states.scope = options;
     merge();
   },
-  get(path: keyof IOptions): any {
+  get(path: keyof TOptions): any {
     return get(state, path, false);
   },
   load(): Promise<ILoad> {
@@ -50,10 +50,19 @@ export default {
 };
 
 function merge(): void {
+  // merge base and scope
   state = Object.assign({}, states.base, states.scope, {
     env: Object.assign({}, states.base.env, states.scope.env)
   });
+
+  // ensure base own properties are of base
+  state.file = states.base.file;
+  state.directory = states.base.directory;
+
+  // Set logging level
   if (state.log) setLevel(state.log);
+
+  // Set config lazy promise
   config = lazy((resolve) => resolve(getConfig()));
 }
 

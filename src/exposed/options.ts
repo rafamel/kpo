@@ -1,6 +1,6 @@
 import state from '~/state';
-import { IOptions } from '~/types';
+import { IScopeOptions } from '~/types';
 
-export default function options(opts: IOptions): void {
+export default function options(opts: IScopeOptions): void {
   return state.scope(opts);
 }

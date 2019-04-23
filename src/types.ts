@@ -21,10 +21,20 @@ export interface IScripts {
   [key: string]: TScript | TScript[] | IScripts;
 }
 
-export interface IOptions {
-  file?: string;
-  directory?: string;
+export type TOptions = IBaseOptions & IScopeOptions;
+
+export interface ICoreOptions {
   env?: IOfType<string>;
   silent?: boolean;
   log?: TLogger;
+}
+
+export interface IBaseOptions extends ICoreOptions {
+  file?: string;
+  directory?: string;
+}
+
+export interface IScopeOptions extends ICoreOptions {
+  root?: string;
+  children?: string[];
 }
