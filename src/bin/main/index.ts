@@ -83,6 +83,7 @@ export default async function main(argv: string[]): Promise<void> {
   });
 
   let first = cmd._.shift();
+  let isScoped = false;
   while (!first || first[0] === '@') {
     if (!first) {
       console.log(help + '\n');
@@ -97,8 +98,12 @@ export default async function main(argv: string[]): Promise<void> {
     first = command.length
       ? `:${command.join(':')}`
       : (cmd._.shift() as string);
+
+    isScoped = true;
   }
-  logger.info('Scope: ' + chalk.bold('@' + state.get('scopes').join(' @')));
+  if (isScoped) {
+    logger.info('Scope: ' + chalk.bold('@' + state.get('scopes').join(' @')));
+  }
 
   // TODO
   if (first[0] === ':') {

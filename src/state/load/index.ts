@@ -1,14 +1,9 @@
 import fs from 'fs-extra';
-import { IScripts, IOfType } from '~/types';
+import { IOfType } from '~/types';
 import { rejects } from 'errorish';
-import { IBasePaths } from '~/state/paths';
+import { IBasePaths, ILoaded } from '../types';
 import hash from 'object-hash';
 import readFile from './read-file';
-
-export interface ILoaded {
-  kpo: IScripts | null;
-  pkg: IOfType<any> | null;
-}
 
 const cache: IOfType<ILoaded> = {};
 export default async function load(paths: IBasePaths): Promise<ILoaded> {

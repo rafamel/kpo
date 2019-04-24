@@ -4,18 +4,23 @@ import { rejects } from 'errorish';
 import { FILE_NAME } from '~/constants';
 import { find, exists } from '~/utils/file';
 
-export interface IGetFile {
+export interface IGetFiles {
   kpo: string | null;
   pkg: string | null;
 }
 
-export default async function getFile(
+/**
+ * - if `strict` is `false`, it will look recursively in `directory` -if passed, otherwise `cwd`- for both `package.json` and `kpo.scripts` files.
+ * - if `strict` is `true`, files will be expected to be in exactly `directory`.
+ * - if `file` is provided, that will determine the path for the `kpo.scripts` file, and will make the `directory` to look for the `package.json` its directory, unless otherwise provided.
+ */
+export default async function getFiles(
   opts: {
     file?: string;
     directory?: string;
   },
   strict: boolean
-): Promise<IGetFile> {
+): Promise<IGetFiles> {
   const cwd = process.cwd();
 
   const directory =
@@ -39,7 +44,7 @@ export async function getExplicit(
   file: string,
   directory: string | undefined,
   strict: boolean
-): Promise<IGetFile> {
+): Promise<IGetFiles> {
   const { ext } = path.parse(file);
   const validExt = ['.js', '.json', '.yml', '.yaml'].includes(ext);
   if (!validExt) return Promise.reject(Error(`Extension ${ext} is not valid`));
@@ -57,7 +62,7 @@ export async function getExplicit(
 export async function getDefault(
   directory: string,
   strict: boolean
-): Promise<IGetFile> {
+): Promise<IGetFiles> {
   let dir = path.join(path.parse(directory).dir, path.parse(directory).base);
 
   let kpo: string | null | undefined = await find(

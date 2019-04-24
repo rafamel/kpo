@@ -1,11 +1,12 @@
-import paths, { IPaths } from './paths';
+import paths from './paths';
 import mergewith from 'lodash.mergewith';
 import { IBaseOptions, IScopeOptions } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
 import { lazy } from 'promist';
-import load, { ILoaded } from './load';
+import load from './load';
 import scope from './scope';
+import { IPaths, ILoaded } from './types';
 
 export const states = {
   base: {
@@ -19,7 +20,7 @@ export const states = {
   options: {} as IScopeOptions,
 
   internal: {
-    scopes: ['self'] as string[]
+    scopes: [] as string[]
   }
 };
 
@@ -41,9 +42,12 @@ export default {
     merge();
   },
   async setScope(name: string): Promise<void> {
-    const scopeName = await scope(name);
-    if (scopeName) states.internal.scopes.push(scopeName);
-    this.setOptions();
+    const definition = await scope(name);
+    if (definition) {
+      states.internal.scopes.push(definition.name);
+      this.setBase({ file: null, directory: definition.directory });
+      this.setOptions();
+    }
   },
   get(key: keyof TState): any {
     return state[key];
