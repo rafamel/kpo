@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { rejects } from 'errorish';
-import { FILE_NAME } from '~/constants';
+import { FILE_NAME, FILE_EXT } from '~/constants';
 import { find, exists } from '~/utils/file';
 
 export interface IGetFiles {
@@ -46,7 +46,7 @@ export async function getExplicit(
   strict: boolean
 ): Promise<IGetFiles> {
   const { ext } = path.parse(file);
-  const validExt = ['.js', '.json', '.yml', '.yaml'].includes(ext);
+  const validExt = FILE_EXT.includes(ext);
   if (!validExt) return Promise.reject(Error(`Extension ${ext} is not valid`));
 
   // Ensure file exists
@@ -66,7 +66,7 @@ export async function getDefault(
   let dir = path.join(path.parse(directory).dir, path.parse(directory).base);
 
   let kpo: string | null | undefined = await find(
-    ['.js', '.json', '.yml', '.yaml'].map((ext) => FILE_NAME + ext),
+    FILE_EXT.map((ext) => FILE_NAME + ext),
     directory,
     strict
   );
