@@ -33,6 +33,6 @@ export interface IBaseOptions extends ICoreOptions {
 }
 
 export interface IScopeOptions extends ICoreOptions {
-  root?: string;
+  root?: string | null;
   children?: IOfType<string>;
 }

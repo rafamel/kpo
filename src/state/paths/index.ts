@@ -13,17 +13,20 @@ export default async function paths(opts: IPathsOpts): Promise<IPaths> {
 
   // has to to called after load to wait for scope options to modify state
   const rootDir = state.get('root');
-  const root = await getRootPaths(
-    rootDir || path.join(self.directory, '../')
-  ).catch(async (err) => {
-    // don't fail if root directory wasn't explicitly passed via options,
-    // just set as null
-    if (!rootDir) return null;
+  const root =
+    rootDir === null
+      ? null
+      : await getRootPaths(rootDir || path.join(self.directory, '../')).catch(
+          async (err) => {
+            // don't fail if root directory wasn't explicitly passed via options,
+            // just set as null
+            if (!rootDir) return null;
 
-    return wrap.rejects(err, {
-      message: `root scope couldn't be retrieved: ${state.get('root')}`
-    });
-  });
+            return wrap.rejects(err, {
+              message: `root scope couldn't be retrieved: ${state.get('root')}`
+            });
+          }
+        );
 
   return {
     ...self,
