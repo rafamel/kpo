@@ -12,7 +12,11 @@ export default async function paths(opts: IPathsOpts): Promise<IPaths> {
   await load(self);
 
   // has to to called after load to wait for scope options to modify state
-  const rootDir = state.get('root');
+  let rootDir = state.get('root');
+  if (rootDir && !path.isAbsolute(rootDir)) {
+    rootDir = path.join(self.directory, rootDir);
+  }
+
   const root =
     rootDir === null
       ? null
