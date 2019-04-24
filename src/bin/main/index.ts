@@ -62,7 +62,7 @@ export default async function main(argv: string[]): Promise<void> {
   if (cmd['--version']) return console.log(pkg.version);
   if (!cmd._.length) {
     console.log(help + '\n');
-    throw Error(`kpo requires a command`);
+    throw Error(`A command is required`);
   }
 
   state.setBase({
@@ -83,11 +83,10 @@ export default async function main(argv: string[]): Promise<void> {
   });
 
   let first = cmd._.shift();
-  let isScoped = false;
   while (!first || first[0] === '@') {
     if (!first) {
       console.log(help + '\n');
-      throw Error(`kpo requires a command`);
+      throw Error(`A command is required`);
     }
 
     const command = first.split(':');
@@ -98,35 +97,42 @@ export default async function main(argv: string[]): Promise<void> {
     first = command.length
       ? `:${command.join(':')}`
       : (cmd._.shift() as string);
+  }
 
-    isScoped = true;
+  // Normalize command on special cases (: and no command)
+  if (first === ':') first = ':cmd';
+  else if (first[0] !== ':') {
+    cmd._.unshift(first);
+    first = ':run';
   }
-  if (isScoped) {
-    logger.info('Scope: ' + chalk.bold('@' + state.get('scopes').join(' @')));
-  }
+
+  // Log full command to be run w/ resolved scopes
+  const scopes = state.get('scopes');
+  logger.info(
+    `Running: ${chalk.bold('kpo')}` +
+      (scopes.length ? chalk.bold.yellow(' @' + scopes.join(' @')) : '') +
+      chalk.bold.blue(' ' + first) +
+      (cmd._.length ? ` "${cmd._.join('" "')}"` : '')
+  );
 
   // TODO
-  if (first[0] === ':') {
-    switch (first) {
-      case ':':
-      case ':cmd':
-        return console.log('TODO :cmd');
-      case ':series':
-        return console.log('TODO :series');
-      case ':parallel':
-        return console.log('TODO :parallel');
-      case ':list':
-        return console.log('TODO :list');
-      case ':raise':
-        return console.log('TODO :raise');
-      case ':link':
-        return console.log('TODO :link');
-      case ':run':
-        return run(cmd._);
-      default:
-        throw Error('Unknown command ' + first);
-    }
-  } else {
-    return run([first].concat(cmd._));
+  switch (first) {
+    case ':cmd':
+      return console.log('TODO :cmd');
+    case ':series':
+      return console.log('TODO :series');
+    case ':parallel':
+      return console.log('TODO :parallel');
+    case ':list':
+      return console.log('TODO :list');
+    case ':raise':
+      return console.log('TODO :raise');
+    case ':link':
+      return console.log('TODO :link');
+    case ':run':
+      // add arguments after --
+      return run(cmd._);
+    default:
+      throw Error('Unknown command ' + first);
   }
 }
