@@ -49,7 +49,7 @@ export default {
       this.setOptions();
     }
   },
-  get(key: keyof TState): any {
+  get<T extends keyof TState>(key: T): TState[T] {
     return state[key];
   },
   paths(): Promise<IPaths> {
