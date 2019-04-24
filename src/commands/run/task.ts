@@ -11,7 +11,7 @@ export default async function runTask(
   pkg: IOfType<any> | null
 ): Promise<void> {
   const task = retrieveTask(name, kpo, pkg);
-  logger.info('Running task: ' + chalk.bold.green(name));
+  logger.info('\nRunning task: ' + chalk.bold.green(name));
   await trunk(task);
   logger.debug('Done with task: ' + name);
 }
@@ -26,7 +26,7 @@ export async function trunk(task: TScript): Promise<void> {
     return exec(task);
   }
   if (typeof task === 'function') {
-    logger.debug('Run function' + task.name ? ` ${task.name}` : '');
+    logger.debug('Run function' + (task.name ? ` ${task.name}` : ''));
     let res: TScript;
     try {
       res = await task();

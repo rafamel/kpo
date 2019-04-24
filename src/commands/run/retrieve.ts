@@ -21,7 +21,7 @@ export default function retrieveTask(
 }
 
 function kpoRetrieveTask(name: string, kpo: IScripts | null): TScript {
-  if (!kpo) throw Error(`Task ${name} couldn't be found`);
+  if (!kpo) throw Error(`Task "${name}" couldn't be found`);
 
   let task: TScript;
 
@@ -32,7 +32,7 @@ function kpoRetrieveTask(name: string, kpo: IScripts | null): TScript {
     }
     task = item;
   } catch (_) {
-    throw Error(`Task ${name} couldn't be found`);
+    throw Error(`Task "${name}" couldn't be found`);
   }
 
   return task;

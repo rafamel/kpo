@@ -32,7 +32,9 @@ export default async function exec(
   return new Promise((resolve: (arg: void) => void, reject) => {
     ps.on('close', (code: number) => {
       delete processes[id];
-      return code ? reject(Error(`Failed: ${command}`)) : resolve();
+      return code
+        ? reject(Error(`"${command}" failed with code ${code}`))
+        : resolve();
     });
     ps.on('error', (err: any) => {
       delete processes[id];
