@@ -23,6 +23,11 @@ export interface ILoaded {
 }
 
 export interface IScopeDefinition {
-  name: string;
+  names: string[];
   directory: string;
+}
+
+export interface IChild {
+  directory: string;
+  matcher: (scope: string) => boolean;
 }

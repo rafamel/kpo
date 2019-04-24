@@ -44,8 +44,11 @@ export default {
   async setScope(name: string): Promise<void> {
     const definition = await scope(name);
     if (definition) {
-      states.internal.scopes.push(definition.name);
+      // keep track of scope branches
+      states.internal.scopes = states.internal.scopes.concat(definition.names);
+      // set current directory as the the one of the scope
       this.setBase({ file: null, directory: definition.directory });
+      // reset options
       this.setOptions();
     }
   },
