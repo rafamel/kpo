@@ -1,4 +1,4 @@
-import _options from '~/options';
+import { options as _options } from '~/core';
 import { IScopeOptions } from '~/types';
 
 export default function options(opts: IScopeOptions): void {

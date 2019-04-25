@@ -1,5 +1,5 @@
 import _cache from '~/utils/cache';
-import options from '~/options';
+import options, { raw } from './options';
 import { getSelfPaths, getRootPaths } from './paths';
 import load from './load';
 import setScope from './scope';
@@ -7,6 +7,7 @@ import { IPaths, ILoaded } from './types';
 import getBin from './bin';
 import exec from './exec';
 import logger from '~/utils/logger';
+import { TCoreOptions } from '~/types';
 
 export interface ICoreState {
   scopes: string[];
@@ -21,17 +22,26 @@ const core = {
   get state(): ICoreState {
     return state;
   },
+  async get<T extends keyof TCoreOptions>(key: T): Promise<TCoreOptions[T]> {
+    // we're ensuring we've loaded user options when
+    // any option is requested
+    await core.load();
+
+    return raw()[key];
+  },
   paths: cache(async function(): Promise<IPaths> {
+    const options = raw();
     return getSelfPaths({
-      file: options.get('file') || undefined,
-      directory: options.get('directory') || undefined
+      file: options.file || undefined,
+      directory: options.directory || undefined
     });
   }),
   root: cache(async function(): Promise<IPaths | null> {
     const paths = await core.paths();
+
     return getRootPaths({
       self: paths.directory,
-      root: options.get('root')
+      root: await core.get('root')
     });
   }),
   load: cache(async function(): Promise<ILoaded> {
@@ -47,7 +57,7 @@ const core = {
   async exec(command: string): Promise<void> {
     const paths = await core.paths();
     const bin = await core.bin();
-    const env = options.get('env');
+    const env = await core.get('env');
     return exec(command, paths.directory, bin, env);
   },
   async setScope(names: string[]): Promise<void> {
@@ -57,7 +67,7 @@ const core = {
     const { next, scope } = await setScope(
       names,
       { self: paths.directory, root: root ? root.directory : undefined },
-      options.get('children')
+      await core.get('children')
     );
     if (scope) {
       logger.debug(`${scope.name} scope set`);
@@ -73,4 +83,4 @@ const core = {
   }
 };
 
-export default core;
+export { core as default, options };

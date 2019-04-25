@@ -19,21 +19,19 @@ let id = uuid();
 let options: TCoreOptions = {};
 merge();
 
+export const raw = (): TCoreOptions => options;
 export default {
   get id(): string {
     return id;
   },
-  get<T extends keyof TCoreOptions>(key: T): TCoreOptions[T] {
-    return options[key];
-  },
-  setBase(options: IBaseOptions): void {
-    mergewith(state.base, options, (obj, src) => {
+  setBase(opts: IBaseOptions): void {
+    mergewith(state.base, opts, (obj, src) => {
       if (obj === 'undefined') return src;
     });
     merge();
   },
-  setScope(options: IScopeOptions = {}): void {
-    state.scope = options;
+  setScope(opts: IScopeOptions = {}): void {
+    state.scope = opts;
     merge();
   }
 };

@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 
 import main from './main';
-import options from '~/options';
+import core from '~/core';
 import { error } from 'cli-belt';
 import logger from '~/utils/logger';
 import { OpenError } from '~/utils/errors';
 
-main(process.argv.slice(2)).catch((err) => {
+main(process.argv.slice(2)).catch(async (err) => {
   const isOpen = err instanceof OpenError;
 
   return error(isOpen ? err.root : err, {
-    exit: options.get('silent') ? 0 : 1,
+    exit: (await core.get('silent')) ? 0 : 1,
     debug: true,
     logger: {
       error: logger.error,
