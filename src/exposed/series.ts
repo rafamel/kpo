@@ -13,6 +13,7 @@ export interface ISeriesOptions extends IExecOptions {
   force?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function series(
   commands: string | string[],
   options: ISeriesOptions = {}
@@ -23,15 +24,14 @@ export default function series(
     let err: Error | null = null;
     for (let command of commands) {
       try {
-        await core.exec(command, args || [], options);
+        if (!command) throw Error(`No command passed for series`);
+        await core.exec(command, args || [], false, options);
       } catch (e) {
         err = e;
+        if (options.force || options.silent) logger.error(err);
         if (!options.force) break;
       }
     }
-    if (err) {
-      if (options.silent) logger.debug(err);
-      else throw err;
-    }
+    if (err && !options.silent) throw err;
   };
 }
