@@ -31,7 +31,7 @@ export async function getRootPaths(directories: {
     : path.join(self, '../');
 
   try {
-    return getPaths({ directory }, Boolean(root));
+    return await getPaths({ directory }, Boolean(root));
   } catch (err) {
     if (!root) return null;
     throw wrap.ensure(err, {
