@@ -8,7 +8,7 @@ import { IPaths, ILoaded, ITask, ITasks } from './types';
 import getBin from './bin';
 import exec from './exec';
 import logger from '~/utils/logger';
-import { TCoreOptions } from '~/types';
+import { TCoreOptions, IOfType } from '~/types';
 
 export interface ICoreState {
   scopes: string[];
@@ -65,11 +65,19 @@ const core = {
     const { kpo, pkg } = await core.load();
     return getTask(path, kpo || undefined, pkg || undefined);
   },
-  async exec(command: string, args: string[]): Promise<void> {
-    const paths = await core.paths();
-    const bin = await core.bin();
-    const env = await core.get('env');
-    return exec(command, args, paths.directory, bin, env);
+  async exec(
+    command: string,
+    args: string[],
+    opts: { cwd?: string; env?: IOfType<string> } = {}
+  ): Promise<void> {
+    const cwd = opts.cwd
+      ? opts.cwd
+      : await core.paths().then((paths) => paths.directory);
+    const bin = opts.cwd ? await getBin(opts.cwd) : await core.bin();
+    const env = opts.env
+      ? Object.assign({}, await core.get('env'), opts.env)
+      : await core.get('env');
+    return exec(command, args, cwd, bin, env);
   },
   async setScope(names: string[]): Promise<void> {
     const paths = await core.paths();
