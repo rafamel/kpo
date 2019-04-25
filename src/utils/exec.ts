@@ -13,6 +13,7 @@ onExit(() => Object.values(processes).forEach((p) => p.kill()));
 
 export default async function exec(
   command: string,
+  args: string[],
   options?: SpawnOptions
 ): Promise<void> {
   const opts: SpawnOptions = Object.assign({}, options);
@@ -21,9 +22,11 @@ export default async function exec(
   if (!opts.stdio) opts.stdio = DEFAULT_STDIO;
   if (!opts.env) opts.env = process.env;
 
-  logger.debug('Executing: ' + command);
+  logger.debug(
+    'Executing: ' + command + (args.length ? ` "${args.join('" "')}"` : '')
+  );
   const id = uuid();
-  const ps = spawn(command, opts);
+  const ps = spawn(command, args, opts);
   processes[id] = ps;
 
   return new Promise((resolve: (arg: void) => void, reject) => {

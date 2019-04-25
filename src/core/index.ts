@@ -65,11 +65,11 @@ const core = {
     const { kpo, pkg } = await core.load();
     return getTask(path, kpo || undefined, pkg || undefined);
   },
-  async exec(command: string): Promise<void> {
+  async exec(command: string, args: string[]): Promise<void> {
     const paths = await core.paths();
     const bin = await core.bin();
     const env = await core.get('env');
-    return exec(command, paths.directory, bin, env);
+    return exec(command, args, paths.directory, bin, env);
   },
   async setScope(names: string[]): Promise<void> {
     const paths = await core.paths();

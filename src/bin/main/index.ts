@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { loadPackage, flags, safePairs } from 'cli-belt';
+import { loadPackage, flags, safePairs, splitBy } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import chalk from 'chalk';
@@ -129,8 +129,7 @@ export default async function main(argv: string[]): Promise<void> {
     case ':raise':
       return console.log('TODO :raise');
     case ':run':
-      // TODO: add arguments after --
-      return run(cmd._);
+      return run(...splitBy(cmd._));
     default:
       throw Error('Unknown command ' + first);
   }

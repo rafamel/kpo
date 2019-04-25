@@ -11,7 +11,7 @@ export type TScript =
   | null
   | false
   | string
-  | (() => Promise<TScript> | TScript)
+  | ((args: string[]) => Promise<TScript> | TScript)
   | IScriptsArray;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

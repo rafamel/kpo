@@ -1,6 +1,9 @@
 import runTask from './task';
 
-export default async function run(tasks: string[]): Promise<void> {
+export default async function run(
+  tasks: string[],
+  args: string[]
+): Promise<void> {
   if (!tasks || !tasks.length) throw Error(`No tasks to run`);
   if (tasks.find((x) => x[0] === ':')) {
     throw Error(
@@ -14,6 +17,6 @@ export default async function run(tasks: string[]): Promise<void> {
   }
 
   for (let path of tasks) {
-    await runTask(path);
+    await runTask(path, args);
   }
 }
