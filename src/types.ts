@@ -40,3 +40,8 @@ export interface IBaseOptions extends IOptions {
 export type TCoreOptions = IBaseOptions & IScopeOptions;
 
 export type TChildrenDefinition = IOfType<string> | string[];
+
+export interface IExecOptions {
+  cwd?: string;
+  env?: IOfType<string>;
+}

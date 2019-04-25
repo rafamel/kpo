@@ -8,7 +8,7 @@ import { IPaths, ILoaded, ITask, ITasks } from './types';
 import getBin from './bin';
 import exec from './exec';
 import logger from '~/utils/logger';
-import { TCoreOptions, IOfType } from '~/types';
+import { TCoreOptions, IExecOptions } from '~/types';
 
 export interface ICoreState {
   scopes: string[];
@@ -68,7 +68,7 @@ const core = {
   async exec(
     command: string,
     args: string[],
-    opts: { cwd?: string; env?: IOfType<string> } = {}
+    opts: IExecOptions = {}
   ): Promise<void> {
     const cwd = opts.cwd
       ? opts.cwd
