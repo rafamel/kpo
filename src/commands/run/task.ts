@@ -1,42 +1,37 @@
-import { IScripts, IOfType, TScript } from '~/types';
+import { TScript } from '~/types';
 import logger from '~/utils/logger';
 import chalk from 'chalk';
-import retrieveTask from './retrieve';
 import core from '~/core';
 import { open } from '~/utils/errors';
 
-export default async function runTask(
-  name: string,
-  kpo: IScripts | null,
-  pkg: IOfType<any> | null
-): Promise<void> {
-  const task = retrieveTask(name, kpo, pkg);
-  logger.info('\nRunning task: ' + chalk.bold.green(name));
-  await trunk(task);
-  logger.debug('Done with task: ' + name);
+export default async function runTask(path: string): Promise<void> {
+  const task = await core.task(path);
+  logger.info('\nRunning task: ' + chalk.bold.green(task.path));
+  await trunk(task.script);
+  logger.debug('Done with task: ' + task.path);
 }
 
-export async function trunk(task: TScript): Promise<void> {
-  if (!task) {
+export async function trunk(script: TScript): Promise<void> {
+  if (!script) {
     logger.debug('Empty task');
     return;
   }
-  if (typeof task === 'string') {
-    logger.debug('Command exec: ' + task);
-    return core.exec(task);
+  if (typeof script === 'string') {
+    logger.debug('Command exec: ' + script);
+    return core.exec(script);
   }
-  if (typeof task === 'function') {
-    logger.debug('Run function' + (task.name ? ` ${task.name}` : ''));
+  if (typeof script === 'function') {
+    logger.debug('Run function' + (script.name ? ` ${script.name}` : ''));
     let res: TScript;
     try {
-      res = await task();
+      res = await script();
     } catch (err) {
       throw open.ensure(err);
     }
     return trunk(res);
   }
-  if (Array.isArray(task)) {
-    for (let sub of task) {
+  if (Array.isArray(script)) {
+    for (let sub of script) {
       await trunk(sub);
     }
     return;
