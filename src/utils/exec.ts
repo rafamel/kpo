@@ -2,10 +2,8 @@ import { spawn, SpawnOptions, ChildProcess } from 'child_process';
 import { DEFAULT_STDIO } from '~/constants';
 import logger from '~/utils/logger';
 import { rejects } from 'errorish';
-import getEnv from './get-env';
 import onExit from 'signal-exit';
 import uuid from 'uuid/v4';
-import state from '~/state';
 import { IOfType } from '~/types';
 
 export const processes: IOfType<ChildProcess> = {};
@@ -21,8 +19,7 @@ export default async function exec(
 
   opts.shell = true;
   if (!opts.stdio) opts.stdio = DEFAULT_STDIO;
-  if (!opts.env) opts.env = await getEnv();
-  if (!opts.cwd) opts.cwd = (await state.paths()).directory;
+  if (!opts.env) opts.env = process.env;
 
   logger.debug('Executing: ' + command);
   const id = uuid();
