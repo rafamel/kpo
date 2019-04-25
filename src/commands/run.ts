@@ -1,4 +1,6 @@
-import runTask from './task';
+import logger from '~/utils/logger';
+import chalk from 'chalk';
+import core from '~/core';
 
 export default async function run(
   tasks: string[],
@@ -17,6 +19,9 @@ export default async function run(
   }
 
   for (let path of tasks) {
-    await runTask(path, args);
+    const task = await core.task(path);
+    logger.info('\nRunning task: ' + chalk.bold.green(task.path));
+    await core.run(task.script, args);
+    logger.debug('Done with task: ' + task.path);
   }
 }
