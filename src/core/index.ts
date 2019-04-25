@@ -82,7 +82,7 @@ const core = {
       // keep track of scope branches
       state.scopes = state.scopes.concat(scope.name);
       // set current directory as the the one of the scope
-      options.setBase({ file: null, directory: scope.directory });
+      options.setCli({ file: null, directory: scope.directory });
       // reset options
       options.setScope();
     }

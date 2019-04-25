@@ -65,7 +65,7 @@ export default async function main(argv: string[]): Promise<void> {
     throw Error(`A command is required`);
   }
 
-  options.setBase({
+  options.setCli({
     file: cmd['--file'],
     directory: cmd['--dir'],
     silent: cmd['--silent'],
@@ -127,10 +127,8 @@ export default async function main(argv: string[]): Promise<void> {
       return console.log('TODO :list');
     case ':raise':
       return console.log('TODO :raise');
-    case ':link':
-      return console.log('TODO :link');
     case ':run':
-      // add arguments after --
+      // TODO: add arguments after --
       return run(cmd._);
     default:
       throw Error('Unknown command ' + first);
