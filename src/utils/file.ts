@@ -2,9 +2,22 @@ import path from 'path';
 import fs from 'fs-extra';
 import up from 'find-up';
 import { rejects } from 'errorish';
-import exists from './exists';
 
-export default async function find(
+export async function exists(
+  file: string,
+  options: { fail?: boolean } = {}
+): Promise<boolean> {
+  return fs
+    .pathExists(file)
+    .catch(rejects)
+    .then((exists) => {
+      return rejects(`${file} doesn't exist`, {
+        case: options.fail && !exists
+      }).then(() => exists);
+    });
+}
+
+export async function find(
   filename: string | string[],
   directory: string,
   strict?: boolean
