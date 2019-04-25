@@ -3,7 +3,8 @@ import options, { raw } from './options';
 import { getSelfPaths, getRootPaths } from './paths';
 import load from './load';
 import setScope from './scope';
-import { IPaths, ILoaded } from './types';
+import { getTask, getAllTasks } from './tasks';
+import { IPaths, ILoaded, ITask, ITasks } from './types';
 import getBin from './bin';
 import exec from './exec';
 import logger from '~/utils/logger';
@@ -26,7 +27,6 @@ const core = {
     // we're ensuring we've loaded user options when
     // any option is requested
     await core.load();
-
     return raw()[key];
   },
   paths: cache(async function(): Promise<IPaths> {
@@ -54,6 +54,14 @@ const core = {
       ? getBin(paths.directory, root.directory)
       : getBin(paths.directory);
   }),
+  tasks: cache(async function(): Promise<ITasks> {
+    const { kpo, pkg } = await core.load();
+    return getAllTasks(kpo || undefined, pkg || undefined);
+  }),
+  async task(path: string): Promise<ITask> {
+    const { kpo, pkg } = await core.load();
+    return getTask(path, kpo || undefined, pkg || undefined);
+  },
   async exec(command: string): Promise<void> {
     const paths = await core.paths();
     const bin = await core.bin();

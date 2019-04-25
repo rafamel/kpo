@@ -1,4 +1,4 @@
-import { IScripts, IOfType } from '~/types';
+import { IScripts, IOfType, TScript } from '~/types';
 
 export interface IPaths {
   kpo: string | null;
@@ -19,4 +19,16 @@ export interface IScope {
 export interface IChild {
   directory: string;
   matcher: (scope: string) => boolean;
+}
+
+export interface ITask {
+  path: string;
+  hidden: boolean;
+  script: TScript | TScript[];
+  description?: string;
+}
+
+export interface ITasks {
+  kpo?: ITask[];
+  pkg?: ITask[];
 }
