@@ -1,13 +1,12 @@
 import path from 'path';
 import getFiles from './files';
 import logger from '~/utils/logger';
-import getBin from './bin';
-import { IPathsOpts, IBasePaths } from '../../types';
+import { IPaths } from '../types';
 
 export default async function getPaths(
-  opts: IPathsOpts,
+  opts: { file?: string; directory?: string },
   strict: boolean
-): Promise<IBasePaths> {
+): Promise<IPaths> {
   const { kpo, pkg } = await getFiles(opts, strict);
 
   if (kpo) logger.debug('kpo configuration file found at: ' + kpo);
@@ -20,7 +19,6 @@ export default async function getPaths(
   return {
     kpo: kpo,
     pkg: pkg,
-    directory: dir,
-    bin: await getBin(dir)
+    directory: dir
   };
 }

@@ -1,5 +1,5 @@
 import runTask from './task';
-import state from '~/state';
+import core from '~/core';
 
 export default async function run(tasks: string[]): Promise<void> {
   if (!tasks || !tasks.length) throw Error(`No tasks to run`);
@@ -14,7 +14,7 @@ export default async function run(tasks: string[]): Promise<void> {
     );
   }
 
-  const { kpo, pkg } = await state.load();
+  const { kpo, pkg } = await core.load();
 
   for (let name of tasks) {
     await runTask(name, kpo, pkg);

@@ -1,20 +1,9 @@
 import { IScripts, IOfType } from '~/types';
 
-export interface IPathsOpts {
-  file?: string;
-  directory?: string;
-}
-
-export interface IBasePaths {
+export interface IPaths {
   kpo: string | null;
   pkg: string | null;
-  bin: string[];
   directory: string;
-}
-
-export interface IPaths extends IBasePaths {
-  root: IBasePaths | null;
-  children: IBasePaths[];
 }
 
 export interface ILoaded {

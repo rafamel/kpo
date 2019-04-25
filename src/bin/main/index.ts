@@ -3,7 +3,8 @@ import { loadPackage, flags, safePairs } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import chalk from 'chalk';
-import state from '~/state';
+import options from '~/options';
+import core from '~/core';
 import { TLogger, IOfType } from '~/types';
 import run from '~/commands/run';
 import logger from '~/utils/logger';
@@ -53,8 +54,8 @@ export default async function main(argv: string[]): Promise<void> {
     '--version': Boolean
   };
 
-  const { options, aliases } = flags(help);
-  safePairs(types, options, { fail: true, bidirectional: true });
+  const { options: base, aliases } = flags(help);
+  safePairs(types, base, { fail: true, bidirectional: true });
   Object.assign(types, aliases);
   const cmd = arg(types, { argv, permissive: false, stopAtPositional: true });
 
@@ -65,7 +66,7 @@ export default async function main(argv: string[]): Promise<void> {
     throw Error(`A command is required`);
   }
 
-  state.setBase({
+  options.setBase({
     file: cmd['--file'],
     directory: cmd['--dir'],
     silent: cmd['--silent'],
@@ -92,7 +93,7 @@ export default async function main(argv: string[]): Promise<void> {
     const command = first.split(':');
     const scope = command.shift() as string;
 
-    await state.setScope(scope === '@' ? 'root' : scope.slice(1));
+    await core.setScope(scope === '@' ? 'root' : scope.slice(1));
 
     first = command.length
       ? `:${command.join(':')}`
@@ -107,7 +108,7 @@ export default async function main(argv: string[]): Promise<void> {
   }
 
   // Log full command to be run w/ resolved scopes
-  const scopes = state.get('scopes');
+  const scopes = core.state.scopes;
   logger.info(
     `Running: ${chalk.bold('kpo')}` +
       (scopes.length ? chalk.bold.yellow(' @' + scopes.join(' @')) : '') +

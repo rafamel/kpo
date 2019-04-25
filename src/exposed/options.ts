@@ -1,6 +1,6 @@
-import state from '~/state';
+import _options from '~/options';
 import { IScopeOptions } from '~/types';
 
 export default function options(opts: IScopeOptions): void {
-  return state.setOptions(opts);
+  return _options.setScope(opts);
 }

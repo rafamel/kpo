@@ -2,7 +2,7 @@ import { IScripts, IOfType, TScript } from '~/types';
 import logger from '~/utils/logger';
 import chalk from 'chalk';
 import retrieveTask from './retrieve';
-import exec from '~/utils/exec';
+import core from '~/core';
 import { open } from '~/utils/errors';
 
 export default async function runTask(
@@ -23,7 +23,7 @@ export async function trunk(task: TScript): Promise<void> {
   }
   if (typeof task === 'string') {
     logger.debug('Command exec: ' + task);
-    return exec(task);
+    return core.exec(task);
   }
   if (typeof task === 'function') {
     logger.debug('Run function' + (task.name ? ` ${task.name}` : ''));

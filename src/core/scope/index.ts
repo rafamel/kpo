@@ -1,17 +1,17 @@
-import state from '../index';
 import logger from '~/utils/logger';
 import getChildren from './children';
 import { IScopeDefinition } from '../types';
+import { TChildrenDefinition } from '~/types';
 
 export default async function scope(
-  scope: string
+  scope: string,
+  directories: { self: string; root?: string },
+  definitions?: TChildrenDefinition
 ): Promise<IScopeDefinition | null> {
-  const paths = await state.paths();
-
   // root scope
   if (scope === 'root') {
-    if (paths.root) {
-      return { names: ['root'], directory: paths.root.directory };
+    if (directories.root) {
+      return { names: ['root'], directory: directories.root };
     } else {
       logger.debug('root scope was not found and was assigned to self');
       return null;
@@ -19,7 +19,7 @@ export default async function scope(
   }
 
   // child scopes
-  const children = await getChildren(paths.directory, state.get('children'));
+  const children = await getChildren(directories.self, definitions);
   const matches = children
     .filter((child) => child.matcher(scope))
     .map((child) => child.directory);
