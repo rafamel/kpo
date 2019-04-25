@@ -6,6 +6,7 @@ import chalk from 'chalk';
 import core, { options } from '~/core';
 import { TLogger, IOfType } from '~/types';
 import run from '~/commands/run';
+import list from './list';
 import logger from '~/utils/logger';
 
 export default async function main(argv: string[]): Promise<void> {
@@ -124,7 +125,7 @@ export default async function main(argv: string[]): Promise<void> {
     case ':parallel':
       return console.log('TODO :parallel');
     case ':list':
-      return console.log('TODO :list');
+      return list(cmd._);
     case ':raise':
       return console.log('TODO :raise');
     case ':run':
