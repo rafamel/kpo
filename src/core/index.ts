@@ -18,7 +18,10 @@ export const state: ICoreState = {
   scopes: []
 };
 
-const cache = _cache.bind(null, () => options.id);
+function cache<T extends Function>(fn: T): T {
+  return _cache(() => options.id, fn);
+}
+
 const core = {
   get state(): ICoreState {
     return state;
