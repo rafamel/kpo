@@ -2,7 +2,7 @@ import mergewith from 'lodash.mergewith';
 import { IBaseOptions, IScopeOptions, TCoreOptions } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
-import uuid from 'uuid/v4';
+import hash from 'object-hash';
 
 export const state = {
   base: {
@@ -15,7 +15,7 @@ export const state = {
   scope: {} as IScopeOptions
 };
 
-let id = uuid();
+let id = 'INIT';
 let options: TCoreOptions = {};
 merge();
 
@@ -37,9 +37,6 @@ export default {
 };
 
 function merge(): void {
-  // reset id
-  id = uuid();
-
   // merge base and scope
   options = Object.assign({}, state.base, state.scope, {
     env: Object.assign({}, state.base.env, state.scope.env)
@@ -51,4 +48,7 @@ function merge(): void {
 
   // Set logging level
   if (options.log) setLevel(options.log);
+
+  // Set id to object hash
+  id = hash(options);
 }
