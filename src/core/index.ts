@@ -7,8 +7,10 @@ import { getTask, getAllTasks } from './tasks';
 import { IPaths, ILoaded, ITask, ITasks } from './types';
 import getBin from './bin';
 import exec from './exec';
+import run from './run';
 import logger from '~/utils/logger';
-import { TCoreOptions, IExecOptions } from '~/types';
+import { TCoreOptions, IExecOptions, TScript } from '~/types';
+import { rejects } from 'errorish';
 
 export interface ICoreState {
   scopes: string[];
@@ -64,6 +66,17 @@ const core = {
   async task(path: string): Promise<ITask> {
     const { kpo, pkg } = await core.load();
     return getTask(path, kpo || undefined, pkg || undefined);
+  },
+  async run(
+    script: TScript,
+    args: string[],
+    opts?: IExecOptions
+  ): Promise<void> {
+    return run(script, async (item) => {
+      return typeof item === 'string'
+        ? core.exec(item, args, opts)
+        : item(args);
+    }).catch(rejects);
   },
   async exec(
     command: string,
