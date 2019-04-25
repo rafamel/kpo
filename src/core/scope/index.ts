@@ -1,38 +1,52 @@
 import logger from '~/utils/logger';
 import getChildren from './children';
-import { IScopeDefinition } from '../types';
+import { IScope } from '../types';
 import { TChildrenDefinition } from '~/types';
 
-export default async function scope(
-  scope: string,
+export default async function setScope(
+  scopes: string[],
   directories: { self: string; root?: string },
   definitions?: TChildrenDefinition
-): Promise<IScopeDefinition | null> {
+): Promise<{ next: string[]; scope?: IScope }> {
+  if (!scopes.length) return { next: [] };
+
+  const name = scopes[0];
+  const next = scopes.slice(1);
+
   // root scope
-  if (scope === 'root') {
+  if (name === 'root') {
     if (directories.root) {
-      return { names: ['root'], directory: directories.root };
+      return { next, scope: { name: 'root', directory: directories.root } };
     } else {
       logger.debug('root scope was not found and was assigned to self');
-      return null;
+      return { next };
     }
   }
 
   // child scopes
   const children = await getChildren(directories.self, definitions);
   const matches = children
-    .filter((child) => child.matcher(scope))
+    .filter((child) => child.matcher(name))
     .map((child) => child.directory);
 
   if (matches.length) {
-    logger.debug(`scopes found for ${scope}:\n${matches.join('\n')}`);
+    logger.debug(`scopes found for ${name}:\n${matches.join('\n')}`);
 
     if (matches.length > 1) {
-      throw Error(`Several scopes matched name "${scope}"`);
+      throw Error(`Several scopes matched name "${name}"`);
     }
 
-    return { names: [scope], directory: matches[0] };
+    return { next, scope: { name, directory: matches[0] } };
   }
 
-  throw Error(`Scope ${scope} was not found`);
+  // it was not found as child, try scaling up to root
+  if (directories.root) {
+    logger.debug(`scope ${name} not found, scaling to root scope`);
+    return {
+      next: next.concat(name),
+      scope: { name: 'root', directory: directories.root }
+    };
+  }
+
+  throw Error(`Scope "${name}" was not found`);
 }

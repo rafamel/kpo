@@ -11,8 +11,8 @@ export interface ILoaded {
   pkg: IOfType<any> | null;
 }
 
-export interface IScopeDefinition {
-  names: string[];
+export interface IScope {
+  name: string;
   directory: string;
 }
 
