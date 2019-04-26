@@ -5,8 +5,10 @@ import core from '~/core';
 import { error } from 'cli-belt';
 import logger from '~/utils/logger';
 import { OpenError } from '~/utils/errors';
+import { ensure } from 'errorish';
 
 main(process.argv.slice(2)).catch(async (err) => {
+  err = ensure(err);
   const isOpen = err instanceof OpenError;
 
   return error(err, {
