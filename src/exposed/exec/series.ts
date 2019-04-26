@@ -1,5 +1,5 @@
 import core from '~/core';
-import { IExecOptions } from '~/types';
+import { IExecOptions, TScript } from '~/types';
 import logger from '~/utils/logger';
 
 export interface ISeriesOptions extends IExecOptions {
@@ -13,11 +13,10 @@ export interface ISeriesOptions extends IExecOptions {
   force?: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function series(
   commands: string | string[],
   options: ISeriesOptions = {}
-) {
+): TScript {
   return async function series(args?: string[]): Promise<void> {
     if (!Array.isArray(commands)) commands = [commands];
 

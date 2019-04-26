@@ -1,5 +1,5 @@
 import core from '~/core';
-import { IExecOptions } from '~/types';
+import { IExecOptions, TScript } from '~/types';
 import logger from '~/utils/logger';
 
 export interface IParallelOptions extends IExecOptions {
@@ -15,11 +15,10 @@ export interface IParallelOptions extends IExecOptions {
   silent?: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function parallel(
   commands: string | string[],
   options: IParallelOptions = {}
-) {
+): TScript {
   return async function parallel(args?: string[]): Promise<void> {
     const argv: string[] = Array.isArray(commands)
       ? commands.concat()

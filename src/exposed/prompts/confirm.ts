@@ -10,8 +10,7 @@ export interface IConfirmOptions {
   timeout?: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export default function confirm(options: IConfirmOptions = {}) {
+export default function confirm(options: IConfirmOptions = {}): TScript {
   return async function confirm(): Promise<TScript> {
     const promise = status(
       prompts({
