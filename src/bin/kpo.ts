@@ -9,8 +9,8 @@ import { OpenError } from '~/utils/errors';
 main(process.argv.slice(2)).catch(async (err) => {
   const isOpen = err instanceof OpenError;
 
-  return error(isOpen ? err.root : err, {
-    exit: (await core.get('silent')) ? 0 : 1,
+  return error(err, {
+    exit: (await core.get('silent').catch(() => false)) ? 0 : 1,
     debug: true,
     logger: {
       error: logger.error,
