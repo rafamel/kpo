@@ -15,6 +15,7 @@ export interface IParallelOptions extends IExecOptions {
   silent?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function parallel(
   commands: string | string[],
   options: IParallelOptions = {}
