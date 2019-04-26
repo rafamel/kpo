@@ -74,13 +74,14 @@ const core = {
   ): Promise<void> {
     return run(script, async (item) => {
       return typeof item === 'string'
-        ? core.exec(item, args, opts)
+        ? core.exec(item, args, false, opts)
         : item(args);
     }).catch(rejects);
   },
   async exec(
     command: string,
     args: string[],
+    fork: boolean,
     opts: IExecOptions = {}
   ): Promise<void> {
     const cwd = opts.cwd
@@ -90,7 +91,7 @@ const core = {
     const env = opts.env
       ? Object.assign({}, await core.get('env'), opts.env)
       : await core.get('env');
-    return exec(command, args, cwd, bin, env);
+    return exec(command, args, fork, cwd, bin, env);
   },
   async setScope(names: string[]): Promise<void> {
     const paths = await core.paths();

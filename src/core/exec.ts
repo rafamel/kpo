@@ -5,6 +5,7 @@ import _exec from '~/utils/exec';
 export default async function exec(
   command: string,
   args: string[],
+  fork: boolean,
   cwd: string,
   bin: string[],
   env?: IOfType<string> | undefined
@@ -16,5 +17,5 @@ export default async function exec(
   const alter = manage(opts.env);
   alter.unshift(bin);
 
-  return _exec(command, args, opts);
+  return _exec(command, args, fork, opts);
 }

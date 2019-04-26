@@ -44,4 +44,5 @@ export type TChildrenDefinition = IOfType<string> | string[];
 export interface IExecOptions {
   cwd?: string;
   env?: IOfType<string>;
+  stdio?: 'pipe' | 'ignore' | 'inherit';
 }

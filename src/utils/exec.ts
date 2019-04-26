@@ -1,10 +1,16 @@
-import { spawn, SpawnOptions, ChildProcess } from 'child_process';
+import {
+  spawn,
+  fork,
+  SpawnOptions,
+  ChildProcess,
+  ForkOptions
+} from 'child_process';
 import { DEFAULT_STDIO } from '~/constants';
 import logger from '~/utils/logger';
 import { rejects } from 'errorish';
 import onExit from 'signal-exit';
 import uuid from 'uuid/v4';
-import { IOfType } from '~/types';
+import { IOfType, IExecOptions } from '~/types';
 
 export const processes: IOfType<ChildProcess> = {};
 
@@ -12,21 +18,37 @@ export const processes: IOfType<ChildProcess> = {};
 onExit(() => Object.values(processes).forEach((p) => p.kill()));
 
 export default async function exec(
+  cmd: string,
+  args: string[],
+  fork: boolean,
+  options: IExecOptions = {}
+): Promise<void> {
+  const opts: SpawnOptions | ForkOptions = {
+    cwd: options.cwd,
+    env: options.env,
+    stdio: options.stdio
+  };
+
+  if (!fork) (opts as SpawnOptions).shell = true;
+  return trunk(cmd, args, fork, opts);
+}
+
+export async function trunk(
   command: string,
   args: string[],
-  options?: SpawnOptions
+  isFork: boolean,
+  options: SpawnOptions | ForkOptions
 ): Promise<void> {
-  const opts: SpawnOptions = Object.assign({}, options);
-
-  opts.shell = true;
-  if (!opts.stdio) opts.stdio = DEFAULT_STDIO;
-  if (!opts.env) opts.env = process.env;
+  if (!options.stdio) options.stdio = DEFAULT_STDIO;
+  if (!options.env) options.env = process.env;
 
   logger.debug(
     'Executing: ' + command + (args.length ? ` "${args.join('" "')}"` : '')
   );
   const id = uuid();
-  const ps = spawn(command, args, opts);
+  const ps = isFork
+    ? fork(command, args, options)
+    : spawn(command, args, options);
   processes[id] = ps;
 
   return new Promise((resolve: (arg: void) => void, reject) => {
