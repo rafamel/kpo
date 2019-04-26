@@ -1,17 +1,17 @@
 import { TScript } from '~/types';
 import core from '~/core';
+import asTag from '~/utils/as-tag';
 
 export default silent;
 
 function silent(command: string): TScript;
-function silent(strs: TemplateStringsArray, ...args: any[]): TScript;
-function silent(strs: any, ...args: any[]): TScript {
+function silent(
+  literals: TemplateStringsArray,
+  ...placeholders: any[]
+): TScript;
+function silent(...args: any[]): TScript {
   return async function silent(argv): Promise<void> {
-    if (!Array.isArray(strs)) strs = [strs || ''];
-    let command = '';
-    for (let i = 0; i < strs.length; i++) {
-      command += strs[i] + (args[i] ? String(args[i]) : '');
-    }
+    const command = asTag(args.shift(), ...args);
     return core.exec(command, argv, false);
   };
 }
