@@ -17,7 +17,11 @@ export default function confirm(options: IConfirmOptions = {}) {
       prompts({
         type: 'confirm',
         name: 'value',
-        message: options.message || 'Continue?',
+        message:
+          (options.message || 'Continue?') +
+          (options.timeout
+            ? ` [${Math.round(options.timeout / 100) / 10}s]`
+            : ''),
         initial: options.initial || false
       })
     );
