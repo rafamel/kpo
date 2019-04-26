@@ -1,4 +1,4 @@
 export * from './exec';
 export * from './prompts';
+export * from './tags';
 export { default as options } from './options';
-export { default as line } from './line';
