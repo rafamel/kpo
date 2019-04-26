@@ -5,7 +5,9 @@ import { open } from '~/utils/errors';
 export default async function run(
   script: TScript,
   runner: (
-    item: string | ((args: string[]) => Promise<TScript> | TScript)
+    item:
+      | string
+      | ((args: string[]) => Promise<TScript | void> | TScript | void)
   ) => Promise<any>
 ): Promise<void> {
   if (!script) {
