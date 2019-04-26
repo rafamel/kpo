@@ -1,3 +1,4 @@
+import path from 'path';
 import _cache from '~/utils/cache';
 import options, { raw } from './options';
 import { getSelfPaths, getRootPaths } from './paths';
@@ -84,10 +85,13 @@ const core = {
     fork: boolean,
     opts: IExecOptions = {}
   ): Promise<void> {
+    const paths = await core.paths();
     const cwd = opts.cwd
-      ? opts.cwd
-      : await core.paths().then((paths) => paths.directory);
-    const bin = opts.cwd ? await getBin(opts.cwd) : await core.bin();
+      ? path.isAbsolute(opts.cwd)
+        ? opts.cwd
+        : path.join(paths.directory, opts.cwd)
+      : paths.directory;
+    const bin = opts.cwd ? await getBin(cwd) : await core.bin();
     const env = opts.env
       ? Object.assign({}, await core.get('env'), opts.env)
       : await core.get('env');
