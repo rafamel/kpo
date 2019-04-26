@@ -1,6 +1,7 @@
 import core from '~/core';
-import { IExecOptions, TScript } from '~/types';
+import { IExecOptions, TScript, IOfType } from '~/types';
 import logger from '~/utils/logger';
+import { wrap } from '~/utils/errors';
 
 export interface IParallelOptions extends IExecOptions {
   names?: string[];
@@ -15,10 +16,19 @@ export interface IParallelOptions extends IExecOptions {
   silent?: boolean;
 }
 
-export default function parallel(
-  commands: string | string[],
-  options: IParallelOptions = {}
-): TScript {
+/**
+ * Signature for `parallel`. Note that you can call `parallel.env` to pass only environment variables as a second argument. See `parallel`.
+ */
+export interface IParallel {
+  (commands: string | string[], options?: IParallelOptions): TScript;
+  env(commands: string | string[], env: IOfType<string>): TScript;
+}
+
+/**
+ * Runs `commands` in parallel, with optional environment variables, names and colors assigned to processes, and more. See `IParallel` and `IParallelOptions`.
+ * @returns A `TScript`, as a function, that won't be executed until called by `kpo` -hence, calling `parallel` won't have any effect until the returned function is called.
+ */
+const parallel: IParallel = function parallel(commands, options = {}) {
   return async function parallel(args?: string[]): Promise<void> {
     const argv: string[] = Array.isArray(commands)
       ? commands.concat()
@@ -41,9 +51,21 @@ export default function parallel(
         true,
         options
       );
-    } catch (err) {
+    } catch (e) {
+      const err = wrap.ensure(e, {
+        message: 'Parallel commands execution failed'
+      });
       if (options.silent) logger.error(err);
       else throw err;
     }
   };
-}
+};
+
+parallel.env = function env(
+  commands: string | string[],
+  env: IOfType<string>
+): TScript {
+  return parallel(commands, { env });
+};
+
+export default parallel;
