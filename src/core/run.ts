@@ -12,6 +12,8 @@ export default async function run(
 ): Promise<void> {
   if (!script) {
     logger.debug('Empty task');
+  } else if (script instanceof Error) {
+    throw script;
   } else if (typeof script === 'string') {
     logger.debug('Command exec: ' + script);
     await runner(script);

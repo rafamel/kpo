@@ -11,6 +11,7 @@ export type TScript =
   | null
   | false
   | string
+  | Error
   | ((args: string[]) => Promise<TScript | void> | TScript | void)
   | IScriptsArray;
 
