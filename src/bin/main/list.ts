@@ -13,11 +13,13 @@ export default async function list(argv: string[]): Promise<void> {
     
     Options:
       --all            List all, including hidden tasks
+      --scopes         List scopes
       -h, --help       Show help
   `;
 
   const types = {
     '--all': Boolean,
+    '--scopes': Boolean,
     '--help': Boolean
   };
 
@@ -30,6 +32,7 @@ export default async function list(argv: string[]): Promise<void> {
   if (cmd._.length) throw Error('Unknown command: ' + cmd._[0]);
 
   return command({
-    all: cmd['--all']
+    all: cmd['--all'],
+    scopes: cmd['--scopes']
   });
 }
