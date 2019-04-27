@@ -3,9 +3,9 @@ import _cache from '~/utils/cache';
 import options, { raw } from './options';
 import { getSelfPaths, getRootPaths } from './paths';
 import load from './load';
-import setScope from './scope';
+import { setScope, getChildren } from './scope';
 import { getTask, getAllTasks } from './tasks';
-import { IPaths, ILoaded, ITask, ITasks } from './types';
+import { IPaths, ILoaded, ITask, ITasks, IChild } from './types';
 import getBin from './bin';
 import exec from './exec';
 import run from './run';
@@ -49,6 +49,12 @@ const core = {
       self: paths.directory,
       root: await core.get('root')
     });
+  }),
+  children: cache(async function(): Promise<IChild[]> {
+    const paths = await core.paths();
+    const children = await core.get('children');
+
+    return getChildren(paths.directory, children);
   }),
   load: cache(async function(): Promise<ILoaded> {
     return load(await core.paths());
@@ -104,7 +110,7 @@ const core = {
     const { next, scope } = await setScope(
       names,
       { self: paths.directory, root: root ? root.directory : undefined },
-      await core.get('children')
+      await core.children()
     );
     if (scope) {
       logger.debug(`${scope.name} scope set`);
