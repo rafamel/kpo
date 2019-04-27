@@ -60,8 +60,12 @@ export interface IScripts {
 }
 
 export interface IOptions {
-  // TODO: env should only be part of IScopeOptions for execution
-  // after env are set @ process.env for cli
+  /**
+   * Project directory.
+   * Used for relative paths resolution and as default `cwd` on command execution.
+   * By default, it will be the directory in which a sibling or parent `package.json` is found for the *kpo* scripts file, or the directory of the *kpo* file itself otherwise.
+   */
+  directory?: string | null;
   /**
    * Environment variables.
    */
@@ -95,13 +99,6 @@ export interface IScopeOptions extends IOptions {
  */
 export interface IBaseOptions extends IOptions {
   file?: string | null;
-  // TODO directory should also be possible to set @ IScopeOptions
-  /**
-   * Project directory.
-   * Used for relative paths resolution and as default `cwd` on command execution.
-   * By default, it will be the directory in which a sibling or parent `package.json` is found for the *kpo* scripts file, or the directory of the *kpo* file itself otherwise.
-   */
-  directory?: string | null;
 }
 
 export type TCoreOptions = IBaseOptions & IScopeOptions;
