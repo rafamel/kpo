@@ -1,4 +1,4 @@
-import { TScript, IOfType } from '~/types';
+import { TScript, IOfType, TScriptAsyncFn } from '~/types';
 import prompts from 'prompts';
 import { wrap } from '~/utils/errors';
 
@@ -18,13 +18,13 @@ export interface ISelectOptions {
 
 export default select;
 
-function select(message: string, options?: ISelectOptions): TScript;
-function select(options?: ISelectOptions): TScript;
+function select(message: string, options?: ISelectOptions): TScriptAsyncFn;
+function select(options?: ISelectOptions): TScriptAsyncFn;
 /**
  * Shows a selection prompt on `stdout` with a choice of a number of values, set via `options`, each triggering a `TScript` execution.
- * @returns A `TScript`, as a function, that won't be executed until called by `kpo` -hence, calling `select` won't have any effect until the returned function is called.
+ * @returns An asynchronous function, as a `TScriptAsyncFn`, that won't be executed until called by `kpo` -hence, calling `select` won't have any effect until the returned function is called.
  */
-function select(...args: any[]): TScript {
+function select(...args: any[]): TScriptAsyncFn {
   return (): Promise<TScript> => {
     return wrap.throws(async () => {
       const message: string =
@@ -48,7 +48,7 @@ function select(...args: any[]): TScript {
           : 0
       });
 
-      return options.values[response.value] || undefined;
+      return options.values[response.value];
     });
   };
 }

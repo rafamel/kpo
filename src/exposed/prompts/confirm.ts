@@ -1,4 +1,4 @@
-import { TScript } from '~/types';
+import { TScript, TScriptAsyncFn } from '~/types';
 import prompts from 'prompts';
 import { status } from 'promist';
 import { wrap } from '~/utils/errors';
@@ -27,13 +27,13 @@ export interface IConfirmOptions {
 
 export default confirm;
 
-function confirm(message: string, options?: IConfirmOptions): TScript;
-function confirm(options?: IConfirmOptions): TScript;
+function confirm(message: string, options?: IConfirmOptions): TScriptAsyncFn;
+function confirm(options?: IConfirmOptions): TScriptAsyncFn;
 /**
  * Shows a confirmation prompt on `stdout` with a binary choice (yes or no); actions for each user choice can be passed via `options`.
- * @returns A `TScript`, as a function, that won't be executed until called by `kpo` -hence, calling `confirm` won't have any effect until the returned function is called.
+ * @returns An asynchronous function, as a `TScriptAsyncFn`, that won't be executed until called by `kpo` -hence, calling `confirm` won't have any effect until the returned function is called.
  */
-function confirm(...args: any[]): TScript {
+function confirm(...args: any[]): TScriptAsyncFn {
   return (): Promise<TScript> => {
     return wrap.throws(async () => {
       const message: string =
@@ -61,7 +61,7 @@ function confirm(...args: any[]): TScript {
       }
 
       const response = await promise;
-      return (response.value ? options.yes : options.no) || undefined;
+      return response.value ? options.yes : options.no;
     });
   };
 }

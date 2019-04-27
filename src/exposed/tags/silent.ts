@@ -1,20 +1,20 @@
-import { TScript } from '~/types';
+import { TScriptAsyncFn } from '~/types';
 import core from '~/core';
 import asTag from '~/utils/as-tag';
 import logger from '~/utils/logger';
 
 export default silent;
 
-function silent(command: string): TScript;
+function silent(command: string): TScriptAsyncFn;
 function silent(
   literals: TemplateStringsArray,
   ...placeholders: any[]
-): TScript;
+): TScriptAsyncFn;
 /**
  * String tag; executes a command that will always exit with code 0.
- * @returns A `TScript`, as a function, that won't be executed until called by `kpo` -hence, calling `silent` won't have any effect until the returned function is called.
+ * @returns An asynchronous function, as a `TScriptAsyncFn`, that won't be executed until called by `kpo` -hence, calling `silent` won't have any effect until the returned function is called.
  */
-function silent(...args: any[]): TScript {
+function silent(...args: any[]): TScriptAsyncFn {
   return async function silent(argv?: string[]): Promise<void> {
     try {
       const command = asTag(args.shift(), ...args);

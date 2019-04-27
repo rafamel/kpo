@@ -1,5 +1,5 @@
 import core from '~/core';
-import { IExecOptions, TScript, IOfType } from '~/types';
+import { IExecOptions, IOfType, TScriptAsyncFn } from '~/types';
 import logger from '~/utils/logger';
 import { wrap } from '~/utils/errors';
 
@@ -18,13 +18,13 @@ export interface ISeriesOptions extends IExecOptions {
  * Signature for `series`. Note that you can call `series.env` to pass only environment variables as a second argument. See `series`.
  */
 export interface ISeries {
-  (commands: string | string[], options?: ISeriesOptions): TScript;
-  env(commands: string | string[], env: IOfType<string>): TScript;
+  (commands: string | string[], options?: ISeriesOptions): TScriptAsyncFn;
+  env(commands: string | string[], env: IOfType<string>): TScriptAsyncFn;
 }
 
 /**
  * Runs `commands` in series, with optional environment variables, names and colors assigned to processes, and more. See `ISeries` and `ISeriesOptions`.
- * @returns A `TScript`, as a function, that won't be executed until called by `kpo` -hence, calling `series` won't have any effect until the returned function is called.
+ * @returns An asynchronous function, as a `TScriptAsyncFn`, that won't be executed until called by `kpo` -hence, calling `series` won't have any effect until the returned function is called.
  */
 const series: ISeries = function series(commands, options = {}) {
   return (args?: string[]): Promise<void> => {
@@ -47,10 +47,7 @@ const series: ISeries = function series(commands, options = {}) {
   };
 };
 
-series.env = function env(
-  commands: string | string[],
-  env: IOfType<string>
-): TScript {
+series.env = function env(commands, env) {
   return series(commands, { env });
 };
 
