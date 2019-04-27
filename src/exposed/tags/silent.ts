@@ -15,10 +15,10 @@ function silent(
  * @returns A `TScript`, as a function, that won't be executed until called by `kpo` -hence, calling `silent` won't have any effect until the returned function is called.
  */
 function silent(...args: any[]): TScript {
-  return async function silent(argv): Promise<void> {
+  return async function silent(argv?: string[]): Promise<void> {
     try {
       const command = asTag(args.shift(), ...args);
-      await core.exec(command, argv, false);
+      await core.exec(command, argv || [], false);
     } catch (err) {
       logger.error(err);
     }

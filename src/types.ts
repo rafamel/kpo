@@ -43,8 +43,16 @@ export type TScript =
   | false
   | string
   | Error
-  | ((args: string[]) => Promise<TScript | void> | TScript | void)
+  | TScriptFn
   | IScriptsArray;
+
+// TODO use for all
+/**
+ * Represents a `TScript` as a function
+ */
+export type TScriptFn = TScriptSyncFn | TScriptAsyncFn;
+export type TScriptSyncFn = (args?: string[]) => TScript | void;
+export type TScriptAsyncFn = (args?: string[]) => Promise<TScript | void>;
 
 /**
  * Represents a `TScript` array.
