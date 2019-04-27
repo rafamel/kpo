@@ -81,7 +81,7 @@ export interface IOptions {
 }
 
 /**
- * Options to be passed to `options`, if your *kpo* file is a `javascript` file, or to define in the `options` key of your scripts file otherwise. They can also live at `kpo.options` in your `package.json`.
+ * Options to be passed to `options`, if your *kpo* file is a `javascript` file, or to define in the `options` key of your scripts file otherwise.
  */
 export interface IScopeOptions extends IOptions {
   /**
@@ -98,9 +98,15 @@ export interface IScopeOptions extends IOptions {
  * Options taken by the CLI.
  */
 export interface IBaseOptions extends IOptions {
+  /**
+   * The location of the *kpo* scripts file for the project.
+   */
   file?: string | null;
 }
 
+/**
+ * Options that can live in the `kpo` key of a `package.json`.
+ */
 export type TCoreOptions = IBaseOptions & IScopeOptions;
 
 /**

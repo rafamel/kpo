@@ -29,11 +29,11 @@ export default {
     merge();
   },
   setScope(opts: IScopeOptions = {}): void {
-    // TODO: overwriting state.scope shouldn't be needed
-    // if we add a reset method to be called on scope change,
-    // that way, several options() calls within a require can accumulate;
-    // also, it would allow options to be optionally set on package.json
-    state.scope = opts;
+    Object.assign(state.scope, opts);
+    merge();
+  },
+  resetScope(): void {
+    state.scope = {};
     merge();
   }
 };

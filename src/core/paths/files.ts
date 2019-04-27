@@ -99,11 +99,11 @@ export async function getFromPackage(
   const dir = path.parse(pkg).dir;
   const parsed = await fs.readJSON(pkg).catch(rejects);
 
-  if (!parsed.kpo || !parsed.kpo.path) return null;
+  if (!parsed.kpo || !parsed.kpo.file) return null;
 
-  const file = path.isAbsolute(parsed.kpo.path)
-    ? parsed.kpo.path
-    : path.join(dir, parsed.kpo.path);
+  const file = path.isAbsolute(parsed.kpo.file)
+    ? parsed.kpo.file
+    : path.join(dir, parsed.kpo.file);
 
   // Ensure file exists
   await exists(file, { fail: true });

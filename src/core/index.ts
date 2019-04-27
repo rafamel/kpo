@@ -119,7 +119,7 @@ const core = {
       // set current directory as the the one of the scope
       options.setCli({ file: null, directory: scope.directory });
       // reset options
-      options.setScope();
+      options.resetScope();
     }
     // Continue recursively
     if (next.length) return core.setScope(next);

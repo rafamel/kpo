@@ -4,17 +4,24 @@ import yaml from 'js-yaml';
 import { rejects } from 'errorish';
 import { open } from '~/utils/errors';
 import { ILoaded, IPaths } from './types';
-import { IOfType } from '~/types';
+import { IOfType, TCoreOptions } from '~/types';
 import options from './options';
 
 export default async function load(paths: IPaths): Promise<ILoaded> {
-  return {
-    kpo: paths.kpo ? await loadFile(paths.kpo) : null,
-    pkg: paths.pkg ? await fs.readJSON(paths.pkg).catch(rejects) : null
-  };
+  // pkg must be loaded first to set options first, if present at key `kpo`
+  const pkg = paths.pkg
+    ? await fs
+        .readJSON(paths.pkg)
+        .then(processPkg)
+        .catch(rejects)
+    : null;
+
+  const kpo = paths.kpo ? await loadFile(paths.kpo) : null;
+
+  return { kpo, pkg };
 }
 
-export async function loadFile(file: string): Promise<IOfType<any>> {
+export async function loadFile(file: string): Promise<IOfType<any> | null> {
   const { ext } = path.parse(file);
 
   switch (ext) {
@@ -23,8 +30,8 @@ export async function loadFile(file: string): Promise<IOfType<any>> {
     case '.json':
       return fs
         .readJSON(file)
-        .catch(rejects)
-        .then(getScripts);
+        .then(processStatic)
+        .catch(rejects);
     case '.yml':
     case '.yaml':
       const kpo = yaml.safeLoad(
@@ -33,15 +40,26 @@ export async function loadFile(file: string): Promise<IOfType<any>> {
           .then(String)
           .catch(rejects)
       );
-      return getScripts(kpo);
+      return processStatic(kpo);
     default:
       throw Error(`Extension not valid for ${file}`);
   }
 }
 
-export function getScripts(kpo: IOfType<any>): IOfType<any> {
-  if (!kpo.scripts) throw Error(`Scripts file didn't contain a scripts key`);
-
+export function processStatic(kpo: IOfType<any>): IOfType<any> | null {
   if (kpo.options) options.setScope(kpo.options);
-  return kpo.scripts;
+
+  return kpo.scripts || null;
+}
+
+export function processPkg(pkg: IOfType<any>): IOfType<any> {
+  if (!pkg || !pkg.kpo) return pkg;
+
+  const opts: TCoreOptions = Object.assign({}, pkg.kpo);
+  // file was already read when getting paths;
+  // it's also not a IScopeOptions field
+  delete opts.file;
+
+  options.setScope(opts);
+  return pkg;
 }
