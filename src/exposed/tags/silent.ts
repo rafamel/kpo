@@ -16,8 +16,8 @@ function silent(
  */
 function silent(...args: any[]): TScript {
   return async function silent(argv): Promise<void> {
-    const command = asTag(args.shift(), ...args);
     try {
+      const command = asTag(args.shift(), ...args);
       await core.exec(command, argv, false);
     } catch (err) {
       logger.error(err);

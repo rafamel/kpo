@@ -1,6 +1,7 @@
 import { TScript } from '~/types';
 import prompts from 'prompts';
 import { status } from 'promist';
+import { wrap } from '~/utils/errors';
 
 /**
  * Options taken by `confirm`.
@@ -33,32 +34,34 @@ function confirm(options?: IConfirmOptions): TScript;
  * @returns A `TScript`, as a function, that won't be executed until called by `kpo` -hence, calling `confirm` won't have any effect until the returned function is called.
  */
 function confirm(...args: any[]): TScript {
-  return async function confirm(): Promise<TScript> {
-    const message: string =
-      args[0] && typeof args[0] === 'string' ? args[0] : 'Continue?';
-    const options: IConfirmOptions =
-      args[1] || (args[0] && typeof args[0] !== 'string' ? args[0] : {});
+  return (): Promise<TScript> => {
+    return wrap.throws(async () => {
+      const message: string =
+        args[0] && typeof args[0] === 'string' ? args[0] : 'Continue?';
+      const options: IConfirmOptions =
+        args[1] || (args[0] && typeof args[0] !== 'string' ? args[0] : {});
 
-    const promise = status(
-      prompts({
-        type: 'confirm',
-        name: 'value',
-        message:
-          message +
-          (options.timeout
-            ? ` [${Math.round(options.timeout / 100) / 10}s]`
-            : ''),
-        initial: options.initial === undefined ? true : options.initial
-      })
-    );
+      const promise = status(
+        prompts({
+          type: 'confirm',
+          name: 'value',
+          message:
+            message +
+            (options.timeout
+              ? ` [${Math.round(options.timeout / 100) / 10}s]`
+              : ''),
+          initial: options.initial === undefined ? true : options.initial
+        })
+      );
 
-    if (options.timeout) {
-      setTimeout(() => {
-        if (promise.status === 'pending') process.stdin.emit('data', '\n');
-      }, options.timeout);
-    }
+      if (options.timeout) {
+        setTimeout(() => {
+          if (promise.status === 'pending') process.stdin.emit('data', '\n');
+        }, options.timeout);
+      }
 
-    const response = await promise;
-    return (response.value ? options.yes : options.no) || undefined;
+      const response = await promise;
+      return (response.value ? options.yes : options.no) || undefined;
+    });
   };
 }

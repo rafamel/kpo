@@ -4,6 +4,7 @@ import core from '~/core';
 import asTag from '~/utils/as-tag';
 import { TScript } from '~/types';
 import { rejects } from 'errorish';
+import { wrap } from '~/utils/errors';
 
 export default rm;
 
@@ -14,13 +15,15 @@ function rm(literals: TemplateStringsArray, ...placeholders: any[]): TScript;
  * @returns A `TScript`, as a function, that won't be executed until called by `kpo` -hence, calling `rm` won't have any effect until the returned function is called.
  */
 function rm(...args: any[]): TScript {
-  return async function rm(): Promise<void> {
-    let file = asTag(args.shift(), ...args);
-    if (!path.isAbsolute(file)) {
-      const paths = await core.paths();
-      file = path.join(paths.directory, file);
-    }
+  return (): Promise<void> => {
+    return wrap.throws(async () => {
+      let file = asTag(args.shift(), ...args);
+      if (!path.isAbsolute(file)) {
+        const paths = await core.paths();
+        file = path.join(paths.directory, file);
+      }
 
-    await fs.remove(file).catch(rejects);
+      await fs.remove(file).catch(rejects);
+    });
   };
 }

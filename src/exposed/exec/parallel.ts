@@ -29,35 +29,38 @@ export interface IParallel {
  * @returns A `TScript`, as a function, that won't be executed until called by `kpo` -hence, calling `parallel` won't have any effect until the returned function is called.
  */
 const parallel: IParallel = function parallel(commands, options = {}) {
-  return async function parallel(args?: string[]): Promise<void> {
-    const argv: string[] = Array.isArray(commands)
-      ? commands.concat()
-      : [commands];
+  return (args?: string[]): Promise<void> => {
+    return wrap.throws(async () => {
+      const argv: string[] = Array.isArray(commands)
+        ? commands.concat()
+        : [commands];
 
-    if (options.names && options.names.length) {
-      argv.push('--names', options.names.join(','));
-    }
-    if (options.colors && options.colors.length) {
-      argv.push('-c', options.colors.join(','));
-    }
-    if (options.early) {
-      argv.push('--kill-others-on-fail');
-    }
+      if (options.names && options.names.length) {
+        argv.push('--names', options.names.join(','));
+      }
+      if (options.colors && options.colors.length) {
+        argv.push('-c', options.colors.join(','));
+      }
+      if (options.early) {
+        argv.push('--kill-others-on-fail');
+      }
 
-    try {
-      await core.exec(
-        require.resolve('concurrently/bin/concurrently'),
-        args ? argv.concat(args) : argv,
-        true,
-        options
-      );
-    } catch (e) {
-      const err = wrap.ensure(e, {
-        message: 'Parallel commands execution failed'
-      });
-      if (options.silent) logger.error(err);
-      else throw err;
-    }
+      try {
+        await core.exec(
+          require.resolve('concurrently/bin/concurrently'),
+          args ? argv.concat(args) : argv,
+          true,
+          options
+        );
+      } catch (e) {
+        const err = wrap.ensure(e, {
+          allow: [],
+          message: 'Parallel commands execution failed'
+        });
+        if (options.silent) logger.error(err);
+        else throw err;
+      }
+    });
   };
 };
 

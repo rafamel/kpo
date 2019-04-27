@@ -35,6 +35,7 @@ export async function getRootPaths(directories: {
   } catch (err) {
     if (!root) return null;
     throw wrap.ensure(err, {
+      allow: [],
       message: `root scope couldn't be retrieved: ${root}`
     });
   }

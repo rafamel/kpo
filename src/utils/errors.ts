@@ -20,7 +20,6 @@ export const open = scope.set('_kpo_open_', {
 });
 
 export const wrap = scope.set('_kpo_wrap_', {
-  allow: [],
   Error: CustomError,
   Errorish: WrappedError
 });

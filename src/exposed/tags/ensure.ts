@@ -4,6 +4,7 @@ import core from '~/core';
 import { TScript } from '~/types';
 import asTag from '~/utils/as-tag';
 import { rejects } from 'errorish';
+import { wrap } from '~/utils/errors';
 
 export default ensure;
 
@@ -17,13 +18,15 @@ function ensure(
  * @returns A `TScript`, as a function, that won't be executed until called by `kpo` -hence, calling `ensure` won't have any effect until the returned function is called.
  */
 function ensure(...args: any[]): TScript {
-  return async function ensure(): Promise<void> {
-    let directory = asTag(args.shift(), ...args);
-    if (!path.isAbsolute(directory)) {
-      const paths = await core.paths();
-      directory = path.join(paths.directory, directory);
-    }
+  return (): Promise<void> => {
+    return wrap.throws(async () => {
+      let directory = asTag(args.shift(), ...args);
+      if (!path.isAbsolute(directory)) {
+        const paths = await core.paths();
+        directory = path.join(paths.directory, directory);
+      }
 
-    await fs.ensureDir(directory).catch(rejects);
+      await fs.ensureDir(directory).catch(rejects);
+    });
   };
 }

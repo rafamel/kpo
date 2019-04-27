@@ -1,6 +1,7 @@
 import core from '~/core';
 import { IExecOptions, TScript, IOfType } from '~/types';
 import logger from '~/utils/logger';
+import { wrap } from '~/utils/errors';
 
 export interface ISeriesOptions extends IExecOptions {
   /**
@@ -26,21 +27,23 @@ export interface ISeries {
  * @returns A `TScript`, as a function, that won't be executed until called by `kpo` -hence, calling `series` won't have any effect until the returned function is called.
  */
 const series: ISeries = function series(commands, options = {}) {
-  return async function series(args?: string[]): Promise<void> {
-    if (!Array.isArray(commands)) commands = [commands];
+  return (args?: string[]): Promise<void> => {
+    return wrap.throws(async () => {
+      if (!Array.isArray(commands)) commands = [commands];
 
-    let err: Error | null = null;
-    for (let command of commands) {
-      try {
-        if (!command) throw Error(`No command passed for series`);
-        await core.exec(command, args || [], false, options);
-      } catch (e) {
-        err = e;
-        if (options.force || options.silent) logger.error(err);
-        if (!options.force) break;
+      let err: Error | null = null;
+      for (let command of commands) {
+        try {
+          if (!command) throw Error(`No command passed for series`);
+          await core.exec(command, args || [], false, options);
+        } catch (e) {
+          err = e;
+          if (options.force || options.silent) logger.error(err);
+          if (!options.force) break;
+        }
       }
-    }
-    if (err && !options.silent) throw err;
+      if (err && !options.silent) throw err;
+    });
   };
 };
 
