@@ -1,24 +1,22 @@
-import { TScriptSyncFn } from '~/types';
 import asTag from '~/utils/as-tag';
-import { wrap } from '~/utils/errors';
+import expose from '~/utils/expose';
 
-export default log;
+export default expose(log);
 
-function log(message: string): TScriptSyncFn;
+function log(message: string): () => void;
 function log(
   literals: TemplateStringsArray,
   ...placeholders: any[]
-): TScriptSyncFn;
+): () => void;
 /**
  * String tag; logs a string on `stdout`.
- * @returns An function, as a `TScriptSyncFn`, that won't be executed until called by `kpo` -hence, calling `log` won't have any effect until the returned function is called.
+ * It is an *exposed* function: call `log.fn()`, which takes the same arguments, in order to execute on call.
+ * @returns A function -hence, calling `log` won't have any effect until the returned function is called.
  */
-function log(...args: any[]): TScriptSyncFn {
-  return (): void => {
-    return wrap.throws(() => {
-      const message = asTag(args.shift(), ...args);
-      // eslint-disable-next-line no-console
-      console.log(message);
-    });
+function log(...args: any[]): () => void {
+  return () => {
+    const message = asTag(args.shift(), ...args);
+    // eslint-disable-next-line no-console
+    console.log(message);
   };
 }

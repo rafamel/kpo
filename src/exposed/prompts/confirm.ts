@@ -1,7 +1,7 @@
-import { TScript, TScriptAsyncFn } from '~/types';
+import { TScript } from '~/types';
 import prompts from 'prompts';
 import { status } from 'promist';
-import { wrap } from '~/utils/errors';
+import expose from '~/utils/expose';
 
 /**
  * Options taken by `confirm`.
@@ -25,43 +25,45 @@ export interface IConfirmOptions {
   timeout?: number;
 }
 
-export default confirm;
+export default expose(confirm);
 
-function confirm(message: string, options?: IConfirmOptions): TScriptAsyncFn;
-function confirm(options?: IConfirmOptions): TScriptAsyncFn;
+function confirm(
+  message: string,
+  options?: IConfirmOptions
+): () => Promise<TScript>;
+function confirm(options?: IConfirmOptions): () => Promise<TScript>;
 /**
  * Shows a confirmation prompt on `stdout` with a binary choice (yes or no); actions for each user choice can be passed via `options`.
- * @returns An asynchronous function, as a `TScriptAsyncFn`, that won't be executed until called by `kpo` -hence, calling `confirm` won't have any effect until the returned function is called.
+ * It is an *exposed* function: call `confirm.fn()`, which takes the same arguments, in order to execute on call.
+ * @returns An asynchronous function -hence, calling `confirm` won't have any effect until the returned function is called.
  */
-function confirm(...args: any[]): TScriptAsyncFn {
-  return (): Promise<TScript> => {
-    return wrap.throws(async () => {
-      const message: string =
-        args[0] && typeof args[0] === 'string' ? args[0] : 'Continue?';
-      const options: IConfirmOptions =
-        args[1] || (args[0] && typeof args[0] !== 'string' ? args[0] : {});
+function confirm(...args: any[]): () => Promise<TScript> {
+  return async () => {
+    const message: string =
+      args[0] && typeof args[0] === 'string' ? args[0] : 'Continue?';
+    const options: IConfirmOptions =
+      args[1] || (args[0] && typeof args[0] !== 'string' ? args[0] : {});
 
-      const promise = status(
-        prompts({
-          type: 'confirm',
-          name: 'value',
-          message:
-            message +
-            (options.timeout
-              ? ` [${Math.round(options.timeout / 100) / 10}s]`
-              : ''),
-          initial: options.initial === undefined ? true : options.initial
-        })
-      );
+    const promise = status(
+      prompts({
+        type: 'confirm',
+        name: 'value',
+        message:
+          message +
+          (options.timeout
+            ? ` [${Math.round(options.timeout / 100) / 10}s]`
+            : ''),
+        initial: options.initial === undefined ? true : options.initial
+      })
+    );
 
-      if (options.timeout) {
-        setTimeout(() => {
-          if (promise.status === 'pending') process.stdin.emit('data', '\n');
-        }, options.timeout);
-      }
+    if (options.timeout) {
+      setTimeout(() => {
+        if (promise.status === 'pending') process.stdin.emit('data', '\n');
+      }, options.timeout);
+    }
 
-      const response = await promise;
-      return response.value ? options.yes : options.no;
-    });
+    const response = await promise;
+    return response.value ? options.yes : options.no;
   };
 }

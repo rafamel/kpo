@@ -1,7 +1,8 @@
 import core from '~/core';
-import { IExecOptions, IOfType, TScriptAsyncFn } from '~/types';
+import { IExecOptions, IOfType } from '~/types';
 import logger from '~/utils/logger';
 import { wrap } from '~/utils/errors';
+import expose from '~/utils/expose';
 
 export interface IParallelOptions extends IExecOptions {
   names?: string[];
@@ -20,17 +21,27 @@ export interface IParallelOptions extends IExecOptions {
  * Signature for `parallel`. Note that you can call `parallel.env` to pass only environment variables as a second argument. See `parallel`.
  */
 export interface IParallel {
-  (commands: string | string[], options?: IParallelOptions): TScriptAsyncFn;
-  env(commands: string | string[], env: IOfType<string>): TScriptAsyncFn;
+  (commands: string | string[], options?: IParallelOptions): (
+    args?: string[]
+  ) => Promise<void>;
+  env(
+    commands: string | string[],
+    env: IOfType<string>
+  ): (args?: string[]) => Promise<void>;
+  fn(commands: string | string[], options?: IParallelOptions): Promise<void>;
 }
 
 /**
  * Runs `commands` in parallel, with optional environment variables, names and colors assigned to processes, and more. See `IParallel` and `IParallelOptions`.
- * @returns An asynchronous function, as a `TScriptAsyncFn`, that won't be executed until called by `kpo` -hence, calling `parallel` won't have any effect until the returned function is called.
+ * It is an *exposed* function: call `parallel.fn()`, which takes the same arguments, in order to execute on call.
+ * @returns An asynchronous function taking additional arguments to be used for all commands -hence, calling `parallel` won't have any effect until the returned function is called.
  */
-const parallel: IParallel = function parallel(commands, options = {}) {
-  return (args?: string[]): Promise<void> => {
-    return wrap.throws(async () => {
+const parallel: IParallel = (() => {
+  const exposed = expose(function parallel(
+    commands: string | string[],
+    options: IParallelOptions = {}
+  ): (args?: string[]) => Promise<void> {
+    return async (args?: string[]) => {
       const argv: string[] = Array.isArray(commands)
         ? commands.concat()
         : [commands];
@@ -60,12 +71,17 @@ const parallel: IParallel = function parallel(commands, options = {}) {
         if (options.silent) logger.error(err);
         else throw err;
       }
-    });
-  };
-};
+    };
+  });
 
-parallel.env = function env(commands, env) {
-  return parallel(commands, { env });
-};
+  return Object.assign(exposed, {
+    env(
+      commands: string | string[],
+      env: IOfType<string>
+    ): (args?: string[]) => Promise<void> {
+      return exposed(commands, { env });
+    }
+  });
+})();
 
 export default parallel;

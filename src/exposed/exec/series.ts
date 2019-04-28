@@ -1,7 +1,7 @@
 import core from '~/core';
-import { IExecOptions, IOfType, TScriptAsyncFn } from '~/types';
+import { IExecOptions, IOfType } from '~/types';
 import logger from '~/utils/logger';
-import { wrap } from '~/utils/errors';
+import expose from '~/utils/expose';
 
 export interface ISeriesOptions extends IExecOptions {
   /**
@@ -18,17 +18,27 @@ export interface ISeriesOptions extends IExecOptions {
  * Signature for `series`. Note that you can call `series.env` to pass only environment variables as a second argument. See `series`.
  */
 export interface ISeries {
-  (commands: string | string[], options?: ISeriesOptions): TScriptAsyncFn;
-  env(commands: string | string[], env: IOfType<string>): TScriptAsyncFn;
+  (commands: string | string[], options?: ISeriesOptions): (
+    args?: string[]
+  ) => Promise<void>;
+  env(
+    commands: string | string[],
+    env: IOfType<string>
+  ): (args?: string[]) => Promise<void>;
+  fn(commands: string | string[], env: IOfType<string>): Promise<void>;
 }
 
 /**
- * Runs `commands` in series, with optional environment variables, names and colors assigned to processes, and more. See `ISeries` and `ISeriesOptions`.
- * @returns An asynchronous function, as a `TScriptAsyncFn`, that won't be executed until called by `kpo` -hence, calling `series` won't have any effect until the returned function is called.
+ * Runs `commands` in series, with optional environment variables and other options. See `ISeries` and `ISeriesOptions`.
+ * It is an *exposed* function: call `series.fn()`, which takes the same arguments, in order to execute on call.
+ * @returns An asynchronous function taking additional arguments to be used for all commands -hence, calling `series` won't have any effect until the returned function is called.
  */
-const series: ISeries = function series(commands, options = {}) {
-  return (args?: string[]): Promise<void> => {
-    return wrap.throws(async () => {
+const series: ISeries = (() => {
+  const exposed = expose(function parallel(
+    commands: string | string[],
+    options: ISeriesOptions = {}
+  ): (args?: string[]) => Promise<void> {
+    return async (args?: string[]) => {
       if (!Array.isArray(commands)) commands = [commands];
 
       let err: Error | null = null;
@@ -43,12 +53,17 @@ const series: ISeries = function series(commands, options = {}) {
         }
       }
       if (err && !options.silent) throw err;
-    });
-  };
-};
+    };
+  });
 
-series.env = function env(commands, env) {
-  return series(commands, { env });
-};
+  return Object.assign(exposed, {
+    env(
+      commands: string | string[],
+      env: IOfType<string>
+    ): (args?: string[]) => Promise<void> {
+      return exposed(commands, { env });
+    }
+  });
+})();
 
 export default series;

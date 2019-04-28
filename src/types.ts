@@ -49,9 +49,9 @@ export type TScript =
 /**
  * Represents a `TScript` as a function
  */
-export type TScriptFn = TScriptSyncFn | TScriptAsyncFn;
-export type TScriptSyncFn = (args?: string[]) => TScript | void;
-export type TScriptAsyncFn = (args?: string[]) => Promise<TScript | void>;
+export type TScriptFn = (
+  args?: string[]
+) => TScript | void | Promise<TScript | void>;
 
 /**
  * Represents a `TScript` array.

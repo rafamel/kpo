@@ -2,13 +2,12 @@ import path from 'path';
 import fs from 'fs-extra';
 import { rejects } from 'errorish';
 import core from '~/core';
-import { wrap } from '~/utils/errors';
 import { absolute, exists } from '~/utils/file';
-import { TScriptAsyncFn } from '~/types';
 import confirm from '../prompts/confirm';
 import { parallel } from 'promist';
 import logger from '~/utils/logger';
 import chalk from 'chalk';
+import expose from '~/utils/expose';
 
 /**
  * Options taken by `remove`.
@@ -24,69 +23,63 @@ export interface IRemoveOptions {
   fail?: boolean;
 }
 
+export default expose(remove);
 /**
  * Removes a file, a directory -recursively-, or an array of them.
+ * It is an *exposed* function: call `remove.fn()`, which takes the same arguments, in order to execute on call.
  * @param paths a path for a file or directory, or an array of them.
- * @param options a `IRemoveOptions` object.
- * @returns An asynchronous function, as a `TScriptAsyncFn`, that won't be executed until called by `kpo` -hence, calling `remove` won't have any effect until the returned function is called.
+ * @param options an `IRemoveOptions` object.
+ * @returns An asynchronous function -hence, calling `remove` won't have any effect until the returned function is called.
  */
-export default function remove(
+function remove(
   paths: string | string[],
   options: IRemoveOptions = {}
-): TScriptAsyncFn {
-  return (): Promise<void> => {
-    return wrap.throws(async () => {
-      const cwd = await core.cwd();
-      paths = Array.isArray(paths) ? paths : [paths];
-      paths = paths.map((path) => absolute(path, cwd));
+): () => Promise<void> {
+  return async () => {
+    const cwd = await core.cwd();
+    paths = Array.isArray(paths) ? paths : [paths];
+    paths = paths.map((path) => absolute(path, cwd));
 
-      const existingPaths = await parallel.filter(paths, (path) =>
-        exists(path)
-      );
-      const nonExistingPaths = paths.filter(
-        (path) => !existingPaths.includes(path)
-      );
-      const relatives = {
-        existing: existingPaths.map((x) => path.relative(cwd, x)),
-        nonExisting: nonExistingPaths.map((x) => path.relative(cwd, x))
-      };
+    const existingPaths = await parallel.filter(paths, (path) => exists(path));
+    const nonExistingPaths = paths.filter(
+      (path) => !existingPaths.includes(path)
+    );
+    const relatives = {
+      existing: existingPaths.map((x) => path.relative(cwd, x)),
+      nonExisting: nonExistingPaths.map((x) => path.relative(cwd, x))
+    };
 
-      if (options.fail && nonExistingPaths.length) {
-        throw Error(
-          `Path to remove doesn't exist: ${relatives.nonExisting[0]}`
-        );
-      }
+    if (options.fail && nonExistingPaths.length) {
+      throw Error(`Path to remove doesn't exist: ${relatives.nonExisting[0]}`);
+    }
 
-      // eslint-disable-next-line no-console
-      (options.confirm ? console.log : logger.debug)(
-        chalk.bold.yellow(
-          relatives.existing.length ? 'Paths to remove' : 'No paths to remove'
-        ) +
-          (relatives.existing.length
-            ? `\n    Existing paths: "${relatives.existing.join('", "')}"`
-            : '') +
-          (relatives.nonExisting.length
-            ? `\n    Non existing paths: "${relatives.nonExisting.join(
-                '", "'
-              )}"`
-            : '')
-      );
+    // eslint-disable-next-line no-console
+    (options.confirm ? console.log : logger.debug)(
+      chalk.bold.yellow(
+        relatives.existing.length ? 'Paths to remove' : 'No paths to remove'
+      ) +
+        (relatives.existing.length
+          ? `\n    Existing paths: "${relatives.existing.join('", "')}"`
+          : '') +
+        (relatives.nonExisting.length
+          ? `\n    Non existing paths: "${relatives.nonExisting.join('", "')}"`
+          : '')
+    );
 
-      if (!existingPaths.length) return;
-      if (options.confirm) {
-        await confirm({ no: false })().then(async (x) => {
-          if (x === false) throw Error(`Cancelled by user`);
-        });
-      }
-
-      await parallel.each(existingPaths, async (absolute, i) => {
-        await fs.remove(absolute).catch(rejects);
-
-        const relative = relatives.existing[i];
-        logger.debug(`Removed: ${relative}`);
+    if (!existingPaths.length) return;
+    if (options.confirm) {
+      await confirm({ no: false })().then(async (x) => {
+        if (x === false) throw Error(`Cancelled by user`);
       });
+    }
 
-      logger.info(`Removed: "${relatives.existing.join('", "')}"`);
+    await parallel.each(existingPaths, async (absolute, i) => {
+      await fs.remove(absolute).catch(rejects);
+
+      const relative = relatives.existing[i];
+      logger.debug(`Removed: ${relative}`);
     });
+
+    logger.info(`Removed: "${relatives.existing.join('", "')}"`);
   };
 }

@@ -1,6 +1,6 @@
-import { TScript, IOfType, TScriptAsyncFn } from '~/types';
+import { TScript, IOfType } from '~/types';
 import prompts from 'prompts';
-import { wrap } from '~/utils/errors';
+import expose from '~/utils/expose';
 
 /**
  * Options taken by `select`.
@@ -16,39 +16,39 @@ export interface ISelectOptions {
   values: IOfType<TScript>;
 }
 
-export default select;
+export default expose(select);
 
-function select(message: string, options?: ISelectOptions): TScriptAsyncFn;
-function select(options?: ISelectOptions): TScriptAsyncFn;
+function select(
+  message: string,
+  options?: ISelectOptions
+): () => Promise<TScript>;
+function select(options?: ISelectOptions): () => Promise<TScript>;
 /**
  * Shows a selection prompt on `stdout` with a choice of a number of values, set via `options`, each triggering a `TScript` execution.
- * @returns An asynchronous function, as a `TScriptAsyncFn`, that won't be executed until called by `kpo` -hence, calling `select` won't have any effect until the returned function is called.
+ * It is an *exposed* function: call `select.fn()`, which takes the same arguments, in order to execute on call.
+ * @returns An asynchronous function -hence, calling `select` won't have any effect until the returned function is called.
  */
-function select(...args: any[]): TScriptAsyncFn {
-  return (): Promise<TScript> => {
-    return wrap.throws(async () => {
-      const message: string =
-        args[0] && typeof args[0] === 'string' ? args[0] : 'Choose an option';
-      const options: ISelectOptions =
-        args[1] || (args[0] && typeof args[0] !== 'string' ? args[0] : {});
+function select(...args: any[]): () => Promise<TScript> {
+  return async () => {
+    const message: string =
+      args[0] && typeof args[0] === 'string' ? args[0] : 'Choose an option';
+    const options: ISelectOptions =
+      args[1] || (args[0] && typeof args[0] !== 'string' ? args[0] : {});
 
-      const keys = Object.keys(options.values || {});
-      if (!keys.length) throw Error(`No values passed to select`);
+    const keys = Object.keys(options.values || {});
+    if (!keys.length) throw Error(`No values passed to select`);
 
-      const response = await prompts({
-        type: 'select',
-        name: 'value',
-        message: message,
-        choices: keys.map((key) => ({
-          title: key,
-          value: key
-        })),
-        initial: options.initial
-          ? Math.max(0, keys.indexOf(options.initial))
-          : 0
-      });
-
-      return options.values[response.value];
+    const response = await prompts({
+      type: 'select',
+      name: 'value',
+      message: message,
+      choices: keys.map((key) => ({
+        title: key,
+        value: key
+      })),
+      initial: options.initial ? Math.max(0, keys.indexOf(options.initial)) : 0
     });
+
+    return options.values[response.value];
   };
 }
