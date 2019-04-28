@@ -42,29 +42,46 @@ const core = {
       directory: options.directory || undefined
     });
   }),
-  root: cache(async function(): Promise<IPaths | null> {
+  load: cache(async function(): Promise<ILoaded> {
+    return load(await core.paths());
+  }),
+  cwd: cache(async function(): Promise<string> {
+    const cwd = await core.get('cwd');
     const paths = await core.paths();
+    if (!cwd) return paths.directory;
+
+    // as cwd is a IScopeOptions property -it can't be set on cli-
+    // if it is set and it's not absolute, it must be relative
+    // to a kpo scripts file -if on package.json it was already set as absolute
+    if (!path.isAbsolute(cwd)) {
+      const dir = paths.kpo ? path.parse(paths.kpo).dir : paths.directory;
+      return path.join(dir, cwd);
+    }
+
+    return cwd;
+  }),
+  root: cache(async function(): Promise<IPaths | null> {
+    const cwd = await core.cwd();
 
     return getRootPaths({
-      self: paths.directory,
+      cwd,
       root: await core.get('root')
     });
   }),
   children: cache(async function(): Promise<IChild[]> {
     const paths = await core.paths();
+    const cwd = await core.cwd();
     const children = await core.get('children');
 
-    return getChildren(paths.directory, children);
-  }),
-  load: cache(async function(): Promise<ILoaded> {
-    return load(await core.paths());
+    return getChildren(
+      { cwd, pkg: paths.pkg ? path.parse(paths.pkg).dir : cwd },
+      children
+    );
   }),
   bin: cache(async function(): Promise<string[]> {
-    const paths = await core.paths();
+    const cwd = await core.cwd();
     const root = await core.root();
-    return root
-      ? getBin(paths.directory, root.directory)
-      : getBin(paths.directory);
+    return root ? getBin(cwd, root.directory) : getBin(cwd);
   }),
   tasks: cache(async function(): Promise<ITasks> {
     const { kpo, pkg } = await core.load();
@@ -91,12 +108,11 @@ const core = {
     fork: boolean,
     opts: IExecOptions = {}
   ): Promise<void> {
-    const paths = await core.paths();
     const cwd = opts.cwd
       ? path.isAbsolute(opts.cwd)
         ? opts.cwd
-        : path.join(paths.directory, opts.cwd)
-      : paths.directory;
+        : path.join(await core.cwd(), opts.cwd)
+      : await core.cwd();
     const bin = opts.cwd ? await getBin(cwd) : await core.bin();
     const env = opts.env
       ? Object.assign({}, await core.get('env'), opts.env)
@@ -104,12 +120,11 @@ const core = {
     return exec(command, args, fork, cwd, bin, env);
   },
   async setScope(names: string[]): Promise<void> {
-    const paths = await core.paths();
     const root = await core.root();
 
     const { next, scope } = await setScope(
       names,
-      { self: paths.directory, root: root ? root.directory : undefined },
+      { root: root ? root.directory : undefined },
       await core.children()
     );
     if (scope) {

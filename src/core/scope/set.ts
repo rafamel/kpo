@@ -3,7 +3,7 @@ import { IScope, IChild } from '../types';
 
 export default async function setScope(
   scopes: string[],
-  directories: { self: string; root?: string },
+  directories: { root?: string },
   children: IChild[]
 ): Promise<{ next: string[]; scope?: IScope }> {
   if (!scopes.length) return { next: [] };

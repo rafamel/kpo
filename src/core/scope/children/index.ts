@@ -9,7 +9,7 @@ import { IChild } from '../../types';
 import { TChildrenDefinition } from '~/types';
 
 export default async function getChildren(
-  directory: string,
+  directories: { cwd: string; pkg: string },
   definition?: TChildrenDefinition
 ): Promise<IChild[]> {
   logger.debug('obtaining children');
@@ -18,19 +18,19 @@ export default async function getChildren(
     logger.debug('children found in options');
 
     if (Array.isArray(definition)) {
-      return getChildrenFromGlobs(definition, directory);
+      return getChildrenFromGlobs(definition, directories.cwd);
     }
-    return getChildrenFromMap(definition, directory);
+    return getChildrenFromMap(definition, directories.cwd);
   }
 
-  const lerna = (await exists(path.join(directory, 'lerna.json')))
-    ? await fs.readJSON(path.join(directory, 'lerna.json')).catch(rejects)
+  const lerna = (await exists(path.join(directories.pkg, 'lerna.json')))
+    ? await fs.readJSON(path.join(directories.pkg, 'lerna.json')).catch(rejects)
     : null;
 
   if (lerna) {
     logger.debug('lerna file found');
     if (lerna.packages) {
-      return getChildrenFromGlobs(lerna.packages, directory);
+      return getChildrenFromGlobs(lerna.packages, directories.pkg);
     }
   }
 

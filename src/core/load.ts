@@ -4,7 +4,7 @@ import yaml from 'js-yaml';
 import { rejects } from 'errorish';
 import { open } from '~/utils/errors';
 import { ILoaded, IPaths } from './types';
-import { IOfType, TCoreOptions } from '~/types';
+import { IOfType, IPackageOptions } from '~/types';
 import options from './options';
 
 export default async function load(paths: IPaths): Promise<ILoaded> {
@@ -12,7 +12,7 @@ export default async function load(paths: IPaths): Promise<ILoaded> {
   const pkg = paths.pkg
     ? await fs
         .readJSON(paths.pkg)
-        .then(processPkg)
+        .then((pkg) => processPkg(paths.pkg as string, pkg))
         .catch(rejects)
     : null;
 
@@ -52,13 +52,16 @@ export function processStatic(kpo: IOfType<any>): IOfType<any> | null {
   return kpo.scripts || null;
 }
 
-export function processPkg(pkg: IOfType<any>): IOfType<any> {
+export function processPkg(file: string, pkg: IOfType<any>): IOfType<any> {
   if (!pkg || !pkg.kpo) return pkg;
 
-  const opts: TCoreOptions = Object.assign({}, pkg.kpo);
+  const opts: IPackageOptions = Object.assign({}, pkg.kpo);
   // file was already read when getting paths;
   // it's also not a IScopeOptions field
   delete opts.file;
+  if (opts.cwd && !path.isAbsolute(opts.cwd)) {
+    opts.cwd = path.join(path.parse(file).dir, opts.cwd);
+  }
 
   options.setScope(opts);
   return pkg;

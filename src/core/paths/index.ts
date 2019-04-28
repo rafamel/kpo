@@ -18,17 +18,17 @@ export async function getSelfPaths(opts: {
  * Will recurse up when `directories.root` is undefined; otherwise it will expect the project directory to be exactly `directories.root`.
  */
 export async function getRootPaths(directories: {
-  self: string;
+  cwd: string;
   root?: string | null;
 }): Promise<IPaths | null> {
-  const { self, root } = directories;
+  const { cwd, root } = directories;
   if (root === null) return null;
 
   const directory = root
     ? path.isAbsolute(root)
       ? root
-      : path.join(self, root)
-    : path.join(self, '../');
+      : path.join(cwd, root)
+    : path.join(cwd, '../');
 
   try {
     return await getPaths({ directory }, Boolean(root));

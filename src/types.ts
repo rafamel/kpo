@@ -46,7 +46,6 @@ export type TScript =
   | TScriptFn
   | IScriptsArray;
 
-// TODO use for all
 /**
  * Represents a `TScript` as a function
  */
@@ -68,12 +67,6 @@ export interface IScripts {
 }
 
 export interface IOptions {
-  /**
-   * Project directory.
-   * Used for relative paths resolution and as default `cwd` on command execution.
-   * By default, it will be the directory in which a sibling or parent `package.json` is found for the *kpo* scripts file, or the directory of the *kpo* file itself otherwise.
-   */
-  directory?: string | null;
   /**
    * Environment variables.
    */
@@ -100,12 +93,23 @@ export interface IScopeOptions extends IOptions {
    * Paths . They can be defined as an array of globs, or otherwise an exclusive map of scope names and directories. See `TChildrenDefinition`. By default, it will be inferred if your project directory contains a `lerna.json` file from its `packages` key globs.
    */
   children?: TChildrenDefinition;
+  // TODO implement cwd (instead of directory)
+  // account for relative paths
+  /**
+   * Used for relative paths resolution and as default `cwd` on command execution. It is also the directory scopes are resolved from.
+   * By default, it will be the directory in which a sibling or parent `package.json` is found for the *kpo* scripts file, or the directory of the *kpo* file itself otherwise, unless a explicit `directory` is passed on the cli -see `ICliOptions`.
+   * If it is a relative path itself, it will be resolved:
+   *  - relative to the process `cwd` if passed on the cli.
+   *  - relative to the `package.json` if set as an option there.
+   *  - relative to the *kpo* scripts file if set there.
+   */
+  cwd?: string;
 }
 
 /**
- * Options taken by the CLI.
+ * Options that can live in the `kpo` key of a `package.json`.
  */
-export interface IBaseOptions extends IOptions {
+export interface IPackageOptions extends IScopeOptions {
   /**
    * The location of the *kpo* scripts file for the project.
    */
@@ -113,9 +117,20 @@ export interface IBaseOptions extends IOptions {
 }
 
 /**
- * Options that can live in the `kpo` key of a `package.json`.
+ * Options taken by the CLI.
  */
-export type TCoreOptions = IBaseOptions & IScopeOptions;
+export interface ICliOptions extends IOptions {
+  /**
+   * The location of the *kpo* scripts file for the project.
+   */
+  file?: string | null;
+  /**
+   * Project directory, used to find the *kpo* scripts `file` or `package.json`, and as a default `cwd`.
+   */
+  directory?: string | null;
+}
+
+export type TCoreOptions = ICliOptions & IPackageOptions;
 
 /**
  * A project children scopes, defined either:

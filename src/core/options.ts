@@ -1,4 +1,4 @@
-import { IBaseOptions, IScopeOptions, TCoreOptions, IOfType } from '~/types';
+import { ICliOptions, IScopeOptions, TCoreOptions, IOfType } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
 import hash from 'object-hash';
@@ -10,8 +10,8 @@ export const state = {
     env: {},
     silent: false,
     log: DEFAULT_LOG_LEVEL
-  } as IBaseOptions,
-  cli: {} as IBaseOptions,
+  } as TCoreOptions,
+  cli: {} as ICliOptions,
   scope: {} as IScopeOptions
 };
 
@@ -24,7 +24,7 @@ export default {
   get id(): string {
     return id;
   },
-  setCli(opts: IBaseOptions): void {
+  setCli(opts: ICliOptions): void {
     Object.assign(state.cli, stripUndefined(opts));
     merge();
   },
@@ -46,6 +46,7 @@ function merge(): void {
 
   // ensure cli own properties are of cli
   options.file = state.cli.file || state.base.file;
+  options.directory = state.cli.directory || state.base.directory;
 
   // Set logging level
   if (options.log) setLevel(options.log);
