@@ -19,11 +19,9 @@ function ensure(
  */
 function ensure(...args: any[]): () => Promise<void> {
   return async () => {
-    // TODO fix core.paths() -> core.cwd()
-    const paths = await core.paths();
     const directory = absolute({
       path: asTag(args.shift(), ...args),
-      cwd: paths.directory
+      cwd: await core.cwd()
     });
 
     await fs.ensureDir(directory).catch(rejects);

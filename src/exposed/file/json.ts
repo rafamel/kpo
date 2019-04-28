@@ -17,8 +17,7 @@ function json(
   fn: (json: IOfType<any>) => IOfType<any> | void | Promise<IOfType<any> | void>
 ): () => Promise<void> {
   return async () => {
-    const paths = await core.paths();
-    file = absolute({ path: file, cwd: paths.directory });
+    file = absolute({ path: file, cwd: await core.cwd() });
 
     await exists(file, { fail: true });
     const json = await fs.readJSON(file).catch(rejects);

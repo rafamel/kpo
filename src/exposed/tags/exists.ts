@@ -17,10 +17,9 @@ function exists(
  */
 function exists(...args: any[]): () => Promise<void> {
   return async () => {
-    const paths = await core.paths();
     const file = absolute({
       path: asTag(args.shift(), ...args),
-      cwd: paths.directory
+      cwd: await core.cwd()
     });
 
     await _exists(file, { fail: true });
