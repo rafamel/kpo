@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { rejects } from 'errorish';
 import { FILE_NAME, FILE_EXT } from '~/constants';
-import { find, exists } from '~/utils/file';
+import { find, exists, absolute } from '~/utils/file';
 
 export interface IGetFiles {
   kpo: string | null;
@@ -23,17 +23,10 @@ export default async function getFiles(
 ): Promise<IGetFiles> {
   const cwd = process.cwd();
 
-  const directory =
-    opts.directory &&
-    (path.isAbsolute(opts.directory)
-      ? opts.directory
-      : path.join(cwd, opts.directory));
+  const directory = opts.directory && absolute({ path: opts.directory, cwd });
 
   const file =
-    opts.file &&
-    (path.isAbsolute(opts.file)
-      ? opts.file
-      : path.join(directory || cwd, opts.file));
+    opts.file && absolute({ path: opts.file, cwd: directory || cwd });
 
   return file
     ? getExplicit(file, directory, strict)
@@ -101,10 +94,7 @@ export async function getFromPackage(
 
   if (!parsed.kpo || !parsed.kpo.file) return null;
 
-  const file = path.isAbsolute(parsed.kpo.file)
-    ? parsed.kpo.file
-    : path.join(dir, parsed.kpo.file);
-
+  const file = absolute({ path: parsed.kpo.file, cwd: dir });
   // Ensure file exists
   await exists(file, { fail: true });
   return file;

@@ -2,6 +2,7 @@ import path from 'path';
 import { IPaths } from '../types';
 import getPaths from './paths';
 import { wrap } from '~/utils/errors';
+import { absolute } from '~/utils/file';
 
 /**
  * - `file` determines the path for the `kpo.scripts` file; if not passed, it will be resolved from `directory`.
@@ -25,9 +26,7 @@ export async function getRootPaths(directories: {
   if (root === null) return null;
 
   const directory = root
-    ? path.isAbsolute(root)
-      ? root
-      : path.join(cwd, root)
+    ? absolute({ path: root, cwd })
     : path.join(cwd, '../');
 
   try {

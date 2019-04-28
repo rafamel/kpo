@@ -6,6 +6,7 @@ import { open } from '~/utils/errors';
 import { ILoaded, IPaths } from './types';
 import { IOfType, IPackageOptions } from '~/types';
 import options from './options';
+import { absolute } from '~/utils/file';
 
 export default async function load(paths: IPaths): Promise<ILoaded> {
   // pkg must be loaded first to set options first, if present at key `kpo`
@@ -59,8 +60,8 @@ export function processPkg(file: string, pkg: IOfType<any>): IOfType<any> {
   // file was already read when getting paths;
   // it's also not a IScopeOptions field
   delete opts.file;
-  if (opts.cwd && !path.isAbsolute(opts.cwd)) {
-    opts.cwd = path.join(path.parse(file).dir, opts.cwd);
+  if (opts.cwd) {
+    opts.cwd = absolute({ path: opts.cwd, cwd: path.parse(file).dir });
   }
 
   options.setScope(opts);

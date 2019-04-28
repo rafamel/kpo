@@ -1,6 +1,5 @@
-import path from 'path';
 import fs from 'fs-extra';
-import { exists } from '~/utils/file';
+import { exists, absolute } from '~/utils/file';
 import core from '~/core';
 import { IOfType } from '~/types';
 import { rejects } from 'errorish';
@@ -18,10 +17,8 @@ function json(
   fn: (json: IOfType<any>) => IOfType<any> | void | Promise<IOfType<any> | void>
 ): () => Promise<void> {
   return async () => {
-    if (!path.isAbsolute(file)) {
-      const paths = await core.paths();
-      file = path.join(paths.directory, file);
-    }
+    const paths = await core.paths();
+    file = absolute({ path: file, cwd: paths.directory });
 
     await exists(file, { fail: true });
     const json = await fs.readJSON(file).catch(rejects);

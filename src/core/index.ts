@@ -12,6 +12,7 @@ import run from './run';
 import logger from '~/utils/logger';
 import { TCoreOptions, IExecOptions, TScript } from '~/types';
 import { rejects } from 'errorish';
+import { absolute } from '~/utils/file';
 
 export interface ICoreState {
   scopes: string[];
@@ -53,12 +54,10 @@ const core = {
     // as cwd is a IScopeOptions property -it can't be set on cli-
     // if it is set and it's not absolute, it must be relative
     // to a kpo scripts file -if on package.json it was already set as absolute
-    if (!path.isAbsolute(cwd)) {
-      const dir = paths.kpo ? path.parse(paths.kpo).dir : paths.directory;
-      return path.join(dir, cwd);
-    }
-
-    return cwd;
+    return absolute({
+      path: cwd,
+      cwd: paths.kpo ? path.parse(paths.kpo).dir : paths.directory
+    });
   }),
   root: cache(async function(): Promise<IPaths | null> {
     const cwd = await core.cwd();
@@ -109,9 +108,7 @@ const core = {
     opts: IExecOptions = {}
   ): Promise<void> {
     const cwd = opts.cwd
-      ? path.isAbsolute(opts.cwd)
-        ? opts.cwd
-        : path.join(await core.cwd(), opts.cwd)
+      ? absolute({ path: opts.cwd, cwd: await core.cwd() })
       : await core.cwd();
     const bin = opts.cwd ? await getBin(cwd) : await core.bin();
     const env = opts.env
