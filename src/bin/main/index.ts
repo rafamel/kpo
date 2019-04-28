@@ -16,8 +16,8 @@ export default async function main(argv: string[]): Promise<void> {
     ${pkg.description ? chalk.bold.yellow(pkg.description) : ''}
 
     Usage:
-      $ kpo [options] [scope] [tasks]
-      $ kpo [:command] [options] [arguments]
+      $ kpo [options] [@scope] [tasks]
+      $ kpo [options] [@scope] [:command] [arguments]
 
     Options:
       -f, --file <path>       Configuration file
@@ -71,6 +71,7 @@ export default async function main(argv: string[]): Promise<void> {
     directory: cmd['--dir'],
     silent: cmd['--silent'],
     log: cmd['--log'] as TLogger,
+    // TODO these should be set in process.env so when required, the js has them
     env: (cmd['--env'] || [])
       .concat(cmd['--node'] ? `NODE_ENV=${cmd['--node']}` : [])
       .reduce((acc: IOfType<string>, str) => {
