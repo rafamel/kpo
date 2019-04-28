@@ -1,6 +1,6 @@
 import { TScript, IOfType } from '~/types';
 import prompts from 'prompts';
-import expose from '~/utils/expose';
+import expose, { TExposedOverload } from '~/utils/expose';
 
 /**
  * Options taken by `select`.
@@ -16,13 +16,16 @@ export interface ISelectOptions {
   values: IOfType<TScript>;
 }
 
-export default expose(select);
+export default expose(select) as TExposedOverload<
+  typeof select,
+  [string, ISelectOptions] | [ISelectOptions]
+>;
 
 function select(
   message: string,
-  options?: ISelectOptions
+  options: ISelectOptions
 ): () => Promise<TScript>;
-function select(options?: ISelectOptions): () => Promise<TScript>;
+function select(options: ISelectOptions): () => Promise<TScript>;
 /**
  * Shows a selection prompt on `stdout` with a choice of a number of values, set via `options`, each triggering a `TScript` execution.
  * It is an *exposed* function: call `select.fn()`, which takes the same arguments, in order to execute on call.

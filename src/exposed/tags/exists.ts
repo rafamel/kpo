@@ -1,9 +1,12 @@
 import core from '~/core';
 import asTag from '~/utils/as-tag';
 import { exists as _exists, absolute } from '~/utils/file';
-import expose from '~/utils/expose';
+import expose, { TExposedOverload } from '~/utils/expose';
 
-export default expose(exists);
+export default expose(exists) as TExposedOverload<
+  typeof exists,
+  [string] | [TemplateStringsArray, ...any[]]
+>;
 
 function exists(path: string): () => Promise<void>;
 function exists(

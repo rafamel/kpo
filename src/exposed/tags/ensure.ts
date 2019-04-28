@@ -2,10 +2,13 @@ import fs from 'fs-extra';
 import core from '~/core';
 import asTag from '~/utils/as-tag';
 import { rejects } from 'errorish';
-import expose from '~/utils/expose';
+import expose, { TExposedOverload } from '~/utils/expose';
 import { absolute } from '~/utils/file';
 
-export default expose(ensure);
+export default expose(ensure) as TExposedOverload<
+  typeof ensure,
+  [string] | [TemplateStringsArray, ...any[]]
+>;
 
 function ensure(directory: string): () => Promise<void>;
 function ensure(

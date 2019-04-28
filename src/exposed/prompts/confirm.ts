@@ -1,7 +1,7 @@
 import { TScript } from '~/types';
 import prompts from 'prompts';
 import { status } from 'promist';
-import expose from '~/utils/expose';
+import expose, { TExposedOverload } from '~/utils/expose';
 
 /**
  * Options taken by `confirm`.
@@ -25,7 +25,10 @@ export interface IConfirmOptions {
   timeout?: number;
 }
 
-export default expose(confirm);
+export default expose(confirm) as TExposedOverload<
+  typeof confirm,
+  [string] | [string, IConfirmOptions] | [IConfirmOptions] | []
+>;
 
 function confirm(
   message: string,
