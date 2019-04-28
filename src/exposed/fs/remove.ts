@@ -8,20 +8,7 @@ import { parallel } from 'promist';
 import logger from '~/utils/logger';
 import chalk from 'chalk';
 import expose from '~/utils/expose';
-
-/**
- * Options taken by `remove`.
- */
-export interface IRemoveOptions {
-  /**
-   * If `true`, it will require user confirmation for removal.
-   */
-  confirm?: boolean;
-  /**
-   * If `true`, it will fail if a path doesn't exist.
-   */
-  fail?: boolean;
-}
+import { IFsReadOptions } from './types';
 
 export default expose(remove);
 /**
@@ -33,9 +20,11 @@ export default expose(remove);
  */
 function remove(
   paths: string | string[],
-  options: IRemoveOptions = {}
+  options: IFsReadOptions = {}
 ): () => Promise<void> {
   return async () => {
+    options = Object.assign({ confirm: false, fail: true }, options);
+
     const cwd = await core.cwd();
     paths = Array.isArray(paths) ? paths : [paths];
     paths = paths.map((path) => absolute({ path, cwd }));
@@ -68,9 +57,12 @@ function remove(
 
     if (!existingPaths.length) return;
     if (options.confirm) {
-      await confirm({ no: false })().then(async (x) => {
-        if (x === false) throw Error(`Cancelled by user`);
-      });
+      const action = await confirm.fn({ no: false }).then((x) => x !== false);
+
+      if (!action) {
+        if (options.fail) throw Error(`Cancelled by user`);
+        else return;
+      }
     }
 
     await parallel.each(existingPaths, async (absolute, i) => {

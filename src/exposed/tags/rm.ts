@@ -1,6 +1,6 @@
 import asTag from '~/utils/as-tag';
 import expose, { TExposedOverload } from '~/utils/expose';
-import remove from '../file/remove';
+import remove from '../fs/remove';
 
 export default expose(rm) as TExposedOverload<
   typeof rm,
@@ -20,6 +20,6 @@ function rm(
 function rm(...args: any[]): () => Promise<void> {
   return async () => {
     let file = asTag(args.shift(), ...args);
-    return remove.fn(file);
+    return remove.fn(file, { confirm: false, fail: false });
   };
 }
