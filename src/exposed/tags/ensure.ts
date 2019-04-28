@@ -1,9 +1,6 @@
-import fs from 'fs-extra';
-import core from '~/core';
 import asTag from '~/utils/as-tag';
-import { rejects } from 'errorish';
 import expose, { TExposedOverload } from '~/utils/expose';
-import { absolute } from '~/utils/file';
+import mkdir from '../fs/mkdir';
 
 export default expose(ensure) as TExposedOverload<
   typeof ensure,
@@ -22,11 +19,7 @@ function ensure(
  */
 function ensure(...args: any[]): () => Promise<void> {
   return async () => {
-    const directory = absolute({
-      path: asTag(args.shift(), ...args),
-      cwd: await core.cwd()
-    });
-
-    await fs.ensureDir(directory).catch(rejects);
+    const path = asTag(args.shift(), ...args);
+    return mkdir.fn(path, { confirm: false, fail: false });
   };
 }
