@@ -38,7 +38,7 @@ function remove(
   return async () => {
     const cwd = await core.cwd();
     paths = Array.isArray(paths) ? paths : [paths];
-    paths = paths.map((path) => absolute(path, cwd));
+    paths = paths.map((path) => absolute({ path, cwd }));
 
     const existingPaths = await parallel.filter(paths, (path) => exists(path));
     const nonExistingPaths = paths.filter(

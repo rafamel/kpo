@@ -3,8 +3,10 @@ import fs from 'fs-extra';
 import up from 'find-up';
 import { rejects } from 'errorish';
 
-export function absolute(relative: string, cwd: string): string {
-  return path.isAbsolute(relative) ? relative : path.join(cwd, relative);
+export function absolute(opts: { path: string; cwd: string }): string {
+  return path.isAbsolute(opts.path)
+    ? opts.path
+    : path.join(opts.cwd, opts.path);
 }
 
 export async function exists(
