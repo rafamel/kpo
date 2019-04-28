@@ -30,10 +30,12 @@ export function trunk(arr: string[], obj: any, path: string): ITask {
   const keys = key[0] === '$' ? [key] : [key, `$${key}`];
   const props = keys.filter((key) => obj.hasOwnProperty(key));
   if (props.length > 1) {
-    throw Error(`There are several tasks matching ${path}.${key}`);
+    throw Error(
+      `There are several tasks matching ${path ? `${path}.${key}` : key}`
+    );
   }
   if (!props.length) {
-    throw Error(`There are no tasks matching ${path}.${key}`);
+    throw Error(`There no tasks matching ${path ? `${path}.${key}` : key}`);
   }
   const actualKey = props.shift() as string;
   const task = trunk(arr, obj[actualKey], `${path}.${actualKey}`);
