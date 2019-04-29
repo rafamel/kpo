@@ -1,2 +1,2 @@
-export * from './exposed';
+export * from './public';
 export * from './types';
