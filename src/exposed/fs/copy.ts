@@ -57,14 +57,6 @@ function copy(src: string, dest: string, ...args: any[]): () => Promise<void> {
     const srcExist = await exists(src, { fail: options.fail });
     if (!srcExist) return;
 
-    const destExists = await exists(dest);
-    if (destExists) {
-      if (options.fail) {
-        throw Error(`Destination already exists: ${relatives.dest}`);
-      }
-      if (!options.overwrite) return;
-    }
-
     if (
       !(await confirm(
         `Copy "${relatives.src}" to "${relatives.dest}"?`,
