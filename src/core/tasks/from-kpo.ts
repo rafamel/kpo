@@ -35,7 +35,7 @@ export function trunk(arr: string[], obj: any, path: string): ITask {
     );
   }
   if (!props.length) {
-    throw Error(`There no tasks matching ${path ? `${path}.${key}` : key}`);
+    throw Error(`There is no task matching ${path ? `${path}.${key}` : key}`);
   }
   const actualKey = props.shift() as string;
   const task = trunk(arr, obj[actualKey], `${path}.${actualKey}`);
