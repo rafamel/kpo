@@ -28,8 +28,8 @@ function move(
     dest = absolute({ path: dest, cwd });
 
     const relatives = {
-      src: path.relative(src, cwd),
-      dest: path.relative(dest, cwd)
+      src: path.relative(cwd, src),
+      dest: path.relative(cwd, dest)
     };
 
     const srcExist = await exists(src, { fail: options.fail });

@@ -23,7 +23,7 @@ function rw(
   return async () => {
     const cwd = await core.cwd();
     file = absolute({ path: file, cwd });
-    const relative = path.relative(file, cwd);
+    const relative = path.relative(cwd, file);
 
     const doesExist = await exists(file, { fail: options.fail });
 
