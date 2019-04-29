@@ -7,6 +7,7 @@ import expose from '~/utils/expose';
 import confirm from './utils/confirm';
 import { IFsOptions } from './types';
 import write from './utils/write';
+import logger from '~/utils/logger';
 
 export default expose(rw);
 
@@ -35,9 +36,14 @@ function rw(
       : undefined;
 
     const response = await fn(raw);
-    if (response !== undefined) {
-      if (!(await confirm(`Write "${relative}"?`, options))) return;
-      await write(file, relative, response);
+    if (response === undefined) {
+      logger.info(`Write skipped: ${relative}`);
+      return;
     }
+
+    if (!(await confirm(`Write "${relative}"?`, options))) return;
+
+    await write(file, response);
+    logger.info(`Written: ${relative}`);
   };
 }

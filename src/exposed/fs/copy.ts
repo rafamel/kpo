@@ -55,16 +55,13 @@ function copy(src: string, dest: string, ...args: any[]): () => Promise<void> {
     };
 
     const srcExist = await exists(src, { fail: options.fail });
-    if (!srcExist) return;
-
-    if (
-      !(await confirm(
-        `Copy "${relatives.src}" to "${relatives.dest}"?`,
-        options
-      ))
-    ) {
+    if (!srcExist) {
+      logger.info(`Copy skipped: "${relatives.src}" to "${relatives.dest}"`);
       return;
     }
+
+    const msg = `Copy "${relatives.src}" to "${relatives.dest}"?`;
+    if (!(await confirm(msg, options))) return;
 
     await fs
       .copy(src, dest, {
@@ -73,6 +70,6 @@ function copy(src: string, dest: string, ...args: any[]): () => Promise<void> {
         filter
       })
       .catch(rejects);
-    logger.info(`Copied "${relatives.src}" to "${relatives.dest}"`);
+    logger.info(`Copied: "${relatives.src}" to "${relatives.dest}"`);
   };
 }

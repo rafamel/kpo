@@ -55,8 +55,14 @@ function mkdir(
           : '')
     );
 
-    if (!nonExistingPaths.length) return;
-
+    if (!nonExistingPaths.length) {
+      logger.info(
+        `Create skipped: "${relatives.existing
+          .concat(relatives.nonExisting)
+          .join('", "')}"`
+      );
+      return;
+    }
     if (!(await confirm('Create?', options))) return;
 
     await parallel.each(nonExistingPaths, async (absolute, i) => {
@@ -65,7 +71,6 @@ function mkdir(
       const relative = relatives.nonExisting[i];
       logger.debug(`Created: ${relative}`);
     });
-
     logger.info(`Created: "${relatives.nonExisting.join('", "')}"`);
   };
 }

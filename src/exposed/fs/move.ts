@@ -33,26 +33,26 @@ function move(
     };
 
     const srcExist = await exists(src, { fail: options.fail });
-    if (!srcExist) return;
+    if (!srcExist) {
+      logger.info(`Move skipped: "${relatives.src}" to "${relatives.dest}"`);
+      return;
+    }
 
     const destExists = await exists(dest);
     if (destExists) {
       if (options.fail) {
         throw Error(`Destination already exists: ${relatives.dest}`);
       }
-      if (!options.overwrite) return;
+      if (!options.overwrite) {
+        logger.info(`Move skipped: "${relatives.src}" to "${relatives.dest}"`);
+        return;
+      }
     }
 
-    if (
-      !(await confirm(
-        `Move "${relatives.src}" to "${relatives.dest}"?`,
-        options
-      ))
-    ) {
-      return;
-    }
+    const msg = `Move "${relatives.src}" to "${relatives.dest}"?`;
+    if (!(await confirm(msg, options))) return;
 
     await fs.move(src, dest, { overwrite: options.overwrite }).catch(rejects);
-    logger.info(`Moved "${relatives.src}" to "${relatives.dest}"`);
+    logger.info(`Moved: "${relatives.src}" to "${relatives.dest}"`);
   };
 }

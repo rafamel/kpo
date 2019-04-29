@@ -53,7 +53,14 @@ function remove(
           : '')
     );
 
-    if (!existingPaths.length) return;
+    if (!existingPaths.length) {
+      logger.info(
+        `Remove skipped: "${relatives.existing
+          .concat(relatives.nonExisting)
+          .join('", "')}"`
+      );
+      return;
+    }
     if (!(await confirm('Remove?', options))) return;
 
     await parallel.each(existingPaths, async (absolute, i) => {
@@ -62,7 +69,6 @@ function remove(
       const relative = relatives.existing[i];
       logger.debug(`Removed: ${relative}`);
     });
-
     logger.info(`Removed: "${relatives.existing.join('", "')}"`);
   };
 }

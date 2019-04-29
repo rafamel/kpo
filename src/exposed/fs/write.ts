@@ -5,6 +5,7 @@ import { IFsWriteOptions } from './types';
 import { exists, absolute } from '~/utils/file';
 import confirm from './utils/confirm';
 import _write from './utils/write';
+import logger from '~/utils/logger';
 
 export default expose(write) as TExposedOverload<
   typeof write,
@@ -43,9 +44,14 @@ function write(file: string, ...args: any[]): () => Promise<void> {
       throw Error(`File already exists: ${relative}`);
     }
 
-    if (!doesExist || options.overwrite) {
-      if (!(await confirm(`Write "${relative}"?`, options))) return;
-      await _write(file, relative, raw);
+    if (doesExist && !options.overwrite) {
+      logger.info(`Write skipped: ${relative}`);
+      return;
     }
+
+    if (!(await confirm(`Write "${relative}"?`, options))) return;
+
+    await _write(file, raw);
+    logger.info(`Written: ${relative}`);
   };
 }
