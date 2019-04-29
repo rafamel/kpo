@@ -4,9 +4,8 @@ import { exists, absolute } from '~/utils/file';
 import core from '~/core';
 import { rejects } from 'errorish';
 import expose from '~/utils/expose';
-import confirm from './utils/confirm';
+import confirm from '~/utils/confirm';
 import { IFsOptions } from './types';
-import write from './utils/write';
 import logger from '~/utils/logger';
 
 export default expose(rw);
@@ -43,7 +42,8 @@ function rw(
 
     if (!(await confirm(`Write "${relative}"?`, options))) return;
 
-    await write(file, response);
+    await fs.ensureDir(file).catch(rejects);
+    await fs.writeFile(file, String(response)).catch(rejects);
     logger.info(`Written: ${relative}`);
   };
 }

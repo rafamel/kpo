@@ -4,7 +4,7 @@ import core from '~/core';
 import { absolute, exists } from '~/utils/file';
 import { IFsWriteOptions } from './types';
 import expose from '~/utils/expose';
-import confirm from './utils/confirm';
+import confirm from '~/utils/confirm';
 import { rejects } from 'errorish';
 import logger from '~/utils/logger';
 

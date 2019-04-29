@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import { rejects } from 'errorish';
 import core from '~/core';
 import { absolute, exists } from '~/utils/file';
-import confirm from './utils/confirm';
+import confirm from '~/utils/confirm';
 import { parallel } from 'promist';
 import logger from '~/utils/logger';
 import chalk from 'chalk';
