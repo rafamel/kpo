@@ -14,9 +14,11 @@ export default async function list(opts: {
     if (tasks.kpo) tasks.kpo = tasks.kpo.filter((task) => !task.hidden);
     if (tasks.pkg) tasks.pkg = tasks.pkg.filter((task) => !task.hidden);
   }
+
   // eslint-disable-next-line no-console
-  console.log(fromTasks(tasks));
-  if (opts.scopes) console.log(await fromScopes());
+  console.log(
+    fromTasks(tasks) + (opts.scopes ? '\n' + (await fromScopes()) : '')
+  );
 }
 
 export function fromTasks(tasks: ITasks): string {
@@ -42,16 +44,16 @@ export function fromTasks(tasks: ITasks): string {
 }
 
 export async function fromScopes(): Promise<string> {
-  const paths = await core.paths();
+  const cwd = await core.cwd();
   const root = await core.root();
   const scopes = await core.children();
 
   let rows = scopes.map((child) => [
     path.parse(child.directory).name,
-    path.relative(paths.directory, child.directory)
+    path.relative(cwd, child.directory)
   ]);
   if (root) {
-    rows.unshift(['root', path.relative(paths.directory, root.directory)]);
+    rows.unshift(['root', path.relative(cwd, root.directory)]);
   }
 
   const nonUnique = rows
@@ -62,7 +64,7 @@ export async function fromScopes(): Promise<string> {
     throw Error(`Scope names conflict`);
   }
 
-  rows = rows.map(([name, dir]) => [chalk.bold('@' + name), dir + '/']);
+  rows = rows.map(([name, dir]) => [chalk.bold('@' + name), './' + dir]);
   return (
     chalk.bold.yellow(`scopes:\n`) +
     table
