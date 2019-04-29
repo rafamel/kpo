@@ -36,7 +36,7 @@ function write(file: string, ...args: any[]): () => Promise<void> {
 
     const cwd = await core.cwd();
     file = absolute({ path: file, cwd });
-    const relative = path.relative(cwd, file);
+    const relative = './' + path.relative(cwd, file);
 
     const doesExist = await exists(file);
     if (options.fail && doesExist) {

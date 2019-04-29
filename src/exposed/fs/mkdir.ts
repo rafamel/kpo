@@ -32,8 +32,8 @@ function mkdir(
       (path) => !existingPaths.includes(path)
     );
     const relatives = {
-      existing: existingPaths.map((x) => path.relative(cwd, x)),
-      nonExisting: nonExistingPaths.map((x) => path.relative(cwd, x))
+      existing: existingPaths.map((x) => './' + path.relative(cwd, x)),
+      nonExisting: nonExistingPaths.map((x) => './' + path.relative(cwd, x))
     };
 
     if (options.fail && existingPaths.length) {
