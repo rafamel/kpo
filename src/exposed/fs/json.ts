@@ -1,7 +1,7 @@
 import { IOfType } from '~/types';
 import expose from '~/utils/expose';
 import rw from './rw';
-import { IFsReadOptions } from './types';
+import { IFsOptions } from './types';
 
 export default expose(json);
 
@@ -15,7 +15,7 @@ function json(
   fn: (
     json?: IOfType<any>
   ) => IOfType<any> | void | Promise<IOfType<any> | void>,
-  options: IFsReadOptions = {}
+  options: IFsOptions = {}
 ): () => Promise<void> {
   return async () => {
     const _fn = async (raw?: string): Promise<string | undefined> => {

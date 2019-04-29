@@ -1,37 +1,51 @@
+import path from 'path';
 import expose, { TExposedOverload } from '~/utils/expose';
-import rw from './rw';
-import { IFsOptions } from './types';
+import core from '~/core';
+import { IFsWriteOptions } from './types';
+import { exists, absolute } from '~/utils/file';
+import confirm from './utils/confirm';
+import _write from './utils/write';
 
 export default expose(write) as TExposedOverload<
   typeof write,
   | [string]
   | [string, string]
-  | [string, IFsOptions]
-  | [string, string, IFsOptions]
+  | [string, IFsWriteOptions]
+  | [string, string, IFsWriteOptions]
 >;
 
 function write(file: string, raw?: string): () => Promise<void>;
-function write(file: string, options?: IFsOptions): () => Promise<void>;
+function write(file: string, options?: IFsWriteOptions): () => Promise<void>;
 function write(
   file: string,
   raw: string,
-  options?: IFsOptions
+  options?: IFsWriteOptions
 ): () => Promise<void>;
 /**
  * Writes a `file` with `raw`. If no `raw` content is passed, it will simply ensure it does exist.
+ * It is an *exposed* function: call `write.fn()`, which takes the same arguments, in order to execute on call.
+ * @returns An asynchronous function -hence, calling `write` won't have any effect until the returned function is called.
  */
 function write(file: string, ...args: any[]): () => Promise<void> {
   return async () => {
-    const raw: string = args.find((x) => typeof x === 'string');
-    const options: IFsOptions = args.find((x) => typeof x === 'object') || {};
-
-    return rw.fn(
-      file,
-      (content) => {
-        if (raw) return raw;
-        return content === undefined ? '' : undefined;
-      },
-      { confirm: false, ...options, fail: false }
+    const raw: string = args.find((x) => typeof x === 'string') || '';
+    const options: IFsWriteOptions = Object.assign(
+      { overwrite: true },
+      args.find((x) => typeof x === 'object') || {}
     );
+
+    const cwd = await core.cwd();
+    file = absolute({ path: file, cwd });
+    const relative = path.relative(file, cwd);
+
+    const doesExist = await exists(file);
+    if (options.fail && doesExist) {
+      throw Error(`File already exists: ${relative}`);
+    }
+
+    if (!doesExist || options.overwrite) {
+      if (!(await confirm(`Write "${relative}"?`, options))) return;
+      await _write(file, relative, raw);
+    }
   };
 }

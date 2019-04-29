@@ -4,9 +4,9 @@ import { exists, absolute } from '~/utils/file';
 import core from '~/core';
 import { rejects } from 'errorish';
 import expose from '~/utils/expose';
-import confirm from '../prompts/confirm';
-import { IFsReadOptions } from './types';
-import ensure from '../tags/ensure';
+import confirm from './utils/confirm';
+import { IFsOptions } from './types';
+import write from './utils/write';
 
 export default expose(rw);
 
@@ -18,17 +18,16 @@ export default expose(rw);
 function rw(
   file: string,
   fn: (raw?: string) => string | void | Promise<string | void>,
-  options: IFsReadOptions = {}
+  options: IFsOptions = {}
 ): () => Promise<void> {
   return async () => {
-    options = Object.assign({ confirm: false, fail: true }, options);
-
     const cwd = await core.cwd();
     file = absolute({ path: file, cwd });
+    const relative = path.relative(file, cwd);
 
-    const read = await exists(file, { fail: options.fail });
+    const doesExist = await exists(file, { fail: options.fail });
 
-    const raw = read
+    const raw = doesExist
       ? await fs
           .readFile(file)
           .then(String)
@@ -37,19 +36,8 @@ function rw(
 
     const response = await fn(raw);
     if (response !== undefined) {
-      if (options.confirm) {
-        const action = await confirm
-          .fn(`Write "${path.relative(file, cwd)}"?`, { no: false })
-          .then((x) => x !== false);
-
-        if (!action) {
-          if (options.fail) throw Error(`Cancelled by user`);
-          else return;
-        }
-      }
-
-      await ensure.fn(path.parse(file).dir);
-      await fs.writeFile(file, String(response)).catch(rejects);
+      if (!(await confirm(`Write "${relative}"?`, options))) return;
+      await write(file, relative, response);
     }
   };
 }
