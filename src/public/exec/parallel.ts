@@ -3,6 +3,7 @@ import { IExecOptions, IOfType } from '~/types';
 import logger from '~/utils/logger';
 import { wrap } from '~/utils/errors';
 import expose from '~/utils/expose';
+import join from 'command-join';
 
 export interface IParallelOptions extends IExecOptions {
   names?: string[];
@@ -43,8 +44,10 @@ const parallel: IParallel = (() => {
   ): (args?: string[]) => Promise<void> {
     return async (args?: string[]) => {
       const argv: string[] = Array.isArray(commands)
-        ? commands.concat()
-        : [commands];
+        ? commands.map(
+            (command) => command + (args && args.length ? ` ${join(args)}` : '')
+          )
+        : [commands + (args && args.length ? ` ${join(args)}` : '')];
 
       if (options.names && options.names.length) {
         argv.push('--names', options.names.join(','));
@@ -59,7 +62,7 @@ const parallel: IParallel = (() => {
       try {
         await core.exec(
           require.resolve('concurrently/bin/concurrently'),
-          args ? argv.concat(args) : argv,
+          argv,
           true,
           options
         );
