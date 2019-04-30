@@ -23,10 +23,9 @@ export default async function main(argv: string[]): Promise<void> {
     Options:
       -f, --file <path>       Configuration file
       -d, --dir <path>        Project directory
-      -e, --env <value>       Environment variables
+      -e, --env <value>       Environment variables for spawned processes
       -s, --silent            Silent fail -exits with code 0 on error
       --log <level>           Logging level
-      --node <value>          Sets node environment, shorthand for -e NODE_ENV=
       -h, --help              Show help
       -v, --version           Show version number
 
@@ -50,7 +49,6 @@ export default async function main(argv: string[]): Promise<void> {
     '--env': [String] as [StringConstructor],
     '--silent': Boolean,
     '--log': String,
-    '--node': String,
     '--help': Boolean,
     '--version': Boolean
   };
@@ -72,17 +70,14 @@ export default async function main(argv: string[]): Promise<void> {
     directory: cmd['--dir'],
     silent: cmd['--silent'],
     log: cmd['--log'] as TLogger,
-    // TODO these should be set in process.env so when required, the js has them
-    env: (cmd['--env'] || [])
-      .concat(cmd['--node'] ? `NODE_ENV=${cmd['--node']}` : [])
-      .reduce((acc: IOfType<string>, str) => {
-        const arr = str.split('=');
-        if (arr.length !== 2) {
-          throw Error(`Environment variables must have format VARIABLE=value`);
-        }
-        acc[arr[0]] = arr[1];
-        return acc;
-      }, {})
+    env: (cmd['--env'] || []).reduce((acc: IOfType<string>, str) => {
+      const arr = str.split('=');
+      if (arr.length !== 2) {
+        throw Error(`Environment variables must have format VARIABLE=value`);
+      }
+      acc[arr[0]] = arr[1];
+      return acc;
+    }, {})
   });
 
   let first = cmd._.shift();
