@@ -7,6 +7,7 @@ import core, { options } from '~/core';
 import { TLogger, IOfType } from '~/types';
 import { run } from '~/public';
 import list from './list';
+import raise from './raise';
 import logger from '~/utils/logger';
 
 export default async function main(argv: string[]): Promise<void> {
@@ -128,7 +129,7 @@ export default async function main(argv: string[]): Promise<void> {
     case ':list':
       return list(cmd._);
     case ':raise':
-      return console.log('TODO :raise');
+      return raise(cmd._);
     case ':run':
       const [tasks, args] = splitBy(cmd._);
       return run(tasks)(args);
