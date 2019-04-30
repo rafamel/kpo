@@ -6,6 +6,7 @@ import chalk from 'chalk';
 import core, { options } from '~/core';
 import { TLogger, IOfType } from '~/types';
 import { run } from '~/public';
+import _cmd from './cmd';
 import series from './series';
 import parallel from './parallel';
 import list from './list';
@@ -115,10 +116,9 @@ export default async function main(argv: string[]): Promise<void> {
       (cmd._.length ? ` "${cmd._.join('" "')}"` : '')
   );
 
-  // TODO
   switch (first) {
     case ':cmd':
-      return console.log('TODO :cmd');
+      return _cmd(cmd._);
     case ':series':
       return series(cmd._);
     case ':parallel':
