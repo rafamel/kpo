@@ -9,9 +9,9 @@ export interface IParallelOptions extends IExecOptions {
   names?: string[];
   colors?: string[];
   /**
-   * If `true`, it will fail early, killing all other processes if any of them fails.
+   * If `true`, it won't kill all other processes if any of them fails.
    */
-  early?: boolean;
+  force?: boolean;
   /**
    * If `true`, it will never throw.
    */
@@ -55,7 +55,7 @@ const parallel: IParallel = (() => {
       if (options.colors && options.colors.length) {
         argv.push('-c', options.colors.join(','));
       }
-      if (options.early) {
+      if (!options.force) {
         argv.push('--kill-others-on-fail');
       }
 

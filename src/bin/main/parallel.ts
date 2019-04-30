@@ -14,7 +14,7 @@ export default async function parallel(argv: string[]): Promise<void> {
     Options:
       -n, --names      Comma separated names
       -c, --colors     Comma separated colors
-      --early          Fail early by killing all other processes if any fails
+      --force          Don't kill all other processes if any fails
       -h, --help       Show help
     
     Examples:
@@ -24,7 +24,7 @@ export default async function parallel(argv: string[]): Promise<void> {
   const types = {
     '--names': String,
     '--colors': String,
-    '--early': Boolean,
+    '--force': Boolean,
     '--help': Boolean
   };
 
@@ -44,7 +44,7 @@ export default async function parallel(argv: string[]): Promise<void> {
   return command(cmds, {
     names: cmd['--names'] ? cmd['--names'].split(',') : undefined,
     colors: cmd['--colors'] ? cmd['--colors'].split(',') : undefined,
-    early: cmd['--early'],
+    force: cmd['--force'],
     silent: false
   })(args);
 }
