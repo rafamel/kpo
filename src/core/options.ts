@@ -4,6 +4,7 @@ import { setLevel } from '~/utils/logger';
 import hash from 'object-hash';
 
 export const state = {
+  force: 0,
   base: {
     file: null,
     directory: null,
@@ -35,6 +36,10 @@ export default {
   resetScope(): void {
     state.scope = {};
     merge();
+  },
+  forceUpdate(): void {
+    state.force += 1;
+    merge();
   }
 };
 
@@ -51,7 +56,7 @@ function merge(): void {
   // Set logging level
   if (options.log) setLevel(options.log);
   // Set id to object hash
-  id = hash(options);
+  id = hash(options) + state.force;
 }
 
 function stripUndefined(obj: IOfType<any>): IOfType<any> {
