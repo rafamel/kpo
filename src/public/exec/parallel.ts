@@ -68,7 +68,7 @@ const parallel: IParallel = (() => {
           allow: [],
           message: 'Parallel commands execution failed'
         });
-        if (options.silent) logger.error(err);
+        if (options.silent) logger.error(err.message);
         else throw err;
       }
     };
