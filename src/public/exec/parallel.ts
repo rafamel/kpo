@@ -4,6 +4,7 @@ import logger from '~/utils/logger';
 import { WrappedError } from '~/utils/errors';
 import expose from '~/utils/expose';
 import join from 'command-join';
+import { CONCURRENTLY_PATH } from '~/constants';
 
 export interface IParallelOptions extends IExecOptions {
   names?: string[];
@@ -60,12 +61,7 @@ const parallel: IParallel = (() => {
       }
 
       try {
-        await core.exec(
-          require.resolve('concurrently/bin/concurrently'),
-          argv,
-          true,
-          options
-        );
+        await core.exec(CONCURRENTLY_PATH, argv, true, options);
       } catch (e) {
         const err = new WrappedError(
           'Parallel commands execution failed',

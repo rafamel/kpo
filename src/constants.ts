@@ -6,3 +6,7 @@ export const FILE_EXT = ['.js', '.json', '.yml', '.yaml'];
 export const DEFAULT_LOG_LEVEL = 'info';
 // Default stdio for spawned commands
 export const DEFAULT_STDIO = 'inherit';
+// Concurrently path
+export const CONCURRENTLY_PATH = require.resolve(
+  'concurrently/bin/concurrently'
+);
