@@ -5,7 +5,7 @@ import arg from 'arg';
 import chalk from 'chalk';
 import core, { options } from '~/core';
 import { TLogger, IOfType } from '~/types';
-import run from '~/commands/run';
+import { run } from '~/public';
 import list from './list';
 import logger from '~/utils/logger';
 
@@ -130,7 +130,8 @@ export default async function main(argv: string[]): Promise<void> {
     case ':raise':
       return console.log('TODO :raise');
     case ':run':
-      return run(...splitBy(cmd._));
+      const [tasks, args] = splitBy(cmd._);
+      return run(tasks)(args);
     default:
       throw Error('Unknown command ' + first);
   }
