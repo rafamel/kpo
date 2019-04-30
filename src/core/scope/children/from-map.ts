@@ -7,6 +7,7 @@ export default function getChildrenFromMap(
   directory: string
 ): IChild[] {
   return Object.entries(map).map(([key, value]) => ({
+    name: key,
     directory: absolute({ path: value, cwd: directory }),
     matcher(name: string): boolean {
       return name === key;

@@ -67,7 +67,7 @@ export async function fromScopes(): Promise<string> {
   const scopes = await core.children();
 
   let rows = scopes.map((child) => [
-    path.parse(child.directory).name,
+    child.name,
     path.relative(cwd, child.directory)
   ]);
   if (root) {
