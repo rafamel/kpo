@@ -1,22 +1,17 @@
 import core from '~/core';
-import { IExecOptions, IOfType } from '~/types';
+import { IOfType, IMultiExecOptions } from '~/types';
 import logger from '~/utils/logger';
 import { WrappedError } from '~/utils/errors';
 import expose from '~/utils/expose';
 import join from 'command-join';
 import { CONCURRENTLY_PATH } from '~/constants';
 
-export interface IParallelOptions extends IExecOptions {
+/**
+ * Options taken by `parallel`
+ */
+export interface IParallelOptions extends IMultiExecOptions {
   names?: string[];
   colors?: string[];
-  /**
-   * If `true`, it won't kill all other processes if any of them fails.
-   */
-  force?: boolean;
-  /**
-   * If `true`, it will never throw.
-   */
-  silent?: boolean;
 }
 
 /**

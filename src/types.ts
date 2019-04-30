@@ -93,8 +93,6 @@ export interface IScopeOptions extends IOptions {
    * Paths . They can be defined as an array of globs, or otherwise an exclusive map of scope names and directories. See `TChildrenDefinition`. By default, it will be inferred if your project directory contains a `lerna.json` file from its `packages` key globs.
    */
   children?: TChildrenDefinition;
-  // TODO implement cwd (instead of directory)
-  // account for relative paths
   /**
    * Used for relative paths resolution and as default `cwd` on command execution. It is also the directory scopes are resolved from.
    * By default, it will be the directory in which a sibling or parent `package.json` is found for the *kpo* scripts file, or the directory of the *kpo* file itself otherwise, unless a explicit `directory` is passed on the cli -see `ICliOptions`.
@@ -155,4 +153,18 @@ export interface IExecOptions {
    * `stdio` mode.
    */
   stdio?: 'pipe' | 'ignore' | 'inherit';
+}
+
+/**
+ * Options for serial and parallel commands execution
+ */
+export interface IMultiExecOptions extends IExecOptions {
+  /**
+   * If `true`, execution of other processes will continue even if one fails
+   */
+  force?: boolean;
+  /**
+   * If `true`, it will never throw.
+   */
+  silent?: boolean;
 }

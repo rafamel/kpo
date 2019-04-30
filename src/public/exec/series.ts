@@ -1,31 +1,20 @@
 import core from '~/core';
-import { IExecOptions, IOfType } from '~/types';
+import { IOfType, IMultiExecOptions } from '~/types';
 import logger from '~/utils/logger';
 import expose from '~/utils/expose';
-
-export interface ISeriesOptions extends IExecOptions {
-  /**
-   * If `true`, it will never throw.
-   */
-  silent?: boolean;
-  /**
-   * If `true`, it will continue executing commands in the series even if some of them fail.
-   */
-  force?: boolean;
-}
 
 /**
  * Signature for `series`. Note that you can call `series.env` to pass only environment variables as a second argument. See `series`.
  */
 export interface ISeries {
-  (commands: string | string[], options?: ISeriesOptions): (
+  (commands: string | string[], options?: IMultiExecOptions): (
     args?: string[]
   ) => Promise<void>;
   env(
     commands: string | string[],
     env: IOfType<string>
   ): (args?: string[]) => Promise<void>;
-  fn(commands: string | string[], options?: ISeriesOptions): Promise<void>;
+  fn(commands: string | string[], options?: IMultiExecOptions): Promise<void>;
 }
 
 /**
@@ -34,9 +23,9 @@ export interface ISeries {
  * @returns An asynchronous function taking additional arguments to be used for all commands -hence, calling `series` won't have any effect until the returned function is called.
  */
 const series: ISeries = (() => {
-  const exposed = expose(function parallel(
+  const exposed = expose(function series(
     commands: string | string[],
-    options: ISeriesOptions = {}
+    options: IMultiExecOptions = {}
   ): (args?: string[]) => Promise<void> {
     return async (args?: string[]) => {
       if (!Array.isArray(commands)) commands = [commands];
