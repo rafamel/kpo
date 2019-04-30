@@ -7,6 +7,7 @@ import core, { options } from '~/core';
 import { TLogger, IOfType } from '~/types';
 import { run } from '~/public';
 import series from './series';
+import parallel from './parallel';
 import list from './list';
 import raise from './raise';
 import logger from '~/utils/logger';
@@ -18,7 +19,7 @@ export default async function main(argv: string[]): Promise<void> {
     ${pkg.description ? chalk.bold.yellow(pkg.description) : ''}
 
     Usage:
-      $ kpo [options] [@scope] [tasks]
+      $ kpo [options] [@scope] [tasks] -- [streamArgs]
       $ kpo [options] [@scope] [:command] [arguments]
 
     Options:
@@ -121,7 +122,7 @@ export default async function main(argv: string[]): Promise<void> {
     case ':series':
       return series(cmd._);
     case ':parallel':
-      return console.log('TODO :parallel');
+      return parallel(cmd._);
     case ':list':
       return list(cmd._);
     case ':raise':
