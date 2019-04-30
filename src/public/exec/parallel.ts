@@ -1,7 +1,7 @@
 import core from '~/core';
 import { IExecOptions, IOfType } from '~/types';
 import logger from '~/utils/logger';
-import { wrap } from '~/utils/errors';
+import { WrappedError } from '~/utils/errors';
 import expose from '~/utils/expose';
 import join from 'command-join';
 
@@ -67,10 +67,11 @@ const parallel: IParallel = (() => {
           options
         );
       } catch (e) {
-        const err = wrap.ensure(e, {
-          allow: [],
-          message: 'Parallel commands execution failed'
-        });
+        const err = new WrappedError(
+          'Parallel commands execution failed',
+          null,
+          e
+        );
         if (options.silent) logger.error(err.message);
         else throw err;
       }
