@@ -25,7 +25,7 @@ export interface ISeries {
     commands: string | string[],
     env: IOfType<string>
   ): (args?: string[]) => Promise<void>;
-  fn(commands: string | string[], env: IOfType<string>): Promise<void>;
+  fn(commands: string | string[], options?: ISeriesOptions): Promise<void>;
 }
 
 /**
