@@ -10,12 +10,12 @@ export default async function parallel(argv: string[]): Promise<void> {
       $ kpo :parallel [options] [commands] -- [streamArgs]
 
     Runs commands in parallel
-    r
+    
     Options:
-      -n, --names      Comma separated names
-      -c, --colors     Comma separated colors
-      --force          Don't kill all other processes if any fails
-      -h, --help       Show help
+      -n, --names <values>      Comma separated names
+      -c, --colors <values>     Comma separated colors
+      --force                   Don't kill all other processes if any fails
+      -h, --help                Show help
     
     Examples:
       $ kpo :parallel -n foo,baz -c blue,magenta "foo --bar" "baz --foobar"

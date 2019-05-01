@@ -12,7 +12,7 @@ export default async function series(argv: string[]): Promise<void> {
     Runs commands in series
     
     Options:
-      --force          Continue serial execution even if some fail
+      --force          Continue serial execution even if a process fails
       -h, --help       Show help
     
     Examples:
