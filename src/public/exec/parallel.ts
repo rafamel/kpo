@@ -63,8 +63,12 @@ const parallel: IParallel = (() => {
           null,
           e
         );
-        if (options.silent) logger.error(err.message);
-        else throw err;
+        if (options.silent) {
+          logger.error(err.message);
+          logger.debug(err);
+        } else {
+          throw err;
+        }
       }
     };
   });

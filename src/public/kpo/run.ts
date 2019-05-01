@@ -29,7 +29,7 @@ function run(tasks: string | string[]): (args?: string[]) => Promise<void> {
 
     for (let path of tasks) {
       const task = await core.task(path);
-      logger.info('\nRunning task: ' + chalk.bold.green(task.path));
+      logger.info('Running ' + chalk.bold.green(task.path));
       await core.run(task.script, args || []);
       logger.debug('Done with task: ' + task.path);
     }

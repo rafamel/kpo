@@ -10,6 +10,7 @@ import logger from '~/utils/logger';
 import { rejects } from 'errorish';
 import onExit from 'signal-exit';
 import uuid from 'uuid/v4';
+import join from 'command-join';
 import { IOfType, IExecOptions } from '~/types';
 
 export const processes: IOfType<ChildProcess> = {};
@@ -42,9 +43,7 @@ export async function trunk(
   if (!options.stdio) options.stdio = DEFAULT_STDIO;
   if (!options.env) options.env = process.env;
 
-  logger.debug(
-    'Executing: ' + command + (args.length ? ` "${args.join('" "')}"` : '')
-  );
+  logger.debug('Executing: ' + join([command].concat(args)));
   const id = uuid();
   const ps = isFork
     ? fork(command, args, options)
@@ -55,7 +54,7 @@ export async function trunk(
     ps.on('close', (code: number) => {
       delete processes[id];
       return code
-        ? reject(Error(`"${command}" failed with code ${code}`))
+        ? reject(Error(`${join([command])} failed with code ${code}`))
         : resolve();
     });
     ps.on('error', (err: any) => {

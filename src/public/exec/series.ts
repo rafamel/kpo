@@ -37,7 +37,10 @@ const series: ISeries = (() => {
           await core.exec(command, args || [], false, options);
         } catch (e) {
           err = e;
-          if (options.force || options.silent) logger.error(e.message);
+          if (options.force || options.silent) {
+            logger.error(e.message);
+            logger.debug(e);
+          }
           if (!options.force) break;
         }
       }
