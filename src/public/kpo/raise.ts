@@ -70,8 +70,10 @@ function raise(options: IRaiseOptions = {}): () => Promise<void> {
       (key) => !selected.includes(key)
     );
 
-    const toRemove = selected.filter((key) => !taskNames.includes(key));
     const toAdd = taskNames.filter((key) => !selected.includes(key));
+    const toRemove = selected
+      .filter((key) => !taskNames.includes(key))
+      .concat(Object.keys(scripts).filter((key) => toAdd.includes(key)));
 
     let msg = chalk.bold.green('No pending scripts changes');
     if (toRemove.length || toAdd.length) {
