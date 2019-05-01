@@ -1,5 +1,5 @@
 import { TScript, IOfType } from '~/types';
-import prompts from 'prompts';
+import prompts from 'prompts/dist';
 import expose, { TExposedOverload } from '~/utils/expose';
 
 /**
