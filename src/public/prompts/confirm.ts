@@ -1,5 +1,6 @@
+//
+import prompts from 'prompts/dist';
 import { TScript } from '~/types';
-import prompts from 'prompts';
 import { status } from 'promist';
 import expose, { TExposedOverload } from '~/utils/expose';
 
