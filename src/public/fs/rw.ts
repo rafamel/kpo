@@ -42,7 +42,7 @@ function rw(
 
     if (!(await confirm(`Write "${relative}"?`, options))) return;
 
-    await fs.ensureDir(file).catch(rejects);
+    await fs.ensureDir(path.parse(file).dir).catch(rejects);
     await fs.writeFile(file, String(response)).catch(rejects);
     logger.info(`Written: ${relative}`);
   };
