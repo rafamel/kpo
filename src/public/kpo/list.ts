@@ -39,6 +39,7 @@ function list(options: IListOptions = {}): () => Promise<void> {
   };
 }
 
+/** @hidden */
 export function fromTasks(tasks: ITasks): string {
   let str = '';
 
@@ -61,6 +62,7 @@ export function fromTasks(tasks: ITasks): string {
   return str;
 }
 
+/** @hidden */
 export async function fromScopes(): Promise<string> {
   const cwd = await core.cwd();
   const root = await core.root();

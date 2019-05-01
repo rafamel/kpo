@@ -34,6 +34,11 @@ export type TStreamOptions = IMultiExecOptions & {
 
 export default expose(stream);
 
+/**
+ * Streams *kpo* commands for children projects.
+ * It is an *exposed* function: call `stream.fn()`, which takes the same arguments, in order to execute on call.
+ * @returns An asynchronous function taking additional arguments to be used for all commands -hence, calling `stream` won't have any effect until the returned function is called.
+ */
 function stream(
   argv: string[],
   options: TStreamOptions = {}
@@ -89,6 +94,7 @@ function stream(
   };
 }
 
+/** @hidden */
 function getChild(name: string, children: IChild[]): IChild {
   const matches = children.filter((child) => child.matcher(name));
   if (matches.length > 1) throw Error(`Several scopes matched name "${name}"`);
