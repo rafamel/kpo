@@ -9,7 +9,12 @@ export default function getFromKpo(path: string, kpo: IScripts): ITask {
 
 export function trunk(arr: string[], obj: any, path: string): ITask {
   if (!arr.length) {
-    if (typeof obj === 'object' && !Array.isArray(obj) && obj !== null) {
+    if (
+      typeof obj === 'object' &&
+      !Array.isArray(obj) &&
+      obj !== null &&
+      !(obj instanceof Error)
+    ) {
       const task = trunk(['default'], obj, path);
       if (obj.hasOwnProperty('_description')) {
         if (task.hasOwnProperty('description')) {
@@ -23,7 +28,7 @@ export function trunk(arr: string[], obj: any, path: string): ITask {
   }
 
   const key = arr.shift() as string;
-  if (typeof obj !== 'object' || obj === null) {
+  if (typeof obj !== 'object' || obj === null || obj instanceof Error) {
     throw Error(`${path} is not an object`);
   }
 

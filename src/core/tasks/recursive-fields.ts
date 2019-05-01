@@ -6,9 +6,15 @@ export default function recursiveFields(obj: IOfType<any>): string[] {
 }
 
 export function trunk(obj: IOfType<any>, path: string): string[] {
-  if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+  if (
+    typeof obj !== 'object' ||
+    obj === null ||
+    obj instanceof Error ||
+    Array.isArray(obj)
+  ) {
     return [path];
   }
+
   return Object.entries(obj).reduce((acc: string[], [key, value]) => {
     if (key[0] === '_') return acc;
     acc = acc.concat(trunk(value, `${path}.${key}`));
