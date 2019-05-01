@@ -22,7 +22,11 @@ export interface ISeries {
  * It is an *exposed* function: call `series.fn()`, which takes the same arguments, in order to execute on call.
  * @returns An asynchronous function taking additional arguments to be used for all commands -hence, calling `series` won't have any effect until the returned function is called.
  */
-const series: ISeries = (() => {
+const series = create();
+export default series;
+
+/** @hidden */
+export function create(): ISeries {
   const exposed = expose(function series(
     commands: string | string[],
     options: IMultiExecOptions = {}
@@ -56,6 +60,4 @@ const series: ISeries = (() => {
       return exposed(commands, { env });
     }
   });
-})();
-
-export default series;
+}

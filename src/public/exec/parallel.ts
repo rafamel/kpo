@@ -33,7 +33,11 @@ export interface IParallel {
  * It is an *exposed* function: call `parallel.fn()`, which takes the same arguments, in order to execute on call.
  * @returns An asynchronous function taking additional arguments to be used for all commands -hence, calling `parallel` won't have any effect until the returned function is called.
  */
-const parallel: IParallel = (() => {
+const parallel = create();
+export default parallel;
+
+/** @hidden */
+export function create(): IParallel {
   const exposed = expose(function parallel(
     commands: string | string[],
     options: IParallelOptions = {}
@@ -81,6 +85,4 @@ const parallel: IParallel = (() => {
       return exposed(commands, { env });
     }
   });
-})();
-
-export default parallel;
+}
