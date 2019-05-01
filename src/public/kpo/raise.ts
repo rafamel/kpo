@@ -78,13 +78,13 @@ function raise(options: IRaiseOptions = {}): () => Promise<void> {
     let msg = chalk.bold.green('No pending scripts changes');
     if (toRemove.length || toAdd.length) {
       msg = toRemove.length
-        ? chalk.bold.red('Scripts to remove: ') + toRemove.join(', ')
-        : chalk.bold.green('No scripts to remove');
+        ? chalk.bold.yellow('Scripts to remove: ') + toRemove.join(', ')
+        : chalk.bold('No scripts to remove');
       msg +=
         '\n' +
         (toAdd.length
           ? chalk.bold.yellow('Scripts to add: ') + toAdd.join(', ')
-          : chalk.bold.green('No scripts to add'));
+          : chalk.bold('No scripts to add'));
     }
 
     // eslint-disable-next-line no-console
