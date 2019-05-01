@@ -3,6 +3,7 @@ import { loadPackage, flags, safePairs, splitBy } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import chalk from 'chalk';
+import join from 'command-join';
 import core, { options } from '~/core';
 import { TLogger, IOfType } from '~/types';
 import { run } from '~/public';
@@ -11,6 +12,7 @@ import series from './series';
 import parallel from './parallel';
 import list from './list';
 import raise from './raise';
+import stream from './stream';
 import logger from '~/utils/logger';
 
 export default async function main(argv: string[]): Promise<void> {
@@ -35,11 +37,11 @@ export default async function main(argv: string[]): Promise<void> {
     Commands:
       :run           Default command -it can be omitted
       :cmd, :        Run a command within a project context
-      :series        Run commands in series within a project context
-      :parallel      Run commands in parallel within a project context
       :list          List available tasks
       :raise         Raise tasks to package
-      :link          Link packages
+      :series        Run commands in series within a project context
+      :parallel      Run commands in parallel within a project context
+      :stream        Stream tasks or commands on children scopes
 
     Examples:
       $ kpo foo bar baz
@@ -110,26 +112,28 @@ export default async function main(argv: string[]): Promise<void> {
   // Log full command to be run w/ resolved scopes
   const scopes = core.state.scopes;
   logger.info(
-    `Running: ${chalk.bold('kpo')}` +
+    chalk.bold('kpo') +
       (scopes.length ? chalk.bold.yellow(' @' + scopes.join(' @')) : '') +
       chalk.bold.blue(' ' + first) +
-      (cmd._.length ? ` "${cmd._.join('" "')}"` : '')
+      ` ${join(cmd._)}`
   );
 
   switch (first) {
+    case ':run':
+      const [tasks, args] = splitBy(cmd._);
+      return run(tasks)(args);
+    case ':list':
+      return list(cmd._);
+    case ':raise':
+      return raise(cmd._);
     case ':cmd':
       return _cmd(cmd._);
     case ':series':
       return series(cmd._);
     case ':parallel':
       return parallel(cmd._);
-    case ':list':
-      return list(cmd._);
-    case ':raise':
-      return raise(cmd._);
-    case ':run':
-      const [tasks, args] = splitBy(cmd._);
-      return run(tasks)(args);
+    case ':stream':
+      return stream(cmd._);
     default:
       throw Error('Unknown command ' + first);
   }
