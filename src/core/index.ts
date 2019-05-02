@@ -22,7 +22,7 @@ export const state: ICoreState = {
   scopes: []
 };
 
-function cache<T extends Function>(fn: T): T {
+function cache<T>(fn: () => T): () => T {
   return _cache(() => options.id, fn);
 }
 
