@@ -32,44 +32,63 @@ function copy(
   filter?: TCopyFilterFn
 ): () => Promise<void>;
 /**
- * Recursive copy.
+ * Recursive copy. If an array of paths is passed as `src`, `dest` will be expected to be a directory.
  * It is an *exposed* function: call `copy.fn()`, which takes the same arguments, in order to execute on call.
  * @returns An asynchronous function -hence, calling `copy` won't have any effect until the returned function is called.
  */
-function copy(src: string, dest: string, ...args: any[]): () => Promise<void> {
+function copy(
+  src: string | string[],
+  dest: string,
+  ...args: any[]
+): () => Promise<void> {
   return async () => {
-    const options: IFsWriteOptions = Object.assign(
-      { overwrite: true },
-      args.find((x) => typeof x === 'object') || {}
-    );
-    const filter: TCopyFilterFn =
-      args.find((x) => typeof x === 'function') || (() => true);
-
-    const cwd = await core.cwd();
-    src = absolute({ path: src, cwd });
-    dest = absolute({ path: dest, cwd });
-
-    const relatives = {
-      src: './' + path.relative(cwd, src),
-      dest: './' + path.relative(cwd, dest)
-    };
-
-    const srcExist = await exists(src, { fail: options.fail });
-    if (!srcExist) {
-      logger.info(`Copy skipped: "${relatives.src}" to "${relatives.dest}"`);
-      return;
+    if (Array.isArray(src)) {
+      for (let source of src) {
+        await trunk(source, path.join(dest, path.parse(source).base), args);
+      }
+    } else {
+      await trunk(src, dest, args);
     }
-
-    const msg = `Copy "${relatives.src}" to "${relatives.dest}"?`;
-    if (!(await confirm(msg, options))) return;
-
-    await fs
-      .copy(src, dest, {
-        overwrite: options.overwrite,
-        errorOnExist: options.fail,
-        filter
-      })
-      .catch(rejects);
-    logger.info(`Copied: "${relatives.src}" to "${relatives.dest}"`);
   };
+}
+
+/** @hidden */
+export async function trunk(
+  src: string,
+  dest: string,
+  args: any[]
+): Promise<void> {
+  const options: IFsWriteOptions = Object.assign(
+    { overwrite: true },
+    args.find((x) => typeof x === 'object') || {}
+  );
+  const filter: TCopyFilterFn =
+    args.find((x) => typeof x === 'function') || (() => true);
+
+  const cwd = await core.cwd();
+  src = absolute({ path: src, cwd });
+  dest = absolute({ path: dest, cwd });
+
+  const relatives = {
+    src: './' + path.relative(cwd, src),
+    dest: './' + path.relative(cwd, dest)
+  };
+
+  const srcExist = await exists(src, { fail: options.fail });
+  if (!srcExist) {
+    logger.info(`Copy skipped: "${relatives.src}" to "${relatives.dest}"`);
+    return;
+  }
+
+  const msg = `Copy "${relatives.src}" to "${relatives.dest}"?`;
+  if (!(await confirm(msg, options))) return;
+
+  await fs
+    .copy(src, dest, {
+      overwrite: options.overwrite,
+      errorOnExist: options.fail,
+      filter
+    })
+    .catch(rejects);
+  logger.info(`Copied: "${relatives.src}" to "${relatives.dest}"`);
 }
