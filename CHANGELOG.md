@@ -1,3 +1,18 @@
+## [0.0.4](https://github.com/rafamel/kpo/compare/v0.0.3...v0.0.4) (2019-05-02)
+
+
+### Bug Fixes
+
+* **utils/cache, core:** removes cache callback arguments ([dfbd213](https://github.com/rafamel/kpo/commit/dfbd213))
+* **utils/confirm:** forces import of transpiled prompts ([8b752d2](https://github.com/rafamel/kpo/commit/8b752d2))
+
+
+### Features
+
+* **public/fs:** takes string array as src for copy and move ([0521531](https://github.com/rafamel/kpo/commit/0521531))
+
+
+
 ## [0.0.3](https://github.com/rafamel/kpo/compare/v0.0.2...v0.0.3) (2019-05-01)
 
 
