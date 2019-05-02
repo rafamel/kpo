@@ -1,4 +1,5 @@
-import prompts from 'prompts';
+// force import of transpiled prompts
+import prompts from 'prompts/dist';
 
 export interface IConfirmOptions {
   confirm?: boolean;
