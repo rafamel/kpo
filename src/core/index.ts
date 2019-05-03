@@ -13,147 +13,182 @@ import logger from '~/utils/logger';
 import { TCoreOptions, IExecOptions, TScript } from '~/types';
 import { rejects } from 'errorish';
 import { absolute } from '~/utils/file';
+import wrapCore from './wrap';
 import { loadPackage } from 'cli-belt';
-import { clean } from 'semver';
+import ob from '~/utils/object-base';
+import versionRange from '~/utils/version-range';
 
 export interface ICoreState {
+  version: string | null;
   scopes: string[];
+  cwd: string;
+  paths: IPaths;
 }
 
 export const state: ICoreState = {
-  scopes: []
+  version: null,
+  scopes: [],
+  cwd: process.cwd(),
+  paths: {
+    directory: process.cwd(),
+    kpo: null,
+    pkg: null
+  }
 };
+
+let loaded: ILoaded = { kpo: null, pkg: null };
 
 function cache<T>(fn: () => T): () => T {
   return _cache(() => options.id, fn);
 }
 
-// Core changes might constitute major version changes even if internal, as
-// core is used overwritten for different kpo instances on load (requireLocal)
-const core = {
-  get options() {
-    return options;
-  },
-  get state(): ICoreState {
-    return state;
-  },
-  async get<T extends keyof TCoreOptions>(key: T): Promise<TCoreOptions[T]> {
-    // we're ensuring we've loaded user options when
-    // any option is requested
-    await core.load();
-    return options.raw()[key];
-  },
-  paths: cache(async function(): Promise<IPaths> {
-    const opts = options.raw();
-    return getSelfPaths({
-      file: opts.file || undefined,
-      directory: opts.directory || undefined
-    });
-  }),
-  load: cache(async function(): Promise<ILoaded> {
-    return load(await core.paths(), options.raw(), await core.version());
-  }),
-  cwd: cache(async function(): Promise<string> {
-    const cwd = await core.get('cwd');
-    const paths = await core.paths();
-    if (!cwd) return paths.directory;
+// Core changes might constitute major version changes even if internal,
+// as core state is overwritten for different kpo instances below
+const core = wrapCore(
+  // These will run in order before any core function call
+  [
+    async function initialize(): Promise<void> {
+      if (state.version) return;
 
-    // as cwd is a IScopeOptions property -it can't be set on cli-
-    // if it is set and it's not absolute, it must be relative
-    // to a kpo scripts file -if on package.json it was already set as absolute
-    return absolute({
-      path: cwd,
-      cwd: paths.kpo ? path.parse(paths.kpo).dir : paths.directory
-    });
-  }),
-  root: cache(async function(): Promise<IPaths | null> {
-    const cwd = await core.cwd();
+      const pkg = await loadPackage(__dirname, { title: false });
+      if (!pkg.version) throw Error(`kpo version couldn't be retrieved`);
+      state.version = pkg.version;
 
-    return getRootPaths({
-      cwd,
-      root: await core.get('root')
-    });
-  }),
-  children: cache(async function(): Promise<IChild[]> {
-    const paths = await core.paths();
-    const cwd = await core.cwd();
-    const children = await core.get('children');
+      if (process.env.KPO_STATE) {
+        const decoded = ob.decode(process.env.KPO_STATE);
+        versionRange(
+          decoded && decoded.core && decoded.core.version,
+          pkg.version
+        );
+        Object.assign(state, decoded.core);
+        options.setBase(decoded.options);
 
-    return getChildren(
-      { cwd, pkg: paths.pkg ? path.parse(paths.pkg).dir : cwd },
-      children
-    );
-  }),
-  bin: cache(async function(): Promise<string[]> {
-    const cwd = await core.cwd();
-    const root = await core.root();
-    return root ? getBin(cwd, root.directory) : getBin(cwd);
-  }),
-  tasks: cache(async function(): Promise<ITasks> {
-    const { kpo, pkg } = await core.load();
-    return getAllTasks(kpo || undefined, pkg || undefined);
-  }),
-  async task(path: string): Promise<ITask> {
-    const { kpo, pkg } = await core.load();
-    return getTask(path, kpo || undefined, pkg || undefined);
-  },
-  async run(
-    script: TScript,
-    args: string[],
-    opts?: IExecOptions
-  ): Promise<void> {
-    return run(script, async (item) => {
-      return typeof item === 'string'
-        ? core.exec(item, args, false, opts)
-        : item(args);
-    }).catch(rejects);
-  },
-  async exec(
-    command: string,
-    args: string[],
-    fork: boolean,
-    opts: IExecOptions = {}
-  ): Promise<void> {
-    const cwd = opts.cwd
-      ? absolute({ path: opts.cwd, cwd: await core.cwd() })
-      : await core.cwd();
-    const bin = opts.cwd ? await getBin(cwd) : await core.bin();
-    const env = opts.env
-      ? Object.assign({}, await core.get('env'), opts.env)
-      : await core.get('env');
-    return exec(command, args, fork, cwd, bin, env);
-  },
-  async setScope(names: string[]): Promise<void> {
-    const root = await core.root();
+        process.chdir(state.paths.directory);
+      }
+    },
+    cache(async function(): Promise<void> {
+      state.paths = await getSelfPaths({
+        cwd: state.cwd,
+        directory: options.raw.directory || undefined,
+        file: options.raw.file || undefined
+      });
+      process.chdir(state.paths.directory);
 
-    const { next, scope } = await setScope(
-      names,
-      { root: root ? root.directory : undefined },
-      await core.children()
-    );
-    if (scope) {
-      logger.debug(`${scope.name} scope set`);
-      // keep track of scope branches
-      state.scopes = state.scopes.concat(scope.name);
-      // set current directory as the the one of the scope
-      options.setCli({ file: null, directory: scope.directory });
-      // reset options
-      options.resetScope();
+      // if any options change on load that's no problem, the only
+      // path option that can change is cwd, which is dealt with below
+      loaded = await load(state.paths);
+
+      // options cwd can only be set on scope options (on load())
+      state.paths.directory = options.raw.cwd
+        ? absolute({
+            path: options.raw.cwd,
+            // we're setting it relative to the file
+            cwd: state.paths.kpo
+              ? path.parse(state.paths.kpo).dir
+              : state.paths.directory
+          })
+        : state.paths.directory;
+      process.chdir(state.paths.directory);
+
+      process.env.KPO_STATE = ob.encode({
+        core: state,
+        options: options.raw
+      });
+    })
+  ],
+  // Core functions
+  {
+    async get<T extends keyof TCoreOptions>(key: T): Promise<TCoreOptions[T]> {
+      return options.raw[key];
+    },
+    async scopes(): Promise<string[]> {
+      return state.scopes;
+    },
+    // TODO use process.cwd() to obtain directory on public fns
+    async paths(): Promise<IPaths> {
+      return state.paths;
+    },
+    async load(): Promise<ILoaded> {
+      return loaded;
+    },
+    root: cache(async function(): Promise<IPaths | null> {
+      return getRootPaths({
+        cwd: state.paths.directory,
+        root: await core.get('root')
+      });
+    }),
+    children: cache(async function(): Promise<IChild[]> {
+      const children = await core.get('children');
+
+      return getChildren(
+        {
+          cwd: state.paths.directory,
+          pkg: state.paths.pkg
+            ? path.parse(state.paths.pkg).dir
+            : state.paths.directory
+        },
+        children
+      );
+    }),
+    bin: cache(async function(): Promise<string[]> {
+      const root = await core.root();
+      return root
+        ? getBin(state.paths.directory, root.directory)
+        : getBin(state.paths.directory);
+    }),
+    tasks: cache(async function(): Promise<ITasks> {
+      return getAllTasks(loaded.kpo || undefined, loaded.pkg || undefined);
+    }),
+    async task(path: string): Promise<ITask> {
+      return getTask(path, loaded.kpo || undefined, loaded.pkg || undefined);
+    },
+    async run(
+      script: TScript,
+      args: string[],
+      opts?: IExecOptions
+    ): Promise<void> {
+      return run(script, async (item) => {
+        return typeof item === 'string'
+          ? core.exec(item, args, false, opts)
+          : item(args);
+      }).catch(rejects);
+    },
+    async exec(
+      command: string,
+      args: string[],
+      fork: boolean,
+      opts: IExecOptions = {}
+    ): Promise<void> {
+      const cwd = opts.cwd
+        ? absolute({ path: opts.cwd, cwd: state.paths.directory })
+        : state.paths.directory;
+      const bin = opts.cwd ? await getBin(cwd) : await core.bin();
+      const env = opts.env
+        ? Object.assign({}, await core.get('env'), opts.env)
+        : await core.get('env');
+      return exec(command, args, fork, cwd, bin, env);
+    },
+    async setScope(names: string[]): Promise<void> {
+      const root = await core.root();
+
+      const { next, scope } = await setScope(
+        names,
+        { root: root ? root.directory : undefined },
+        await core.children()
+      );
+      if (scope) {
+        logger.debug(`${scope.name} scope set`);
+        // keep track of scope branches
+        state.scopes = state.scopes.concat(scope.name);
+        // set current directory as the the one of the scope
+        options.setCli({ file: null, directory: scope.directory });
+        // reset options
+        options.resetScope();
+      }
+      // Continue recursively
+      if (next.length) return core.setScope(next);
     }
-    // Continue recursively
-    if (next.length) return core.setScope(next);
-  },
-  async version(): Promise<string> {
-    const pkg = await loadPackage(__dirname, { title: false });
-    if (!pkg || !pkg.version) {
-      throw Error(`kpo version couldn't be retrieved`);
-    }
-
-    const version = clean(pkg.version);
-    if (!version) throw Error(`kpo version couldn't be retrieved`);
-
-    return version;
   }
-};
+);
 
 export { core as default, options };

@@ -16,21 +16,21 @@ export interface IGetFiles {
  */
 export default async function getFiles(
   opts: {
+    cwd: string;
     file?: string;
     directory?: string;
   },
   strict: boolean
 ): Promise<IGetFiles> {
-  const cwd = process.cwd();
-
-  const directory = opts.directory && absolute({ path: opts.directory, cwd });
+  const directory =
+    opts.directory && absolute({ path: opts.directory, cwd: opts.cwd });
 
   const file =
-    opts.file && absolute({ path: opts.file, cwd: directory || cwd });
+    opts.file && absolute({ path: opts.file, cwd: directory || opts.cwd });
 
   return file
     ? getExplicit(file, directory, strict)
-    : getDefault(directory || cwd, strict);
+    : getDefault(directory || opts.cwd, strict);
 }
 
 export async function getExplicit(

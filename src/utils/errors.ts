@@ -1,7 +1,7 @@
 import { scope, Errorish } from 'errorish';
 
 // Error changes might constitute major version changes even if internal,
-// as they're overwritten for different kpo instances on load (requireLocal)
+// as they're overwritten for different kpo instances on core load
 
 class CustomError<T> extends Errorish<T> {}
 

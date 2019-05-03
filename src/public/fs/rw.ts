@@ -21,9 +21,9 @@ function rw(
   options: IFsOptions = {}
 ): () => Promise<void> {
   return async () => {
-    const cwd = await core.cwd();
-    file = absolute({ path: file, cwd });
-    const relative = './' + path.relative(cwd, file);
+    const paths = await core.paths();
+    file = absolute({ path: file, cwd: paths.directory });
+    const relative = './' + path.relative(paths.directory, file);
 
     const doesExist = await exists(file, { fail: options.fail });
 

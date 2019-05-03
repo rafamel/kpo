@@ -23,7 +23,7 @@ function mkdir(
   options: IFsOptions = {}
 ): () => Promise<void> {
   return async () => {
-    const cwd = await core.cwd();
+    const cwd = await core.paths().then((paths) => paths.directory);
     paths = Array.isArray(paths) ? paths : [paths];
     paths = paths.map((path) => absolute({ path, cwd }));
 

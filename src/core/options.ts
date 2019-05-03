@@ -4,10 +4,9 @@ import { setLevel } from '~/utils/logger';
 import hash from 'object-hash';
 
 // Option changes should constitute major version changes even if internal,
-// as they're overwritten for different kpo instances on load (requireLocal)
+// as they're overwritten for different kpo instances on core load
 export const state = {
   base: {
-    force: 0,
     file: null,
     directory: null,
     env: {},
@@ -18,22 +17,22 @@ export const state = {
   scope: {} as IScopeOptions
 };
 
-let id = 'INIT';
-if (!process.env.KPO_STATE_ID) process.env.KPO_STATE_ID = id;
-
+let id = '';
+let force = 0;
 let options: TCoreOptions = {};
+merge();
 
 export default {
   get id(): string {
     return id;
   },
-  raw(): TCoreOptions {
-    if (id === 'INIT') merge();
+  // Raw should only be called from core (after initialization)
+  get raw(): TCoreOptions {
     return Object.assign({}, options);
   },
-  setBase(opts: TCoreOptions, verify?: 'post' | 'pre'): void {
+  setBase(opts: TCoreOptions): void {
     Object.assign(state.base, opts);
-    merge(verify);
+    merge();
   },
   setCli(opts: ICliOptions): void {
     Object.assign(state.cli, stripUndefined(opts));
@@ -48,14 +47,12 @@ export default {
     merge();
   },
   forceUpdate(): void {
-    state.base.force = state.base.force ? state.base.force + 1 : 0;
+    force += 1;
     merge();
   }
 };
 
-function merge(verify: 'post' | 'pre' = 'pre'): void {
-  if (verify === 'pre') verifyId();
-
+function merge(): void {
   // merge base and scope
   options = Object.assign({}, state.base, state.scope, state.cli, {
     env: Object.assign({}, state.base.env, state.scope.env, state.cli.env)
@@ -68,9 +65,7 @@ function merge(verify: 'post' | 'pre' = 'pre'): void {
   // Set logging level
   if (options.log) setLevel(options.log);
   // Set id to object hash
-  id = hash(options);
-  if (verify === 'post') verifyId();
-  process.env.KPO_STATE_ID = id;
+  id = hash(options) + force;
 }
 
 function stripUndefined(obj: IOfType<any>): IOfType<any> {
@@ -78,10 +73,4 @@ function stripUndefined(obj: IOfType<any>): IOfType<any> {
     if (value !== undefined) acc[key] = value;
     return acc;
   }, {});
-}
-
-function verifyId(): void {
-  if (id !== process.env.KPO_STATE_ID) {
-    throw Error(`Local kpo instance doesn't match executing instance`);
-  }
 }

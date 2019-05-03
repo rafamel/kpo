@@ -9,6 +9,7 @@ import { absolute } from '~/utils/file';
  * - `directory` determines the path to look for the `package.json` and `kpo.scripts` files; if passed, files will be expected to be exactly in that directory, otherwise `directory` will be `cwd` and the search will **recurse up** until the root folder is reached. If a `package.json` is found closer to `directory` than any `kpo.scripts` containing a `kpo.path` key, that path for a `kpo.scripts` file will take precedence.
  */
 export async function getSelfPaths(opts: {
+  cwd: string;
   file?: string;
   directory?: string;
 }): Promise<IPaths> {
@@ -30,7 +31,7 @@ export async function getRootPaths(directories: {
     : path.join(cwd, '../');
 
   try {
-    return await getPaths({ directory }, Boolean(root));
+    return await getPaths({ directory, cwd }, Boolean(root));
   } catch (err) {
     if (!root) return null;
     throw new errors.WrappedError(

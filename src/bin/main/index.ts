@@ -96,7 +96,6 @@ export default async function main(argv: string[]): Promise<void> {
     const scope = command.shift() as string;
 
     await core.setScope(scope === '@' ? ['root'] : [scope.slice(1)]);
-
     first = command.length
       ? `:${command.join(':')}`
       : (cmd._.shift() as string);
@@ -110,12 +109,11 @@ export default async function main(argv: string[]): Promise<void> {
   }
 
   // Log full command to be run w/ resolved scopes
-  const scopes = core.state.scopes;
+  const scopes = await core.scopes();
   logger.info(
     chalk.bold('kpo') +
       (scopes.length ? chalk.bold.yellow(' @' + scopes.join(' @')) : '') +
-      chalk.bold.blue(' ' + first) +
-      ` ${join(cmd._)}`
+      `${chalk.bold.blue(' ' + first)} ${join(cmd._)}`
   );
 
   switch (first) {

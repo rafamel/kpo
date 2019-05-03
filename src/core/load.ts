@@ -4,17 +4,12 @@ import yaml from 'js-yaml';
 import { rejects } from 'errorish';
 import errors from '~/utils/errors';
 import { ILoaded, IPaths } from './types';
-import { IOfType, IPackageOptions, TCoreOptions } from '~/types';
+import { IOfType, IPackageOptions } from '~/types';
 import options from './options';
 import { absolute } from '~/utils/file';
-import { diff } from 'semver';
 import * as _public from '../public';
 
-export default async function load(
-  paths: IPaths,
-  raw: TCoreOptions,
-  version: string
-): Promise<ILoaded> {
+export default async function load(paths: IPaths): Promise<ILoaded> {
   // pkg must be loaded first to set options first, if present at key `kpo`
   const pkg = paths.pkg
     ? await fs
@@ -23,21 +18,17 @@ export default async function load(
         .catch(rejects)
     : null;
 
-  const kpo = paths.kpo ? await loadFile(paths.kpo, raw, version) : null;
+  const kpo = paths.kpo ? await loadFile(paths.kpo) : null;
 
   return { kpo, pkg };
 }
 
-export async function loadFile(
-  file: string,
-  raw: TCoreOptions,
-  version: string
-): Promise<IOfType<any> | null> {
+export async function loadFile(file: string): Promise<IOfType<any> | null> {
   const { ext } = path.parse(file);
 
   switch (ext) {
     case '.js':
-      return requireLocal(file, raw, version);
+      return requireLocal(file);
     case '.json':
       return fs
         .readJSON(file)
@@ -78,11 +69,7 @@ export function processPkg(file: string, pkg: IOfType<any>): IOfType<any> {
   return pkg;
 }
 
-export async function requireLocal(
-  file: string,
-  raw: TCoreOptions,
-  version: string
-): Promise<IOfType<any>> {
+export async function requireLocal(file: string): Promise<IOfType<any>> {
   // Ensure local kpo has equal state
   let kpoPath: string | null = null;
   try {
@@ -90,29 +77,8 @@ export async function requireLocal(
   } catch (_) {}
   if (kpoPath) {
     const local = errors.open.throws(() => require(kpoPath as string));
-
-    if (!local || !local.core || !local.core.version) {
-      throw Error(`Local kpo version doesn't match executing instance version`);
-    }
-
-    const localVersion = await local.core.version();
-    const verDiff = diff(localVersion, version);
-    // Error out if difference is a major version or we're on v0.x.x
-    if (
-      verDiff === 'major' ||
-      verDiff === 'premajor' ||
-      (verDiff && version[0] === '0')
-    ) {
-      throw Error(
-        `Local kpo version (${localVersion})` +
-          ` doesn't match executing instance version (${version})`
-      );
-    }
-
-    // Overwrite options
-    local.core.options.setBase(raw, 'post');
     // Overwrite error constructors and helpers
-    Object.assign(local.errors, errors);
+    if (local && local.errors) Object.assign(local.errors, errors);
   }
 
   const scripts = errors.open.throws(() => require(file));

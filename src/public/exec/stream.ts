@@ -63,7 +63,7 @@ function stream(
     if (!children.length) throw Error(`No project children selected`);
 
     const commands = children.map((child) => {
-      return [NODE_PATH, KPO_PATH, '-d', child.directory].concat(argv);
+      return [NODE_PATH, KPO_PATH, '@' + child.name].concat(argv);
     });
 
     await (options.parallel
@@ -80,7 +80,8 @@ function stream(
                   NODE_PATH,
                   '-e',
                   oneLine`console.log(
-                    "\\nScope: ${chalk.bold.yellow('@' + children[i].name)}"
+                    "${i === 0 ? 'Scope:' : '\\nScope:'}
+                    ${chalk.bold.yellow('@' + children[i].name)}"
                   )`
                 ]),
                 join(cmd)

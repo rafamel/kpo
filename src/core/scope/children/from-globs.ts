@@ -19,6 +19,7 @@ export default async function getChildrenFromGlobs(
     return acc.concat(arr);
   }, []);
 
+  // TODO verify names don't conflict
   // filter and make into IChild
   return filter(dirs).map((dir) => ({
     name: path.parse(dir).name,

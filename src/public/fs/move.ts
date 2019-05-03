@@ -39,13 +39,13 @@ export async function trunk(
 ): Promise<void> {
   options = Object.assign({ overwrite: true }, options);
 
-  const cwd = await core.cwd();
-  src = absolute({ path: src, cwd });
-  dest = absolute({ path: dest, cwd });
+  const paths = await core.paths();
+  src = absolute({ path: src, cwd: paths.directory });
+  dest = absolute({ path: dest, cwd: paths.directory });
 
   const relatives = {
-    src: './' + path.relative(cwd, src),
-    dest: './' + path.relative(cwd, dest)
+    src: './' + path.relative(paths.directory, src),
+    dest: './' + path.relative(paths.directory, dest)
   };
 
   const srcExist = await exists(src, { fail: options.fail });

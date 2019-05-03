@@ -1,8 +1,8 @@
 import { IScripts, IOfType, TScript } from '~/types';
 
 export interface IPaths {
-  kpo: string | null;
   pkg: string | null;
+  kpo: string | null;
   directory: string;
 }
 

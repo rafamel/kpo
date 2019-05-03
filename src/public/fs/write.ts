@@ -36,9 +36,9 @@ function write(file: string, ...args: any[]): () => Promise<void> {
       args.find((x) => typeof x === 'object') || {}
     );
 
-    const cwd = await core.cwd();
-    file = absolute({ path: file, cwd });
-    const relative = './' + path.relative(cwd, file);
+    const paths = await core.paths();
+    file = absolute({ path: file, cwd: paths.directory });
+    const relative = './' + path.relative(paths.directory, file);
 
     const doesExist = await exists(file);
     if (options.fail && doesExist) {

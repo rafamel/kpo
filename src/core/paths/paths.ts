@@ -4,7 +4,7 @@ import logger from '~/utils/logger';
 import { IPaths } from '../types';
 
 export default async function getPaths(
-  opts: { file?: string; directory?: string },
+  opts: { cwd: string; file?: string; directory?: string },
   strict: boolean
 ): Promise<IPaths> {
   const { kpo, pkg } = await getFiles(opts, strict);
@@ -17,8 +17,8 @@ export default async function getPaths(
 
   const dir = path.parse((pkg || kpo) as string).dir;
   return {
-    kpo: kpo,
     pkg: pkg,
+    kpo: kpo,
     directory: dir
   };
 }

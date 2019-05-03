@@ -64,16 +64,16 @@ export function fromTasks(tasks: ITasks): string {
 
 /** @hidden */
 export async function fromScopes(): Promise<string> {
-  const cwd = await core.cwd();
+  const paths = await core.paths();
   const root = await core.root();
   const scopes = await core.children();
 
   let rows = scopes.map((child) => [
     child.name,
-    path.relative(cwd, child.directory)
+    path.relative(paths.directory, child.directory)
   ]);
   if (root) {
-    rows.unshift(['root', path.relative(cwd, root.directory)]);
+    rows.unshift(['root', path.relative(paths.directory, root.directory)]);
   }
 
   const nonUnique = rows
