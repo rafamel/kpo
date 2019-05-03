@@ -1,3 +1,21 @@
+# [0.1.0](https://github.com/rafamel/kpo/compare/v0.0.4...v0.1.0) (2019-05-03)
+
+
+### Bug Fixes
+
+* overwrites error constructors and helpers for locally imported kpo instances ([0a420d4](https://github.com/rafamel/kpo/commit/0a420d4))
+* **core/options:** setBase doesn't strip undefined values to fully preserve passed options ([479165b](https://github.com/rafamel/kpo/commit/479165b))
+* **core/tasks:** fixes path parsing and printing ([51d34a3](https://github.com/rafamel/kpo/commit/51d34a3))
+* **core/tasks:** tries to run package.json tasks only when task is not found on kpo, but not for any ([20344a8](https://github.com/rafamel/kpo/commit/20344a8))
+
+
+### Features
+
+* **core:** deals with different executing and imported kpo instances ([2b7478a](https://github.com/rafamel/kpo/commit/2b7478a))
+* **core/load:** passes public functions if kpo scripts file exports a function ([04a93b8](https://github.com/rafamel/kpo/commit/04a93b8))
+
+
+
 ## [0.0.4](https://github.com/rafamel/kpo/compare/v0.0.3...v0.0.4) (2019-05-02)
 
 
