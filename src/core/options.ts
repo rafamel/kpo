@@ -32,7 +32,7 @@ export default {
     return Object.assign({}, options);
   },
   setBase(opts: TCoreOptions, verify?: 'post' | 'pre'): void {
-    Object.assign(state.base, stripUndefined(opts));
+    Object.assign(state.base, opts);
     merge(verify);
   },
   setCli(opts: ICliOptions): void {
