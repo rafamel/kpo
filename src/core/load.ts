@@ -8,6 +8,7 @@ import { IOfType, IPackageOptions, TCoreOptions } from '~/types';
 import options from './options';
 import { absolute } from '~/utils/file';
 import { diff } from 'semver';
+import * as _public from '../public';
 
 export default async function load(
   paths: IPaths,
@@ -116,5 +117,6 @@ export async function requireLocal(
     Object.assign(local.errors, errors);
   }
 
-  return errors.open.throws(() => require(file));
+  const scripts = errors.open.throws(() => require(file));
+  return typeof scripts === 'function' ? scripts(_public) : scripts;
 }
