@@ -82,8 +82,6 @@ function stripUndefined(obj: IOfType<any>): IOfType<any> {
 
 function verifyId(): void {
   if (id !== process.env.KPO_STATE_ID) {
-    throw Error(
-      `Locally imported kpo instance doesn't match executing instance`
-    );
+    throw Error(`Local kpo instance doesn't match executing instance`);
   }
 }

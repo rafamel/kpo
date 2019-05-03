@@ -92,9 +92,7 @@ export async function requireLocal(
     const local = errors.open.throws(() => require(kpoPath as string));
 
     if (!local || !local.core || !local.core.version) {
-      throw Error(
-        "Locally imported kpo version doesn't match executing instance version"
-      );
+      throw Error(`Local kpo version doesn't match executing instance version`);
     }
 
     const localVersion = await local.core.version();
@@ -106,7 +104,7 @@ export async function requireLocal(
       (verDiff && version[0] === '0')
     ) {
       throw Error(
-        `Locally imported kpo version (${localVersion})` +
+        `Local kpo version (${localVersion})` +
           ` doesn't match executing instance version (${version})`
       );
     }
