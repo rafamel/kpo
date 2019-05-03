@@ -1,7 +1,7 @@
 import core from '~/core';
 import { IOfType, IMultiExecOptions } from '~/types';
 import logger from '~/utils/logger';
-import { WrappedError } from '~/utils/errors';
+import errors from '~/utils/errors';
 import expose from '~/utils/expose';
 import join from 'command-join';
 import { CONCURRENTLY_PATH } from '~/constants';
@@ -62,7 +62,7 @@ export function create(): IParallel {
       try {
         await core.exec(CONCURRENTLY_PATH, argv, true, options);
       } catch (e) {
-        const err = new WrappedError(
+        const err = new errors.WrappedError(
           'Parallel commands execution failed',
           null,
           e

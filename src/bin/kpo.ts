@@ -4,12 +4,12 @@ import main from './main';
 import core from '~/core';
 import { error } from 'cli-belt';
 import logger from '~/utils/logger';
-import { OpenError } from '~/utils/errors';
+import errors from '~/utils/errors';
 import { ensure } from 'errorish';
 
 main(process.argv.slice(2)).catch(async (err) => {
   err = ensure(err);
-  const isOpen = err instanceof OpenError;
+  const isOpen = err instanceof errors.OpenError;
 
   return error(err, {
     exit: (await core.get('silent').catch(() => false)) ? 0 : 1,

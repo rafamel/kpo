@@ -3,6 +3,8 @@ import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
 import hash from 'object-hash';
 
+// Option changes should constitute major version changes even if internal,
+// as they're overwritten for different kpo instances on load (requireLocal)
 export const state = {
   base: {
     force: 0,

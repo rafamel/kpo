@@ -1,4 +1,4 @@
-//
+// force import of transpiled prompts
 import prompts from 'prompts/dist';
 import { TScript } from '~/types';
 import { status } from 'promist';

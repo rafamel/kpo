@@ -8,7 +8,7 @@ import { NODE_PATH, KPO_PATH } from '~/constants';
 import { IMultiExecOptions } from '~/types';
 import chalk from 'chalk';
 import { oneLine } from 'common-tags';
-import { WrappedError } from '~/utils/errors';
+import errors from '~/utils/errors';
 
 /**
  * Options taken by `stream`
@@ -89,7 +89,11 @@ function stream(
           ),
           { ...options, cwd: undefined }
         )(args).catch(async (err) => {
-          throw new WrappedError('Series commands execution failed', null, err);
+          throw new errors.WrappedError(
+            'Series commands execution failed',
+            null,
+            err
+          );
         }));
   };
 }

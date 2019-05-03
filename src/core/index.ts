@@ -28,6 +28,8 @@ function cache<T>(fn: () => T): () => T {
   return _cache(() => options.id, fn);
 }
 
+// Core changes might constitute major version changes even if internal, as
+// core is used overwritten for different kpo instances on load (requireLocal)
 const core = {
   get options() {
     return options;

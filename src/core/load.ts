@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import yaml from 'js-yaml';
 import { rejects } from 'errorish';
-import { open } from '~/utils/errors';
+import errors from '~/utils/errors';
 import { ILoaded, IPaths } from './types';
 import { IOfType, IPackageOptions, TCoreOptions } from '~/types';
 import options from './options';
@@ -88,7 +88,7 @@ export async function requireLocal(
     kpoPath = require.resolve('kpo', { paths: [file] });
   } catch (_) {}
   if (kpoPath) {
-    const local = open.throws(() => require(kpoPath as string));
+    const local = errors.open.throws(() => require(kpoPath as string));
 
     if (!local || !local.core || !local.core.version) {
       throw Error(
@@ -105,12 +105,16 @@ export async function requireLocal(
       (verDiff && version[0] === '0')
     ) {
       throw Error(
-        `Locally imported kpo version (${localVersion}) doesn't match executing instance version (${version})`
+        `Locally imported kpo version (${localVersion})` +
+          ` doesn't match executing instance version (${version})`
       );
     }
 
+    // Overwrite options
     local.core.options.setBase(raw, 'post');
+    // Overwrite error constructors and helpers
+    Object.assign(local.errors, errors);
   }
 
-  return open.throws(() => require(file));
+  return errors.open.throws(() => require(file));
 }

@@ -1,7 +1,7 @@
 import path from 'path';
 import { IPaths } from '../types';
 import getPaths from './paths';
-import { WrappedError } from '~/utils/errors';
+import errors from '~/utils/errors';
 import { absolute } from '~/utils/file';
 
 /**
@@ -33,7 +33,7 @@ export async function getRootPaths(directories: {
     return await getPaths({ directory }, Boolean(root));
   } catch (err) {
     if (!root) return null;
-    throw new WrappedError(
+    throw new errors.WrappedError(
       `root scope couldn't be retrieved: ${root}`,
       null,
       err
