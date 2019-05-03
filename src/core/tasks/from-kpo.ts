@@ -3,8 +3,8 @@ import { IScripts } from '~/types';
 import purePath from './pure-path';
 
 export default function getFromKpo(path: string, kpo: IScripts): ITask {
-  const task = trunk(path.split('.'), kpo, '');
-  return { ...task, path: purePath(task.path.slice(1)) };
+  const task = trunk(purePath(path).split('.'), kpo, '');
+  return { ...task, path: purePath(task.path) };
 }
 
 export function trunk(arr: string[], obj: any, path: string): ITask {
@@ -18,7 +18,7 @@ export function trunk(arr: string[], obj: any, path: string): ITask {
       const task = trunk(['default'], obj, path);
       if (obj.hasOwnProperty('_description')) {
         if (task.hasOwnProperty('description')) {
-          throw Error(`There are several descriptions for ${path}`);
+          throw Error(`There are several descriptions for ${purePath(path)}`);
         }
         return { ...task, description: obj._description };
       }
@@ -29,20 +29,27 @@ export function trunk(arr: string[], obj: any, path: string): ITask {
 
   const key = arr.shift() as string;
   if (typeof obj !== 'object' || obj === null || obj instanceof Error) {
-    throw Error(`${path} is not an object`);
+    throw Error(`${purePath(path)} is not an object`);
   }
 
   const keys = key[0] === '$' ? [key] : [key, `$${key}`];
   const props = keys.filter((key) => obj.hasOwnProperty(key));
   if (props.length > 1) {
     throw Error(
-      `There are several tasks matching ${path ? `${path}.${key}` : key}`
+      `There are several tasks matching ` +
+        purePath(path ? `${path}.${key}` : key)
     );
   }
   if (!props.length) {
-    throw Error(`There is no task matching ${path ? `${path}.${key}` : key}`);
+    throw Error(
+      `There are no tasks matching ${purePath(path ? `${path}.${key}` : key)}`
+    );
   }
   const actualKey = props.shift() as string;
-  const task = trunk(arr, obj[actualKey], `${path}.${actualKey}`);
+  const task = trunk(
+    arr,
+    obj[actualKey],
+    path ? `${path}.${actualKey}` : actualKey
+  );
   return actualKey[0] === '$' ? { ...task, hidden: true } : task;
 }
