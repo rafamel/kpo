@@ -1,6 +1,7 @@
 import { ITask } from '../types';
 import { IScripts } from '~/types';
 import purePath from './pure-path';
+import { CustomError } from '~/utils/errors';
 
 export default function getFromKpo(path: string, kpo: IScripts): ITask {
   const task = trunk(purePath(path).split('.'), kpo, '');
@@ -41,8 +42,9 @@ export function trunk(arr: string[], obj: any, path: string): ITask {
     );
   }
   if (!props.length) {
-    throw Error(
-      `There are no tasks matching ${purePath(path ? `${path}.${key}` : key)}`
+    throw new CustomError(
+      `There are no tasks matching ${purePath(path ? `${path}.${key}` : key)}`,
+      { type: 'NotFound' }
     );
   }
   const actualKey = props.shift() as string;

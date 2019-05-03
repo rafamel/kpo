@@ -3,6 +3,7 @@ import getFromKpo from './from-kpo';
 import getFromPackage from './from-package';
 import { ITask, ITasks } from '../types';
 import recursiveFields from './recursive-fields';
+import { CustomError } from '~/utils/errors';
 
 export function getTask(
   path: string,
@@ -11,9 +12,11 @@ export function getTask(
 ): ITask {
   try {
     if (kpo) return getFromKpo(path, kpo);
-    throw Error(`Task ${path} not found`);
+    throw new CustomError(`Task ${path} not found`, { type: 'NotFound' });
   } catch (err) {
-    if (!pkg) throw err;
+    if (!pkg || !err.data || !err.data.type || err.data.type !== 'NotFound') {
+      throw err;
+    }
 
     try {
       return getFromPackage(path, pkg);
