@@ -1,6 +1,6 @@
 import path from 'path';
 import _cache from '~/utils/cache';
-import options, { raw } from './options';
+import options from './options';
 import { getSelfPaths, getRootPaths } from './paths';
 import load from './load';
 import { setScope, getChildren } from './scope';
@@ -13,6 +13,8 @@ import logger from '~/utils/logger';
 import { TCoreOptions, IExecOptions, TScript } from '~/types';
 import { rejects } from 'errorish';
 import { absolute } from '~/utils/file';
+import { loadPackage } from 'cli-belt';
+import { clean } from 'semver';
 
 export interface ICoreState {
   scopes: string[];
@@ -27,6 +29,9 @@ function cache<T>(fn: () => T): () => T {
 }
 
 const core = {
+  get options() {
+    return options;
+  },
   get state(): ICoreState {
     return state;
   },
@@ -34,17 +39,17 @@ const core = {
     // we're ensuring we've loaded user options when
     // any option is requested
     await core.load();
-    return raw()[key];
+    return options.raw()[key];
   },
   paths: cache(async function(): Promise<IPaths> {
-    const options = raw();
+    const opts = options.raw();
     return getSelfPaths({
-      file: options.file || undefined,
-      directory: options.directory || undefined
+      file: opts.file || undefined,
+      directory: opts.directory || undefined
     });
   }),
   load: cache(async function(): Promise<ILoaded> {
-    return load(await core.paths());
+    return load(await core.paths(), options.raw(), await core.version());
   }),
   cwd: cache(async function(): Promise<string> {
     const cwd = await core.get('cwd');
@@ -135,6 +140,17 @@ const core = {
     }
     // Continue recursively
     if (next.length) return core.setScope(next);
+  },
+  async version(): Promise<string> {
+    const pkg = await loadPackage(__dirname, { title: false });
+    if (!pkg || !pkg.version) {
+      throw Error(`kpo version couldn't be retrieved`);
+    }
+
+    const version = clean(pkg.version);
+    if (!version) throw Error(`kpo version couldn't be retrieved`);
+
+    return version;
   }
 };
 

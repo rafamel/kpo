@@ -128,7 +128,7 @@ export interface ICliOptions extends IOptions {
   directory?: string | null;
 }
 
-export type TCoreOptions = ICliOptions & IPackageOptions;
+export type TCoreOptions = ICliOptions & IPackageOptions & { force?: number };
 
 /**
  * A project children scopes, defined either:
