@@ -1,5 +1,4 @@
-// force import of transpiled prompts
-import prompts from 'prompts/dist';
+import prompts from 'prompts';
 import { TScript } from '~/types';
 import { status } from 'promist';
 import expose, { TExposedOverload } from '~/utils/expose';
