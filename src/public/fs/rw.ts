@@ -1,7 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { exists, absolute } from '~/utils/file';
-import core from '~/core';
 import { rejects } from 'errorish';
 import expose from '~/utils/expose';
 import confirm from '~/utils/confirm';
@@ -21,9 +20,9 @@ function rw(
   options: IFsOptions = {}
 ): () => Promise<void> {
   return async () => {
-    const paths = await core.paths();
-    file = absolute({ path: file, cwd: paths.directory });
-    const relative = './' + path.relative(paths.directory, file);
+    const cwd = process.cwd();
+    file = absolute({ path: file, cwd });
+    const relative = './' + path.relative(cwd, file);
 
     const doesExist = await exists(file, { fail: options.fail });
 

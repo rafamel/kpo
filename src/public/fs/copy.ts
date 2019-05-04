@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs-extra';
-import core from '~/core';
 import { absolute, exists } from '~/utils/file';
 import { IFsWriteOptions } from './types';
 import expose, { TExposedOverload } from '~/utils/expose';
@@ -65,13 +64,13 @@ export async function trunk(
   const filter: TCopyFilterFn =
     args.find((x) => typeof x === 'function') || (() => true);
 
-  const paths = await core.paths();
-  src = absolute({ path: src, cwd: paths.directory });
-  dest = absolute({ path: dest, cwd: paths.directory });
+  const cwd = process.cwd();
+  src = absolute({ path: src, cwd });
+  dest = absolute({ path: dest, cwd });
 
   const relatives = {
-    src: './' + path.relative(paths.directory, src),
-    dest: './' + path.relative(paths.directory, dest)
+    src: './' + path.relative(cwd, src),
+    dest: './' + path.relative(cwd, dest)
   };
 
   const srcExist = await exists(src, { fail: options.fail });

@@ -1,4 +1,3 @@
-import core from '~/core';
 import asTag from '~/utils/as-tag';
 import { exists as _exists, absolute } from '~/utils/file';
 import expose, { TExposedOverload } from '~/utils/expose';
@@ -20,10 +19,9 @@ function exists(
  */
 function exists(...args: any[]): () => Promise<void> {
   return async () => {
-    const paths = await core.paths();
     const file = absolute({
       path: asTag(args.shift(), ...args),
-      cwd: paths.directory
+      cwd: process.cwd()
     });
 
     await _exists(file, { fail: true });

@@ -1,7 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { rejects } from 'errorish';
-import core from '~/core';
 import { absolute, exists } from '~/utils/file';
 import confirm from '~/utils/confirm';
 import { parallel } from 'promist';
@@ -23,7 +22,7 @@ function remove(
   options: IFsOptions = {}
 ): () => Promise<void> {
   return async () => {
-    const cwd = await core.paths().then((paths) => paths.directory);
+    const cwd = process.cwd();
     paths = Array.isArray(paths) ? paths : [paths];
     paths = paths.map((path) => absolute({ path, cwd }));
 
