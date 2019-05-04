@@ -19,9 +19,8 @@ export default async function getChildrenFromGlobs(
     return acc.concat(arr);
   }, []);
 
-  // TODO verify names don't conflict
   // filter and make into IChild
-  return filter(dirs).map((dir) => ({
+  const children = filter(dirs).map((dir) => ({
     name: path.parse(dir).name,
     // absolute path
     directory: path.join(directory, dir),
@@ -29,6 +28,18 @@ export default async function getChildrenFromGlobs(
       return dir.includes(name);
     }
   }));
+
+  // Check for name conflicts
+  const conflicts = children
+    .map((child) => child.name)
+    .filter((name, i, arr) => arr.indexOf(name) !== i);
+  if (conflicts.length)
+    throw Error(
+      `There are several children scopes with the same name: ` +
+        conflicts.join(', ')
+    );
+
+  return children;
 }
 
 export async function fromGlob(
