@@ -1,12 +1,12 @@
-import { IOfType } from '~/types';
-
 export default function cache<T>(getId: () => string, fn: () => T): () => T {
-  const store: IOfType<any> = {};
+  let id: null | string = null;
+  let value: null | T = null;
 
   return function() {
     const key = getId();
-    if (store.hasOwnProperty(key)) return store[key];
+    if (key === id) return value as T;
 
-    return (store[key] = fn());
-  } as any;
+    id = key;
+    return (value = fn());
+  };
 }

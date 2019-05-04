@@ -20,19 +20,14 @@ test(`succeeds`, async () => {
   expect(getId).toHaveBeenCalledTimes(3);
   expect(cb).toHaveBeenCalledTimes(2);
 
-  id = '1';
-  expect(fn()).toBe('foo');
-  expect(getId).toHaveBeenCalledTimes(4);
-  expect(cb).toHaveBeenCalledTimes(2);
-
   id = '3';
   cb.mockImplementation(() => Promise.resolve('baz'));
   await expect(fn()).resolves.toBe('baz');
-  expect(getId).toHaveBeenCalledTimes(5);
+  expect(getId).toHaveBeenCalledTimes(4);
   expect(cb).toHaveBeenCalledTimes(3);
 
   await expect(fn()).resolves.toBe('baz');
-  expect(getId).toHaveBeenCalledTimes(6);
+  expect(getId).toHaveBeenCalledTimes(5);
   expect(cb).toHaveBeenCalledTimes(3);
 });
 
