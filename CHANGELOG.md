@@ -1,3 +1,19 @@
+# [0.2.0](https://github.com/rafamel/kpo/compare/v0.1.0...v0.2.0) (2019-05-04)
+
+
+### Bug Fixes
+
+* **core/tasks:** fails on tasks starting with "_" ([2439812](https://github.com/rafamel/kpo/commit/2439812))
+* **utils/cache:** saves only last result, otherwise side effects (options changes) won't be register ([0073f48](https://github.com/rafamel/kpo/commit/0073f48))
+
+
+### Features
+
+* properly passes state between kpo instances and processes via KPO_STATE env var ([4cb9957](https://github.com/rafamel/kpo/commit/4cb9957))
+* **core/scope:** checks for children name conflicts when inferred from directory name ([0cf24eb](https://github.com/rafamel/kpo/commit/0cf24eb))
+
+
+
 # [0.1.0](https://github.com/rafamel/kpo/compare/v0.0.4...v0.1.0) (2019-05-03)
 
 
