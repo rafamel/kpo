@@ -29,6 +29,12 @@ export function trunk(arr: string[], obj: any, path: string): ITask {
   }
 
   const key = arr.shift() as string;
+  if (key[0] === '_') {
+    throw Error(
+      `Fields starting with '_' are reserved for metadata: ` +
+        purePath(path ? `${path}.${key}` : key)
+    );
+  }
   if (typeof obj !== 'object' || obj === null || obj instanceof Error) {
     throw Error(`${purePath(path)} is not an object`);
   }
