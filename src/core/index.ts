@@ -17,6 +17,7 @@ import wrapCore from './wrap';
 import { loadPackage } from 'cli-belt';
 import ob from '~/utils/object-base';
 import versionRange from '~/utils/version-range';
+import { KPO_ENV_STATE } from '~/constants';
 
 export interface ICoreState {
   version: string | null;
@@ -54,8 +55,9 @@ const core = wrapCore(
       if (!pkg.version) throw Error(`kpo version couldn't be retrieved`);
       state.version = pkg.version;
 
-      if (process.env.KPO_STATE) {
-        const decoded = ob.decode(process.env.KPO_STATE);
+      const encoded = process.env[KPO_ENV_STATE];
+      if (encoded) {
+        const decoded = ob.decode(encoded);
         versionRange(
           decoded && decoded.core && decoded.core.version,
           pkg.version
@@ -90,7 +92,7 @@ const core = wrapCore(
         : state.paths.directory;
       process.chdir(state.paths.directory);
 
-      process.env.KPO_STATE = ob.encode({
+      process.env[KPO_ENV_STATE] = ob.encode({
         core: state,
         options: options.raw
       });
@@ -104,7 +106,6 @@ const core = wrapCore(
     async scopes(): Promise<string[]> {
       return state.scopes;
     },
-    // TODO use process.cwd() to obtain directory on public fns
     async paths(): Promise<IPaths> {
       return state.paths;
     },
