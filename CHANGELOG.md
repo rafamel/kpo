@@ -1,3 +1,20 @@
+# [0.3.0](https://github.com/rafamel/kpo/compare/v0.2.0...v0.3.0) (2019-05-05)
+
+
+### Bug Fixes
+
+* **core:** doesn't preserve state when cwd has changed ([2d4d9be](https://github.com/rafamel/kpo/commit/2d4d9be))
+* **public/exec:** stream arguments get passed to command ([0e96323](https://github.com/rafamel/kpo/commit/0e96323))
+
+
+### Features
+
+* **public/exec:** allows for arguments to be passed in options; arguments in options overwrite glob ([1c341ef](https://github.com/rafamel/kpo/commit/1c341ef))
+* **public/kpo:** adds -- to kpo commands on raise so they can take arguments out of the box ([ef05508](https://github.com/rafamel/kpo/commit/ef05508))
+* **utils/version-range:** returns boolean instead of throwing for mismatches ([09e9ef6](https://github.com/rafamel/kpo/commit/09e9ef6))
+
+
+
 # [0.2.0](https://github.com/rafamel/kpo/compare/v0.1.0...v0.2.0) (2019-05-04)
 
 
