@@ -69,8 +69,16 @@ const core = wrapCore(
           );
         }
 
-        Object.assign(state, decoded.core);
-        options.setBase(decoded.options);
+        if (path.relative(state.cwd, decoded.core.cwd)) {
+          // if cwd has changed, that's an explicit signal for kpo to run
+          // in a new directory, hence we won't recover core state,
+          // and only recover log level from options state
+          options.setBase({ log: decoded.options.log || DEFAULT_LOG_LEVEL });
+        } else {
+          // otherwise, we'll recover both core and options state
+          Object.assign(state, decoded.core);
+          options.setBase(decoded.options);
+        }
 
         process.chdir(state.paths.directory);
       }
