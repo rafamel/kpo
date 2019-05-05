@@ -16,8 +16,8 @@ import { absolute } from '~/utils/file';
 import wrapCore from './wrap';
 import { loadPackage } from 'cli-belt';
 import ob from '~/utils/object-base';
-import versionRange from '~/utils/version-range';
-import { KPO_ENV_STATE } from '~/constants';
+import inVersionRange from '~/utils/version-range';
+import { KPO_ENV_STATE, DEFAULT_LOG_LEVEL } from '~/constants';
 
 export interface ICoreState {
   version: string | null;
@@ -58,10 +58,17 @@ const core = wrapCore(
       const encoded = process.env[KPO_ENV_STATE];
       if (encoded) {
         const decoded = ob.decode(encoded);
-        versionRange(
+        const inRange = inVersionRange(
           decoded && decoded.core && decoded.core.version,
           pkg.version
         );
+        if (!inRange) {
+          throw Error(
+            `Local kpo version (${pkg.version.trim()})` +
+              ` doesn't match executing version (${decoded.core.version.trim()})`
+          );
+        }
+
         Object.assign(state, decoded.core);
         options.setBase(decoded.options);
 
