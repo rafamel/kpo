@@ -167,4 +167,8 @@ export interface IMultiExecOptions extends IExecOptions {
    * If `true`, it will never throw.
    */
   silent?: boolean;
+  /**
+   * Arguments to pass to all commands
+   */
+  args?: string[];
 }

@@ -42,10 +42,12 @@ export function create(): IParallel {
     commands: string | string[],
     options: IParallelOptions = {}
   ): (args?: string[]) => Promise<void> {
-    return async (args?: string[]) => {
+    return async (args: string[] = []) => {
+      args = options.args || args;
+
       const argv: string[] = Array.isArray(commands)
         ? commands.map(
-            (command) => command + (args && args.length ? ` ${join(args)}` : '')
+            (command) => command + (args.length ? ` ${join(args)}` : '')
           )
         : [commands + (args && args.length ? ` ${join(args)}` : '')];
 

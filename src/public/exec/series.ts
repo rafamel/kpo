@@ -31,14 +31,16 @@ export function create(): ISeries {
     commands: string | string[],
     options: IMultiExecOptions = {}
   ): (args?: string[]) => Promise<void> {
-    return async (args?: string[]) => {
+    return async (args: string[] = []) => {
+      args = options.args || args;
+
       if (!Array.isArray(commands)) commands = [commands];
 
       let err: Error | null = null;
       for (let command of commands) {
         try {
           if (!command) throw Error(`No command passed for series`);
-          await core.exec(command, args || [], false, options);
+          await core.exec(command, args, false, options);
         } catch (e) {
           err = e;
           if (options.force || options.silent) {
