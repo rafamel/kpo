@@ -43,7 +43,9 @@ function stream(
   argv: string[],
   options: TStreamOptions = {}
 ): (args?: string[]) => Promise<void> {
-  return async (args?: string[]) => {
+  return async (args: string[] = []) => {
+    args = options.args || args;
+
     let children = await core.children();
     if (!children.length) throw Error(`Project has no children`);
 
@@ -63,39 +65,43 @@ function stream(
     if (!children.length) throw Error(`No project children selected`);
 
     const commands = children.map((child) => {
-      return [NODE_PATH, KPO_PATH, '@' + child.name].concat(argv);
+      return [NODE_PATH, KPO_PATH, '@' + child.name]
+        .concat(argv)
+        .concat(args.length ? ['--'].concat(args) : []);
     });
 
     await (options.parallel
-      ? parallel(commands.map(join), {
+      ? parallel.fn(commands.map(join), {
           ...options,
           cwd: undefined,
           names: children.map((child) => '@' + child.name)
-        })(args)
-      : series(
-          commands.reduce(
-            (acc: string[], cmd, i) =>
-              acc.concat([
-                join([
-                  NODE_PATH,
-                  '-e',
-                  oneLine`console.log(
+        })
+      : series
+          .fn(
+            commands.reduce(
+              (acc: string[], cmd, i) =>
+                acc.concat([
+                  join([
+                    NODE_PATH,
+                    '-e',
+                    oneLine`console.log(
                     "${i === 0 ? 'Scope:' : '\\nScope:'}
                     ${chalk.bold.yellow('@' + children[i].name)}"
                   )`
+                  ]),
+                  join(cmd)
                 ]),
-                join(cmd)
-              ]),
-            []
-          ),
-          { ...options, cwd: undefined }
-        )(args).catch(async (err) => {
-          throw new errors.WrappedError(
-            'Series commands execution failed',
-            null,
-            err
-          );
-        }));
+              []
+            ),
+            { ...options, cwd: undefined }
+          )
+          .catch(async (err) => {
+            throw new errors.WrappedError(
+              'Series commands execution failed',
+              null,
+              err
+            );
+          }));
   };
 }
 
