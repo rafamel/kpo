@@ -110,10 +110,12 @@ export default async function main(argv: string[]): Promise<void> {
 
   // Log full command to be run w/ resolved scopes
   const scopes = await core.scopes();
+  const plain = join(cmd._);
   logger.info(
     chalk.bold('kpo') +
       (scopes.length ? chalk.bold.yellow(' @' + scopes.join(' @')) : '') +
-      `${chalk.bold.blue(' ' + first)} ${join(cmd._)}`
+      chalk.bold.blue(' ' + first + ' ') +
+      (plain.slice(-3) === ' --' ? plain.slice(0, -3) : plain)
   );
 
   switch (first) {
