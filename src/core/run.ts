@@ -1,6 +1,7 @@
 import logger from '~/utils/logger';
 import { TScript } from '~/types';
 import errors from '~/utils/errors';
+import guardian from '~/utils/guardian';
 
 export default async function run(
   script: TScript,
@@ -10,6 +11,8 @@ export default async function run(
       | ((args: string[]) => Promise<TScript | void> | TScript | void)
   ) => Promise<any>
 ): Promise<void> {
+  guardian();
+
   if (!script) {
     logger.debug('Empty task');
   } else if (script instanceof Error) {

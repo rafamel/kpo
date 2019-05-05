@@ -18,6 +18,7 @@ import { loadPackage } from 'cli-belt';
 import ob from '~/utils/object-base';
 import inVersionRange from '~/utils/version-range';
 import { KPO_ENV_STATE, DEFAULT_LOG_LEVEL } from '~/constants';
+import guardian from '~/utils/guardian';
 
 export interface ICoreState {
   version: string | null;
@@ -48,6 +49,7 @@ function cache<T>(fn: () => T): () => T {
 const core = wrapCore(
   // These will run in order before any core function call
   [
+    async () => guardian(),
     async function initialize(): Promise<void> {
       if (state.version) return;
 
