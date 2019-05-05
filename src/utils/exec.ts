@@ -1,22 +1,10 @@
-import {
-  spawn,
-  fork,
-  SpawnOptions,
-  ChildProcess,
-  ForkOptions
-} from 'child_process';
-import { DEFAULT_STDIO } from '~/constants';
+import { SpawnOptions } from 'child_process';
+import { DEFAULT_STDIO, NODE_PATH } from '~/constants';
 import logger from '~/utils/logger';
-import { rejects } from 'errorish';
-import onExit from 'signal-exit';
-import uuid from 'uuid/v4';
 import join from 'command-join';
-import { IOfType, IExecOptions } from '~/types';
-
-export const processes: IOfType<ChildProcess> = {};
-
-// Kill all dangling child processes on main process exit
-onExit(() => Object.values(processes).forEach((p) => p.kill()));
+import { IExecOptions } from '~/types';
+import { spawn } from 'exits';
+import errors from './errors';
 
 export default async function exec(
   cmd: string,
@@ -24,42 +12,20 @@ export default async function exec(
   fork: boolean,
   options: IExecOptions = {}
 ): Promise<void> {
-  const opts: SpawnOptions | ForkOptions = {
+  const opts: SpawnOptions = {
+    shell: !fork,
     cwd: options.cwd,
-    env: options.env,
-    stdio: options.stdio
+    env: options.env || process.env,
+    stdio: options.stdio || DEFAULT_STDIO
   };
 
-  if (!fork) (opts as SpawnOptions).shell = true;
-  return trunk(cmd, args, fork, opts);
-}
+  logger.debug('Executing: ' + join([cmd].concat(args)));
 
-export async function trunk(
-  command: string,
-  args: string[],
-  isFork: boolean,
-  options: SpawnOptions | ForkOptions
-): Promise<void> {
-  if (!options.stdio) options.stdio = DEFAULT_STDIO;
-  if (!options.env) options.env = process.env;
+  const { promise } = fork
+    ? spawn(NODE_PATH, [cmd].concat(args), opts)
+    : spawn(cmd, args, opts);
 
-  logger.debug('Executing: ' + join([command].concat(args)));
-  const id = uuid();
-  const ps = isFork
-    ? fork(command, args, options)
-    : spawn(command, args, options);
-  processes[id] = ps;
-
-  return new Promise((resolve: (arg: void) => void, reject) => {
-    ps.on('close', (code: number) => {
-      delete processes[id];
-      return code
-        ? reject(Error(`${join([command])} failed with code ${code}`))
-        : resolve();
-    });
-    ps.on('error', (err: any) => {
-      delete processes[id];
-      return reject(err);
-    });
-  }).catch(rejects);
+  await promise.catch(async (err) => {
+    throw new errors.CustomError(`Process failed: ${join([cmd])}`, null, err);
+  });
 }
