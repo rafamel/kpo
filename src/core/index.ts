@@ -7,28 +7,24 @@ import { setScope, getChildren } from './scope';
 import { getTask, getAllTasks } from './tasks';
 import { IPaths, ILoaded, ITask, ITasks, IChild } from './types';
 import getBin from './bin';
-import exec from '~/utils/exec';
 import run from './run';
 import logger from '~/utils/logger';
+import exec from '~/utils/exec';
 import { TCoreOptions, IExecOptions, TScript } from '~/types';
 import { rejects } from 'errorish';
 import { absolute } from '~/utils/file';
 import wrapCore from './wrap';
-import { loadPackage } from 'cli-belt';
-import ob from '~/utils/object-base';
-import inVersionRange from '~/utils/version-range';
-import { KPO_ENV_STATE, DEFAULT_LOG_LEVEL } from '~/constants';
 import guardian from '~/utils/guardian';
+import globals from '~/globals';
 
 export interface ICoreState {
-  version: string | null;
   scopes: string[];
   cwd: string;
   paths: IPaths;
 }
 
-export const state: ICoreState = {
-  version: null,
+/* Shared between instances: changes might imply a major version release */
+export const state: ICoreState = globals('core', {
   scopes: [],
   cwd: process.cwd(),
   paths: {
@@ -36,60 +32,22 @@ export const state: ICoreState = {
     kpo: null,
     pkg: null
   }
-};
+}).get();
 
 let loaded: ILoaded = { kpo: null, pkg: null };
+const cache = <T>(fn: () => T): (() => T) => _cache(() => options.id, fn);
 
-function cache<T>(fn: () => T): () => T {
-  return _cache(() => options.id, fn);
-}
-
-// Core changes might constitute major version changes even if internal,
-// as core state is overwritten for different kpo instances below
 const core = wrapCore(
   // These will run in order before any core function call
   [
     async () => guardian(),
-    async function initialize(): Promise<void> {
-      if (state.version) return;
-
-      const pkg = await loadPackage(__dirname, { title: false });
-      if (!pkg.version) throw Error(`kpo version couldn't be retrieved`);
-      state.version = pkg.version;
-
-      const encoded = process.env[KPO_ENV_STATE];
-      if (encoded) {
-        const decoded = ob.decode(encoded);
-        const inRange = inVersionRange(
-          decoded && decoded.core && decoded.core.version,
-          pkg.version
-        );
-        if (!inRange) {
-          throw Error(
-            `Local kpo version (${pkg.version.trim()})` +
-              ` doesn't match executing version (${decoded.core.version.trim()})`
-          );
-        }
-
-        if (path.relative(state.cwd, decoded.core.cwd)) {
-          // if cwd has changed, that's an explicit signal for kpo to run
-          // in a new directory, hence we won't recover core state,
-          // and only recover log level from options state
-          options.setBase({ log: decoded.options.log || DEFAULT_LOG_LEVEL });
-        } else {
-          // otherwise, we'll recover both core and options state
-          Object.assign(state, decoded.core);
-          options.setBase(decoded.options);
-        }
-
-        process.chdir(state.paths.directory);
-      }
-    },
     cache(async function(): Promise<void> {
+      const raw = options.raw();
+
       state.paths = await getSelfPaths({
         cwd: state.cwd,
-        directory: options.raw.directory || undefined,
-        file: options.raw.file || undefined
+        directory: raw.directory || undefined,
+        file: raw.file || undefined
       });
       process.chdir(state.paths.directory);
 
@@ -98,9 +56,9 @@ const core = wrapCore(
       loaded = await load(state.paths);
 
       // options cwd can only be set on scope options (on load())
-      state.paths.directory = options.raw.cwd
+      state.paths.directory = raw.cwd
         ? absolute({
-            path: options.raw.cwd,
+            path: raw.cwd,
             // we're setting it relative to the file
             cwd: state.paths.kpo
               ? path.parse(state.paths.kpo).dir
@@ -108,17 +66,12 @@ const core = wrapCore(
           })
         : state.paths.directory;
       process.chdir(state.paths.directory);
-
-      process.env[KPO_ENV_STATE] = ob.encode({
-        core: state,
-        options: options.raw
-      });
     })
   ],
   // Core functions
   {
     async get<T extends keyof TCoreOptions>(key: T): Promise<TCoreOptions[T]> {
-      return options.raw[key];
+      return options.raw()[key];
     },
     async scopes(): Promise<string[]> {
       return state.scopes;

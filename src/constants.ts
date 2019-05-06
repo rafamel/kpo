@@ -14,8 +14,6 @@ export const KPO_PATH = require.resolve('./bin/kpo');
 export const CONCURRENTLY_PATH = require.resolve(
   'concurrently/bin/concurrently'
 );
-// Environment variable name for core state storage
-export const KPO_ENV_STATE = 'KPO_STATE';
 /* Shared between instances: changes might imply a major version release */
 export const LOG_ENV_KEY = 'kpo_log';
 export const GLOBALS_KEY = 'kpo_globals';
