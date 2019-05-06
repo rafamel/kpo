@@ -7,8 +7,8 @@ import join from 'command-join';
 import { NODE_PATH, KPO_PATH } from '~/constants';
 import { IMultiExecOptions } from '~/types';
 import chalk from 'chalk';
-import { oneLine } from 'common-tags';
 import errors from '~/utils/errors';
+import logger from '~/utils/logger';
 
 /**
  * Options taken by `stream`
@@ -70,38 +70,29 @@ function stream(
         .concat(args.length ? ['--'].concat(args) : []);
     });
 
-    await (options.parallel
-      ? parallel.fn(commands.map(join), {
-          ...options,
-          cwd: undefined,
-          names: children.map((child) => '@' + child.name)
-        })
-      : series
-          .fn(
-            commands.reduce(
-              (acc: string[], cmd, i) =>
-                acc.concat([
-                  join([
-                    NODE_PATH,
-                    '-e',
-                    oneLine`console.log(
-                    "${i === 0 ? 'Scope:' : '\\nScope:'}
-                    ${chalk.bold.yellow('@' + children[i].name)}"
-                  )`
-                  ]),
-                  join(cmd)
-                ]),
-              []
-            ),
-            { ...options, cwd: undefined }
-          )
+    if (options.parallel) {
+      await parallel.fn(commands.map(join), {
+        ...options,
+        cwd: undefined,
+        names: children.map((child) => '@' + child.name)
+      });
+    } else {
+      for (let i = 0; i < commands.length; i++) {
+        logger.info(
+          (i === 0 ? 'Scope: ' : '\nScope: ') +
+            chalk.bold.yellow('@' + children[i].name)
+        );
+        await series
+          .fn(join(commands[i]), { ...options, cwd: undefined })
           .catch(async (err) => {
             throw new errors.WrappedError(
-              'Series commands execution failed',
+              `Stream failed for ${children[i].name}: ${join(argv)}`,
               null,
               err
             );
-          }));
+          });
+      }
+    }
   };
 }
 
