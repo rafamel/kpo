@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { loadPackage, flags, safePairs, splitBy } from 'cli-belt';
+import { flags, safePairs, splitBy } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import chalk from 'chalk';
@@ -14,12 +14,14 @@ import list from './list';
 import raise from './raise';
 import stream from './stream';
 import logger from '~/utils/logger';
+import { pkg } from '~/globals';
 
 export default async function main(argv: string[]): Promise<void> {
-  const pkg = await loadPackage(__dirname, { title: true });
+  // Set process title
+  if (pkg().name) process.title = pkg().name;
 
   const help = indent`
-    ${pkg.description ? chalk.bold.yellow(pkg.description) : ''}
+    ${pkg().description ? chalk.bold.yellow(pkg().description) : ''}
 
     Usage:
       $ kpo [options] [@scope] [tasks] -- [streamArgs]
@@ -64,7 +66,7 @@ export default async function main(argv: string[]): Promise<void> {
   const cmd = arg(types, { argv, permissive: false, stopAtPositional: true });
 
   if (cmd['--help']) return console.log(help);
-  if (cmd['--version']) return console.log(pkg.version);
+  if (cmd['--version']) return console.log(pkg().version || 'Unknown');
   if (!cmd._.length) {
     console.log(help + '\n');
     throw Error(`A command is required`);
