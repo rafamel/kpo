@@ -65,7 +65,7 @@ function stream(
     if (!children.length) throw Error(`No project children selected`);
 
     const commands = children.map((child) => {
-      return [NODE_PATH, KPO_PATH, '@' + child.name]
+      return [NODE_PATH, KPO_PATH, '-d', child.directory]
         .concat(argv)
         .concat(args.length ? ['--'].concat(args) : []);
     });
