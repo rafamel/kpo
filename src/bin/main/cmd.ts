@@ -34,5 +34,5 @@ export default async function series(argv: string[]): Promise<void> {
     console.log(help + '\n');
     throw Error(`A command is required`);
   }
-  return core.exec(cmd._[0], cmd._.slice(1), false);
+  return core().exec(cmd._[0], cmd._.slice(1), false);
 }

@@ -46,7 +46,7 @@ function stream(
   return async (args: string[] = []) => {
     args = options.args || args;
 
-    let children = await core.children();
+    let children = await core().children();
     if (!children.length) throw Error(`Project has no children`);
 
     if (options.include) {

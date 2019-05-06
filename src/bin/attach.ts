@@ -8,7 +8,9 @@ export default function attach(): void {
   _attach();
   options({
     async resolver(type, arg) {
-      const silent = await core.get('silent').catch(() => false);
+      const silent = core()
+        .get('silent')
+        .catch(() => false);
 
       if (silent) {
         logger.debug('Silent: exiting with code 0');
@@ -18,7 +20,7 @@ export default function attach(): void {
         logger.debug('Received a termination signal: exiting with code 1');
         return resolver('exit', 1);
       }
-      logger.debug(`Received a ${type} event: `, arg);
+      logger.debug(`${type} event: `, arg);
       return resolver(type, arg);
     }
   });

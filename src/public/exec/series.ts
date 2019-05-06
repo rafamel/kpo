@@ -40,7 +40,7 @@ export function create(): ISeries {
       for (let command of commands) {
         try {
           if (!command) throw Error(`No command passed for series`);
-          await core.exec(command, args, false, options);
+          await core().exec(command, args, false, options);
         } catch (e) {
           err = e;
           if (options.force || options.silent) {

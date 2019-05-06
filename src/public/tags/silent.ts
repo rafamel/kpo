@@ -23,7 +23,7 @@ function silent(...args: any[]): (args?: string[]) => Promise<void> {
   return async function silent(argv) {
     try {
       const command = asTag(args.shift(), ...args);
-      await core.exec(command, argv || [], false);
+      await core().exec(command, argv || [], false);
     } catch (e) {
       const err = error(e);
       logger.error(err.message);

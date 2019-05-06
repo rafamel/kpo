@@ -1,5 +1,10 @@
 import { IScripts, IOfType, TScript } from '~/types';
 
+export interface ICoreData {
+  paths: IPaths;
+  loaded: ILoaded;
+}
+
 export interface IPaths {
   pkg: string | null;
   kpo: string | null;

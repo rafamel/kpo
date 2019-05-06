@@ -40,13 +40,13 @@ function raise(options: IRaiseOptions = {}): () => Promise<void> {
       );
     }
 
-    const paths = await core.paths();
-    const { pkg } = await core.load();
+    const paths = await core().paths();
+    const { pkg } = await core().load();
 
     if (!paths.kpo) throw Error(`No kpo scripts found`);
     if (!paths.pkg || !pkg) throw Error(`No package.json found`);
 
-    const tasks = await core.tasks();
+    const tasks = await core().tasks();
     const taskNames = (tasks.kpo || [])
       .filter((task) => !task.hidden)
       .map((task) => task.path);
