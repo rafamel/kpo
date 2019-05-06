@@ -5,7 +5,6 @@ import join from 'command-join';
 import { IExecOptions } from '~/types';
 import { spawn } from 'exits';
 import errors from './errors';
-import guardian from './guardian';
 
 export default async function exec(
   cmd: string,
@@ -13,8 +12,6 @@ export default async function exec(
   fork: boolean,
   options: IExecOptions = {}
 ): Promise<void> {
-  guardian();
-
   const opts: SpawnOptions = {
     shell: !fork,
     cwd: options.cwd,
