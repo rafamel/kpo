@@ -126,6 +126,7 @@
     "js-yaml": "^3.13.1",
     "loglevel": "^1.6.1",
     "manage-path": "^2.0.0",
+    "path-key": "^3.1.0",
     "pify": "^4.0.1",
     "promist": "^0.5.3",
     "prompts": "^2.0.4",
