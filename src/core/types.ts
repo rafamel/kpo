@@ -3,6 +3,8 @@ import { IScripts, IOfType, TScript } from '~/types';
 export interface ICoreData {
   paths: IPaths;
   loaded: ILoaded;
+  root: IPaths | null;
+  bin: string[];
 }
 
 export interface IPaths {

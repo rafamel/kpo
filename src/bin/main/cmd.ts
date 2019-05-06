@@ -2,7 +2,7 @@
 import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import { flags, safePairs } from 'cli-belt';
-import core from '~/core';
+import exec from '~/utils/exec';
 
 export default async function series(argv: string[]): Promise<void> {
   const help = indent`
@@ -34,5 +34,5 @@ export default async function series(argv: string[]): Promise<void> {
     console.log(help + '\n');
     throw Error(`A command is required`);
   }
-  return core().exec(cmd._[0], cmd._.slice(1), false);
+  return exec(cmd._[0], cmd._.slice(1), false);
 }

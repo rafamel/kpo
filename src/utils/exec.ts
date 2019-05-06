@@ -1,33 +1,45 @@
-import {
-  spawn,
-  fork as _fork,
-  SpawnOptions,
-  ChildProcess,
-  ForkOptions
-} from 'child_process';
+import { spawn, fork as _fork, SpawnOptions, ForkOptions } from 'child_process';
 import { DEFAULT_STDIO } from '~/constants';
 import logger from '~/utils/logger';
 import join from 'command-join';
-import alter from 'manage-path';
 import { IExecOptions } from '~/types';
-import manager from './ps-manager';
+import { absolute } from './file';
+import manager, { EnvManager } from '~/utils/env-manager';
+import path from 'path';
+import getBinPaths from './paths';
+import guardian from './guardian';
 
-export default function exec(
+export default async function exec(
   cmd: string,
   args: string[],
   fork: boolean,
   options: IExecOptions = {}
-): { ps: ChildProcess; promise: Promise<void> } {
+): Promise<void> {
+  // Fail if main process is already exiting
+  guardian();
+
+  const env = Object.assign({}, process.env);
+  const local = new EnvManager(env);
+
+  const cwd = options.cwd
+    ? absolute({ path: options.cwd, cwd: process.cwd() })
+    : process.cwd();
+
+  if (path.relative(cwd, process.cwd())) {
+    local.assign({ [local.path]: manager.purePaths });
+    local.addPaths(await getBinPaths(cwd));
+  }
+  if (options.env) local.assign(options.env);
+  if (options.paths && options.paths.length) {
+    local.addPaths(options.paths);
+  }
+
   const opts: SpawnOptions | ForkOptions = {
+    cwd,
+    env,
     shell: fork ? undefined : true,
-    cwd: options.cwd,
-    env: Object.assign({}, process.env, options.env),
     stdio: options.stdio || DEFAULT_STDIO
   };
-
-  if (opts.env && options.paths && options.paths.length) {
-    alter(opts.env).unshift(options.paths);
-  }
 
   logger.debug('Executing: ' + join([cmd].concat(args)));
 
@@ -41,6 +53,5 @@ export default function exec(
     });
   });
 
-  manager.add(ps.pid, promise);
-  return { ps, promise };
+  return promise;
 }

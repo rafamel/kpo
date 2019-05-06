@@ -1,5 +1,5 @@
 import { IOfType } from '~/types';
-import { lazy, status } from 'promist';
+import { lazy } from 'promist';
 
 export default function wrap<
   T,

@@ -1,10 +1,10 @@
-import core from '~/core';
-import { IOfType, IMultiExecOptions } from '~/types';
 import logger from '~/utils/logger';
 import expose from '~/utils/expose';
+import exec from '~/utils/exec';
 import join from 'command-join';
 import { CONCURRENTLY_PATH } from '~/constants';
 import { KpoError } from '~/utils/errors';
+import { IOfType, IMultiExecOptions } from '~/types';
 
 /**
  * Options taken by `parallel`
@@ -62,7 +62,7 @@ export function create(): IParallel {
       }
 
       try {
-        await core().exec(CONCURRENTLY_PATH, argv, true, options);
+        await exec(CONCURRENTLY_PATH, argv, true, options);
       } catch (e) {
         const err = new KpoError('Parallel commands execution failed', e);
         if (options.silent) {

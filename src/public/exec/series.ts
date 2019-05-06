@@ -1,7 +1,7 @@
-import core from '~/core';
-import { IOfType, IMultiExecOptions } from '~/types';
+import exec from '~/utils/exec';
 import logger from '~/utils/logger';
 import expose from '~/utils/expose';
+import { IOfType, IMultiExecOptions } from '~/types';
 
 /**
  * Signature for `series`. Note that you can call `series.env` to pass only environment variables as a second argument. See `series`.
@@ -40,7 +40,7 @@ export function create(): ISeries {
       for (let command of commands) {
         try {
           if (!command) throw Error(`No command passed for series`);
-          await core().exec(command, args, false, options);
+          await exec(command, args, false, options);
         } catch (e) {
           err = e;
           if (options.force || options.silent) {

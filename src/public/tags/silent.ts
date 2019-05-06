@@ -1,4 +1,4 @@
-import core from '~/core';
+import exec from '~/utils/exec';
 import asTag from '~/utils/as-tag';
 import logger from '~/utils/logger';
 import expose, { TExposedOverload } from '~/utils/expose';
@@ -23,7 +23,7 @@ function silent(...args: any[]): (args?: string[]) => Promise<void> {
   return async function silent(argv) {
     try {
       const command = asTag(args.shift(), ...args);
-      await core().exec(command, argv || [], false);
+      await exec(command, argv || [], false);
     } catch (e) {
       const err = error(e);
       logger.error(err.message);

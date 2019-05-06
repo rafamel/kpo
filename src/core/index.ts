@@ -1,16 +1,13 @@
 import path from 'path';
 import _cache from '~/utils/cache';
 import options from './options';
-import { getRootPaths } from './paths';
 import { setScope, getChildren } from './scope';
 import { getTask, getAllTasks } from './tasks';
 import { IPaths, ILoaded, ITask, ITasks, IChild } from './types';
-import getBin from './bin';
 import run from './run';
 import logger from '~/utils/logger';
 import exec from '~/utils/exec';
 import { TCoreOptions, IExecOptions, TScript } from '~/types';
-import { absolute } from '~/utils/file';
 import wrap from './wrap';
 import initialize from './initialize';
 
@@ -32,12 +29,12 @@ const core = cache(
     async load(): Promise<ILoaded> {
       return promise.then((data) => data.loaded);
     },
-    root: cache(async function(): Promise<IPaths | null> {
-      return getRootPaths({
-        cwd: await promise.then((data) => data.paths.directory),
-        root: await core().get('root')
-      });
-    }),
+    async root(): Promise<IPaths | null> {
+      return promise.then((data) => data.root);
+    },
+    async bin(): Promise<string[]> {
+      return promise.then((data) => data.bin);
+    },
     children: cache(async function(): Promise<IChild[]> {
       const { paths } = await promise;
       const children = await core().get('children');
@@ -49,13 +46,6 @@ const core = cache(
         },
         children
       );
-    }),
-    bin: cache(async function(): Promise<string[]> {
-      const root = await core().root();
-      const { paths } = await promise;
-      return root
-        ? getBin(paths.directory, root.directory)
-        : getBin(paths.directory);
     }),
     tasks: cache(async function(): Promise<ITasks> {
       const { loaded } = await promise;
@@ -72,31 +62,9 @@ const core = cache(
     ): Promise<void> {
       return run(script, async (item) => {
         return typeof item === 'string'
-          ? core().exec(item, args, false, opts)
+          ? exec(item, args, false, opts)
           : item(args);
       });
-    },
-    async exec(
-      command: string,
-      args: string[],
-      fork: boolean,
-      opts: IExecOptions = {}
-    ): Promise<void> {
-      const { paths } = await promise;
-      const cwd = opts.cwd
-        ? absolute({ path: opts.cwd, cwd: paths.directory })
-        : paths.directory;
-      const env = opts.env
-        ? Object.assign({}, await core().get('env'), opts.env)
-        : await core().get('env');
-      const bin = cwd ? await getBin(cwd) : await core().bin();
-
-      return exec(command, args, fork, {
-        ...opts,
-        cwd,
-        env,
-        paths: opts.paths ? opts.paths.concat(bin) : bin
-      }).promise;
     },
     async setScope(names: string[]): Promise<void> {
       const root = await core().root();
