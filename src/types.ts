@@ -1,5 +1,3 @@
-import { LogLevelDesc } from 'loglevel';
-
 /**
  * Represents an object with values of type `T`.
  */
@@ -8,9 +6,9 @@ export interface IOfType<T> {
 }
 
 /**
- * A logging level value, one of `'trace'`, `'debug'`, `'info'`, `'warn'`, `'error'`, `'silent'`.
+ * A logging level value.
  */
-export type TLogger = LogLevelDesc;
+export type TLogger = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
 
 /**
  * Represents a script or nested collection of scripts to be run:
