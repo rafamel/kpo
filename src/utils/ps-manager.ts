@@ -1,4 +1,4 @@
-import globals from '~/globals';
+import { globals } from '~/globals';
 import { IOfType } from '~/types';
 import logger from './logger';
 

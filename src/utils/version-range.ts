@@ -1,17 +1,13 @@
 import { clean, diff } from 'semver';
-import pkg from './pkg';
-import globals from './globals';
 
-export default function inVersionRange(): void {
-  if (!globals.version) {
-    globals.version = clean(pkg().version);
-    return;
-  }
+export default function inVersionRange(
+  local?: string | null,
+  executable?: string | null
+): void {
+  local = local && clean(local);
+  executable = executable && clean(executable);
 
-  const executable = globals.version && clean(globals.version);
-  const local = pkg().version && clean(pkg().version);
-
-  if (!executable || !local) throw Error(`Version could not be parsed`);
+  if (!local || !executable) throw Error(`Version could not be parsed`);
 
   const release = diff(executable, local);
 

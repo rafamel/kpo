@@ -15,7 +15,7 @@ import { rejects } from 'errorish';
 import { absolute } from '~/utils/file';
 import wrapCore from './wrap';
 import guardian from '~/utils/guardian';
-import globals from '~/globals';
+import { globals } from '~/globals';
 
 export interface ICoreState {
   scopes: string[];

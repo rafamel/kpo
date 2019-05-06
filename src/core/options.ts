@@ -1,7 +1,7 @@
 import { ICliOptions, IScopeOptions, TCoreOptions, IOfType } from '~/types';
-import { DEFAULT_LOG_LEVEL, LOG_ENV_KEY } from '~/constants';
+import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
-import globals from '~/globals';
+import { globals, environmentals } from '~/globals';
 import cache from '~/utils/cache';
 
 /* Shared between instances: changes might imply a major version release */
@@ -12,7 +12,7 @@ export const state = globals('options', {
     directory: null,
     env: {},
     silent: false,
-    log: process.env[LOG_ENV_KEY] || DEFAULT_LOG_LEVEL
+    log: environmentals('kpo_log').get() || DEFAULT_LOG_LEVEL
   } as TCoreOptions,
   cli: {} as ICliOptions,
   scope: {} as IScopeOptions
@@ -67,7 +67,7 @@ function merge(): void {
   // Set logging level
   if (options.log) {
     setLevel(options.log);
-    process.env[LOG_ENV_KEY] = options.log;
+    environmentals('kpo_log').set(options.log);
   }
 }
 
