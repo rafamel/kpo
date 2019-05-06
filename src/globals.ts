@@ -3,7 +3,12 @@ import inVersionRange from '~/utils/version-range';
 import read from 'read-pkg-up';
 import cache from '~/utils/cache';
 import errors from '~/utils/errors';
-import { GLOBALS_KEY, TGlobal, TEnvironmental } from '~/constants';
+import {
+  GLOBALS_KEY,
+  TGlobal,
+  TEnvironmental,
+  OWNED_ENV_KEY
+} from '~/constants';
 import { IOfType } from '~/types';
 
 const locals = {
@@ -28,8 +33,10 @@ export const pkg = cache(
  * that is, if `process.env[OWNED_ENV_KEY]` is set.
  */
 export function globals<T>(key: TGlobal, initial: T) {
-  const vars = ((global as any)[GLOBALS_KEY] ||
-    ((global as any)[GLOBALS_KEY] = {})) as { [key in TGlobal]: any };
+  const vars = process.env[OWNED_ENV_KEY]
+    ? (((global as any)[GLOBALS_KEY] ||
+        ((global as any)[GLOBALS_KEY] = {})) as { [key in TGlobal]: any })
+    : locals.globals;
 
   if (!vars.version) vars.version = pkg().version;
   else inVersionRange(pkg().version, vars.version);
@@ -50,7 +57,7 @@ export function globals<T>(key: TGlobal, initial: T) {
  * that is, if `process.env[OWNED_ENV_KEY]` is set.
  */
 export function environmentals(key: TEnvironmental) {
-  const vars = process.env;
+  const vars = process.env[OWNED_ENV_KEY] ? process.env : locals.environmentals;
 
   return {
     get(): string | void {

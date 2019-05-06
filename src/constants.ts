@@ -15,6 +15,7 @@ export const CONCURRENTLY_PATH = require.resolve(
   'concurrently/bin/concurrently'
 );
 /* Shared between instances: changes might imply a major version release */
+export const OWNED_ENV_KEY = 'kpo_owned';
 export const GLOBALS_KEY = 'kpo_globals';
 export type TEnvironmental = 'kpo_log';
 export type TGlobal = 'version' | 'core' | 'options' | 'processses';
