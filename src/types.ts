@@ -144,9 +144,13 @@ export interface IExecOptions {
    */
   cwd?: string;
   /**
-   * Environment variables.
+   * Additional environment variables.
    */
   env?: IOfType<string>;
+  /**
+   * Additional paths for $PATH
+   */
+  paths?: string[];
   /**
    * `stdio` mode.
    */

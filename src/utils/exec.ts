@@ -8,8 +8,10 @@ import {
 import { DEFAULT_STDIO } from '~/constants';
 import logger from '~/utils/logger';
 import join from 'command-join';
-import { IExecOptions } from '~/types';
 import { rejects } from 'errorish';
+import alter from 'manage-path';
+import { IExecOptions } from '~/types';
+import manager from './ps-manager';
 
 export default function exec(
   cmd: string,
@@ -20,14 +22,17 @@ export default function exec(
   const opts: SpawnOptions | ForkOptions = {
     shell: fork ? undefined : true,
     cwd: options.cwd,
-    env: options.env || process.env,
+    env: Object.assign({}, process.env, options.env),
     stdio: options.stdio || DEFAULT_STDIO
   };
+
+  if (opts.env && options.paths && options.paths.length) {
+    alter(opts.env).unshift(options.paths);
+  }
 
   logger.debug('Executing: ' + join([cmd].concat(args)));
 
   const ps = fork ? _fork(cmd, args, opts) : spawn(cmd, args, opts);
-
   const promise = new Promise((resolve: (arg: void) => void, reject) => {
     ps.on('error', (err: any) => reject(err));
     ps.on('close', (code: number) => {
@@ -37,5 +42,6 @@ export default function exec(
     });
   }).catch(rejects);
 
+  manager.add(ps.pid, promise);
   return { ps, promise };
 }

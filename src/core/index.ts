@@ -7,7 +7,7 @@ import { setScope, getChildren } from './scope';
 import { getTask, getAllTasks } from './tasks';
 import { IPaths, ILoaded, ITask, ITasks, IChild } from './types';
 import getBin from './bin';
-import exec from './exec';
+import exec from '~/utils/exec';
 import run from './run';
 import logger from '~/utils/logger';
 import { TCoreOptions, IExecOptions, TScript } from '~/types';
@@ -180,11 +180,19 @@ const core = wrapCore(
       const cwd = opts.cwd
         ? absolute({ path: opts.cwd, cwd: state.paths.directory })
         : state.paths.directory;
-      const bin = opts.cwd ? await getBin(cwd) : await core.bin();
       const env = opts.env
         ? Object.assign({}, await core.get('env'), opts.env)
         : await core.get('env');
-      return exec(command, args, fork, cwd, bin, env);
+      const bin = cwd ? await getBin(cwd) : await core.bin();
+
+      const { promise } = exec(command, args, fork, {
+        ...opts,
+        cwd,
+        env,
+        paths: opts.paths ? opts.paths.concat(bin) : bin
+      });
+
+      return promise;
     },
     async setScope(names: string[]): Promise<void> {
       const root = await core.root();
