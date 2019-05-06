@@ -75,6 +75,7 @@
     "@types/object-hash": "^1.2.0",
     "@types/pify": "^3.0.2",
     "@types/prompts": "^2.4.0",
+    "@types/read-pkg-up": "^3.0.1",
     "@types/semver": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
@@ -131,6 +132,7 @@
     "pify": "^4.0.1",
     "promist": "^0.5.3",
     "prompts": "^2.0.4",
+    "read-pkg-up": "^5.0.0",
     "semver": "^6.0.0",
     "slimconf": "^0.9.0",
     "string-argv": "^0.3.0"
