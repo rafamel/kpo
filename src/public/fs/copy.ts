@@ -4,7 +4,6 @@ import { absolute, exists } from '~/utils/file';
 import { IFsWriteOptions } from './types';
 import expose, { TExposedOverload } from '~/utils/expose';
 import confirm from '~/utils/confirm';
-import { rejects } from 'errorish';
 import logger from '~/utils/logger';
 
 export type TCopyFilterFn =
@@ -82,12 +81,10 @@ export async function trunk(
   const msg = `Copy "${relatives.src}" to "${relatives.dest}"?`;
   if (!(await confirm(msg, options))) return;
 
-  await fs
-    .copy(src, dest, {
-      overwrite: options.overwrite,
-      errorOnExist: options.fail,
-      filter
-    })
-    .catch(rejects);
+  await fs.copy(src, dest, {
+    overwrite: options.overwrite,
+    errorOnExist: options.fail,
+    filter
+  });
   logger.info(`Copied: "${relatives.src}" to "${relatives.dest}"`);
 }

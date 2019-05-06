@@ -1,7 +1,7 @@
 import logger from '~/utils/logger';
 import { TScript } from '~/types';
-import errors from '~/utils/errors';
 import guardian from '~/utils/guardian';
+import { open } from '~/utils/errors';
 
 export default async function run(
   script: TScript,
@@ -26,7 +26,7 @@ export default async function run(
     try {
       res = await runner(script);
     } catch (err) {
-      throw errors.open.ensure(err);
+      throw open(err);
     }
     await run(res, runner);
   } else if (Array.isArray(script)) {

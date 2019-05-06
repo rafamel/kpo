@@ -7,8 +7,8 @@ import join from 'command-join';
 import { NODE_PATH, KPO_PATH } from '~/constants';
 import { IMultiExecOptions } from '~/types';
 import chalk from 'chalk';
-import errors from '~/utils/errors';
 import logger from '~/utils/logger';
+import { KpoError } from '~/utils/errors';
 
 /**
  * Options taken by `stream`
@@ -85,9 +85,8 @@ function stream(
         await series
           .fn(join(commands[i]), { ...options, cwd: undefined })
           .catch(async (err) => {
-            throw new errors.WrappedError(
+            throw new KpoError(
               `Stream failed for ${children[i].name}: ${join(argv)}`,
-              null,
               err
             );
           });

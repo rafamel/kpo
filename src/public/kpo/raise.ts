@@ -6,7 +6,6 @@ import chalk from 'chalk';
 import logger from '~/utils/logger';
 import expose from '~/utils/expose';
 import confirm from '~/utils/confirm';
-import { rejects } from 'errorish';
 
 export interface IRaiseOptions {
   /**
@@ -120,7 +119,7 @@ function raise(options: IRaiseOptions = {}): () => Promise<void> {
       }, {})
     };
 
-    await fs.writeFile(paths.pkg, JSON.stringify(pkg, null, 2)).catch(rejects);
+    await fs.writeFile(paths.pkg, JSON.stringify(pkg, null, 2));
     _options.forceUpdate();
   };
 }

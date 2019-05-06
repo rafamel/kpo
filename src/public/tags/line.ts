@@ -1,4 +1,5 @@
 import { oneLine } from 'common-tags';
+import { error } from '~/utils/errors';
 
 export default line;
 
@@ -14,5 +15,9 @@ function line(literals: TemplateStringsArray, ...placeholders: any[]): string;
  * @returns a `string`
  */
 function line(...args: any[]): string {
-  return oneLine(args.shift(), ...args);
+  try {
+    return oneLine(args.shift(), ...args);
+  } catch (err) {
+    throw error(err);
+  }
 }

@@ -1,6 +1,5 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { rejects } from 'errorish';
 import expose, { TExposedOverload } from '~/utils/expose';
 import { IFsWriteOptions } from './types';
 import { exists, absolute } from '~/utils/file';
@@ -51,8 +50,8 @@ function write(file: string, ...args: any[]): () => Promise<void> {
 
     if (!(await confirm(`Write "${relative}"?`, options))) return;
 
-    await fs.ensureDir(file).catch(rejects);
-    await fs.writeFile(file, String(raw)).catch(rejects);
+    await fs.ensureDir(file);
+    await fs.writeFile(file, String(raw));
     logger.info(`Written: ${relative}`);
   };
 }

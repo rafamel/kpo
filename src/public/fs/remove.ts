@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs-extra';
-import { rejects } from 'errorish';
 import { absolute, exists } from '~/utils/file';
 import confirm from '~/utils/confirm';
 import { parallel } from 'promist';
@@ -63,7 +62,7 @@ function remove(
     if (!(await confirm('Remove?', options))) return;
 
     await parallel.each(existingPaths, async (absolute, i) => {
-      await fs.remove(absolute).catch(rejects);
+      await fs.remove(absolute);
 
       const relative = relatives.existing[i];
       logger.debug(`Removed: ${relative}`);

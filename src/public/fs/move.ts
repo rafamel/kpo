@@ -4,7 +4,6 @@ import { absolute, exists } from '~/utils/file';
 import { IFsWriteOptions } from './types';
 import expose from '~/utils/expose';
 import confirm from '~/utils/confirm';
-import { rejects } from 'errorish';
 import logger from '~/utils/logger';
 
 export default expose(move);
@@ -67,6 +66,6 @@ export async function trunk(
   const msg = `Move "${relatives.src}" to "${relatives.dest}"?`;
   if (!(await confirm(msg, options))) return;
 
-  await fs.move(src, dest, { overwrite: options.overwrite }).catch(rejects);
+  await fs.move(src, dest, { overwrite: options.overwrite });
   logger.info(`Moved: "${relatives.src}" to "${relatives.dest}"`);
 }

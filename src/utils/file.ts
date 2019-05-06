@@ -1,7 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
 import up from 'find-up';
-import { rejects } from 'errorish';
 
 export function absolute(opts: { path: string; cwd: string }): string {
   return path.isAbsolute(opts.path)
@@ -13,14 +12,12 @@ export async function exists(
   file: string,
   options: { fail?: boolean } = {}
 ): Promise<boolean> {
-  return fs
-    .pathExists(file)
-    .catch(rejects)
-    .then((exists) => {
-      return rejects(`${file} doesn't exist`, {
-        case: options.fail && !exists
-      }).then(() => exists);
-    });
+  return fs.pathExists(file).then(async (exists) => {
+    if (options.fail && !exists) {
+      throw Error(`${file} doesn't exist`);
+    }
+    return exists;
+  });
 }
 
 export async function find(
@@ -31,7 +28,7 @@ export async function find(
   if (!strict) return up(filename, { cwd: directory });
 
   await exists(directory, { fail: true });
-  const stat = await fs.stat(directory).catch(rejects);
+  const stat = await fs.stat(directory);
   if (!stat.isDirectory()) throw Error(`${directory} is not a directory`);
 
   const filenames: string[] = Array.isArray(filename) ? filename : [filename];

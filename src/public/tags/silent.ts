@@ -2,7 +2,7 @@ import core from '~/core';
 import asTag from '~/utils/as-tag';
 import logger from '~/utils/logger';
 import expose, { TExposedOverload } from '~/utils/expose';
-import { ensure } from 'errorish';
+import { error } from '~/utils/errors';
 
 export default expose(silent) as TExposedOverload<
   typeof silent,
@@ -25,9 +25,9 @@ function silent(...args: any[]): (args?: string[]) => Promise<void> {
       const command = asTag(args.shift(), ...args);
       await core.exec(command, argv || [], false);
     } catch (e) {
-      const err = ensure(e);
+      const err = error(e);
       logger.error(err.message);
-      logger.debug(err);
+      if (err.root.stack) logger.trace(err.root.stack);
     }
   };
 }

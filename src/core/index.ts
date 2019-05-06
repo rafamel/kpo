@@ -11,7 +11,6 @@ import run from './run';
 import logger from '~/utils/logger';
 import exec from '~/utils/exec';
 import { TCoreOptions, IExecOptions, TScript } from '~/types';
-import { rejects } from 'errorish';
 import { absolute } from '~/utils/file';
 import wrapCore from './wrap';
 import guardian from '~/utils/guardian';
@@ -122,7 +121,7 @@ const core = wrapCore(
         return typeof item === 'string'
           ? core.exec(item, args, false, opts)
           : item(args);
-      }).catch(rejects);
+      });
     },
     async exec(
       command: string,

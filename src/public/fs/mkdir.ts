@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs-extra';
-import { rejects } from 'errorish';
 import { absolute, exists } from '~/utils/file';
 import confirm from '~/utils/confirm';
 import { parallel } from 'promist';
@@ -65,7 +64,7 @@ function mkdir(
     if (!(await confirm('Create?', options))) return;
 
     await parallel.each(nonExistingPaths, async (absolute, i) => {
-      await fs.ensureDir(absolute).catch(rejects);
+      await fs.ensureDir(absolute);
 
       const relative = relatives.nonExisting[i];
       logger.debug(`Created: ${relative}`);

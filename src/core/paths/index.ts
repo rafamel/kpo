@@ -1,8 +1,8 @@
 import path from 'path';
 import { IPaths } from '../types';
 import getPaths from './paths';
-import errors from '~/utils/errors';
 import { absolute } from '~/utils/file';
+import { KpoError } from '~/utils/errors';
 
 /**
  * - `file` determines the path for the `kpo.scripts` file; if not passed, it will be resolved from `directory`.
@@ -34,10 +34,6 @@ export async function getRootPaths(directories: {
     return await getPaths({ directory, cwd }, Boolean(root));
   } catch (err) {
     if (!root) return null;
-    throw new errors.WrappedError(
-      `root scope couldn't be retrieved: ${root}`,
-      null,
-      err
-    );
+    throw new KpoError(`root scope couldn't be retrieved: ${root}`, err);
   }
 }

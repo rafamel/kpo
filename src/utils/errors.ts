@@ -1,36 +1,57 @@
-import { scope, Errorish } from 'errorish';
+import { IOfType } from '~/types';
 
-// Error changes might constitute major version changes even if internal,
-// as they're overwritten for different kpo instances on core load
+export class KpoError<A> extends Error {
+  public static isKpoError = true;
+  public source: any;
+  public data: IOfType<any>;
+  public constructor(message?: string, source?: A) {
+    if (!message) {
+      if (typeof source === 'object' && source !== null) {
+        message = (source as any).message;
+      }
+      if (!message) message = 'An error occurred';
+    }
 
-class CustomError<T> extends Errorish<T> {}
+    super(message);
+    this.source = source;
+    this.data = {};
+  }
+  public get name(): string {
+    return 'CustomError';
+  }
+  public get root(): Error {
+    if (isKpoError(this.source)) return this.source.root;
+    return this.source instanceof Error ? this.source : this;
+  }
+  public set<T extends KpoError<A>>(this: T, data: IOfType<any>): T {
+    this.data = data;
+    return this;
+  }
+  public assign<T extends KpoError<A>>(this: T, data: IOfType<any>): T {
+    Object.assign(this.data, data);
+    return this;
+  }
+}
 
-class OpenError<T> extends CustomError<T> {
+export class OpenError<T> extends KpoError<T> {
   public get name(): string {
     return 'OpenError';
   }
 }
 
-class WrappedError<T> extends CustomError<T> {
-  public get name(): string {
-    return 'WrappedError';
-  }
+export function open(source?: any): KpoError<any> {
+  return isKpoError(source) ? source : new OpenError(undefined, source);
 }
 
-const open = scope.set('_kpo_open_', {
-  Error: CustomError,
-  Errorish: OpenError
-});
+export function error(source?: any): KpoError<any> {
+  return isKpoError(source) ? source : new KpoError(undefined, source);
+}
 
-const wrap = scope.set('_kpo_wrap_', {
-  Error: CustomError,
-  Errorish: WrappedError
-});
+export function isKpoError(err: any): err is KpoError<any> {
+  // We're duck typing errors as there might be several instances running
+  return err && err instanceof Error && (err.constructor as any).isKpoError;
+}
 
-export default {
-  CustomError,
-  OpenError,
-  WrappedError,
-  open,
-  wrap
-};
+export function isOpenError(err: any): err is OpenError<any> {
+  return isKpoError(err) && err.name === 'OpenError';
+}

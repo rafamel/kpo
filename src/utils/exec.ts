@@ -8,7 +8,6 @@ import {
 import { DEFAULT_STDIO } from '~/constants';
 import logger from '~/utils/logger';
 import join from 'command-join';
-import { rejects } from 'errorish';
 import alter from 'manage-path';
 import { IExecOptions } from '~/types';
 import manager from './ps-manager';
@@ -40,7 +39,7 @@ export default function exec(
         ? reject(Error(`Process failed with code ${code}: ${join([cmd])}`))
         : resolve();
     });
-  }).catch(rejects);
+  });
 
   manager.add(ps.pid, promise);
   return { ps, promise };

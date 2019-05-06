@@ -1,6 +1,5 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { rejects } from 'errorish';
 import { FILE_NAME, FILE_EXT } from '~/constants';
 import { find, exists, absolute } from '~/utils/file';
 
@@ -90,7 +89,7 @@ export async function getFromPackage(
   if (!pkg) return null;
 
   const dir = path.parse(pkg).dir;
-  const parsed = await fs.readJSON(pkg).catch(rejects);
+  const parsed = await fs.readJSON(pkg);
 
   if (!parsed.kpo || !parsed.kpo.file) return null;
 

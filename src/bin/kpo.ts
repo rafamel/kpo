@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
 import main from './main';
-import { ensure } from 'errorish';
-import errors from '~/utils/errors';
 import logger from '~/utils/logger';
 import { terminate, state } from 'exits';
 import attach from './attach';
 import { OWNED_ENV_KEY } from '~/constants';
+import { error, isOpenError } from '~/utils/errors';
 
 // Attach exits hooks
 attach();
@@ -17,9 +16,12 @@ process.env[OWNED_ENV_KEY] = 'true';
 main(process.argv.slice(2)).catch(async (err) => {
   if (state().triggered) return;
 
-  err = ensure(err);
+  err = error(err);
   logger.error(err.message);
-  if (err instanceof errors.OpenError) logger.debug(err);
+  if (err.root.stack) {
+    if (isOpenError(err)) logger.error(err.root.stack);
+    else logger.trace(err.root.stack);
+  }
 
   return terminate('exit', 1);
 });

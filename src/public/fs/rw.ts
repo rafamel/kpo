@@ -1,7 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { exists, absolute } from '~/utils/file';
-import { rejects } from 'errorish';
 import expose from '~/utils/expose';
 import confirm from '~/utils/confirm';
 import { IFsOptions } from './types';
@@ -26,12 +25,7 @@ function rw(
 
     const doesExist = await exists(file, { fail: options.fail });
 
-    const raw = doesExist
-      ? await fs
-          .readFile(file)
-          .then(String)
-          .catch(rejects)
-      : undefined;
+    const raw = doesExist ? await fs.readFile(file).then(String) : undefined;
 
     const response = await fn(raw);
     if (response === undefined) {
@@ -41,8 +35,8 @@ function rw(
 
     if (!(await confirm(`Write "${relative}"?`, options))) return;
 
-    await fs.ensureDir(path.parse(file).dir).catch(rejects);
-    await fs.writeFile(file, String(response)).catch(rejects);
+    await fs.ensureDir(path.parse(file).dir);
+    await fs.writeFile(file, String(response));
     logger.info(`Written: ${relative}`);
   };
 }

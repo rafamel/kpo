@@ -2,7 +2,6 @@ import path from 'path';
 import fs from 'fs-extra';
 import logger from '~/utils/logger';
 import { exists } from '~/utils/file';
-import { rejects } from 'errorish';
 import getChildrenFromGlobs from './from-globs';
 import getChildrenFromMap from './from-map';
 import { IChild } from '../../types';
@@ -24,7 +23,7 @@ export default async function getChildren(
   }
 
   const lerna = (await exists(path.join(directories.pkg, 'lerna.json')))
-    ? await fs.readJSON(path.join(directories.pkg, 'lerna.json')).catch(rejects)
+    ? await fs.readJSON(path.join(directories.pkg, 'lerna.json'))
     : null;
 
   if (lerna) {

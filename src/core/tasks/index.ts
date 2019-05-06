@@ -3,7 +3,7 @@ import getFromKpo from './from-kpo';
 import getFromPackage from './from-package';
 import { ITask, ITasks } from '../types';
 import recursiveFields from './recursive-fields';
-import errors from '~/utils/errors';
+import { KpoError, isKpoError } from '~/utils/errors';
 
 export function getTask(
   path: string,
@@ -12,11 +12,9 @@ export function getTask(
 ): ITask {
   try {
     if (kpo) return getFromKpo(path, kpo);
-    throw new errors.CustomError(`Task ${path} not found`, {
-      type: 'NotFound'
-    });
+    throw new KpoError(`Task ${path} not found`).set({ type: 'NotFound' });
   } catch (err) {
-    if (!pkg || !err.data || !err.data.type || err.data.type !== 'NotFound') {
+    if (!pkg || !isKpoError(err) || !err.data || err.data.type !== 'NotFound') {
       throw err;
     }
 

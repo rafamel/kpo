@@ -1,5 +1,6 @@
 import { TScriptFn } from '~/types';
-import errors from './errors';
+import { error } from './errors';
+import { isPromise } from 'promist';
 
 export type TExposedOverload<
   T extends (...args: any[]) => TScriptFn,
@@ -21,7 +22,15 @@ export default function expose<T extends (...args: any[]) => TScriptFn>(
 ): TExposed<T> {
   const exposed = function(...args: any[]): any {
     return (argv?: string[]) => {
-      return errors.wrap.throws(() => fn(...args)(argv));
+      let res: any;
+      try {
+        res = fn(...args)(argv);
+      } catch (err) {
+        throw error(err);
+      }
+      return isPromise(res)
+        ? res.catch((err: Error) => Promise.reject(error(err)))
+        : res;
     };
   };
   exposed.fn = function(...args: any[]) {

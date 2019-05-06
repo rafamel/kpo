@@ -2,7 +2,6 @@
 import inVersionRange from '~/utils/version-range';
 import read from 'read-pkg-up';
 import cache from '~/utils/cache';
-import errors from '~/utils/errors';
 import {
   GLOBALS_KEY,
   TGlobal,
@@ -10,6 +9,7 @@ import {
   OWNED_ENV_KEY
 } from '~/constants';
 import { IOfType } from '~/types';
+import { KpoError } from './utils/errors';
 
 const locals = {
   globals: {} as { [key in TGlobal]: any },
@@ -21,8 +21,8 @@ export const pkg = cache(
   (): IOfType<any> => {
     try {
       return read.sync({ cwd: __dirname }).pkg;
-    } catch (e) {
-      throw new errors.CustomError(`Package couldn't be retrieved`, null, e);
+    } catch (err) {
+      throw new KpoError(`Package couldn't be retrieved`, err);
     }
   }
 );
