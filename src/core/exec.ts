@@ -1,6 +1,7 @@
-import manage from 'manage-path';
 import { IOfType } from '~/types';
 import _exec from '~/utils/exec';
+import manage from 'manage-path';
+import manager from '~/utils/ps-manager';
 
 export default async function exec(
   command: string,
@@ -17,5 +18,7 @@ export default async function exec(
   const alter = manage(opts.env);
   alter.unshift(bin);
 
-  return _exec(command, args, fork, opts);
+  const { ps, promise } = _exec(command, args, fork, opts);
+  manager.add(ps.pid, promise);
+  return promise;
 }

@@ -1,19 +1,24 @@
-import { SpawnOptions } from 'child_process';
-import { DEFAULT_STDIO, NODE_PATH } from '~/constants';
+import {
+  spawn,
+  fork as _fork,
+  SpawnOptions,
+  ChildProcess,
+  ForkOptions
+} from 'child_process';
+import { DEFAULT_STDIO } from '~/constants';
 import logger from '~/utils/logger';
 import join from 'command-join';
 import { IExecOptions } from '~/types';
-import { spawn } from 'exits';
-import errors from './errors';
+import { rejects } from 'errorish';
 
-export default async function exec(
+export default function exec(
   cmd: string,
   args: string[],
   fork: boolean,
   options: IExecOptions = {}
-): Promise<void> {
-  const opts: SpawnOptions = {
-    shell: !fork,
+): { ps: ChildProcess; promise: Promise<void> } {
+  const opts: SpawnOptions | ForkOptions = {
+    shell: fork ? undefined : true,
     cwd: options.cwd,
     env: options.env || process.env,
     stdio: options.stdio || DEFAULT_STDIO
@@ -21,11 +26,16 @@ export default async function exec(
 
   logger.debug('Executing: ' + join([cmd].concat(args)));
 
-  const { promise } = fork
-    ? spawn(NODE_PATH, [cmd].concat(args), opts)
-    : spawn(cmd, args, opts);
+  const ps = fork ? _fork(cmd, args, opts) : spawn(cmd, args, opts);
 
-  await promise.catch(async (err) => {
-    throw new errors.CustomError(`Process failed: ${join([cmd])}`, null, err);
-  });
+  const promise = new Promise((resolve: (arg: void) => void, reject) => {
+    ps.on('error', (err: any) => reject(err));
+    ps.on('close', (code: number) => {
+      return code
+        ? reject(Error(`Process failed with code ${code}: ${join([cmd])}`))
+        : resolve();
+    });
+  }).catch(rejects);
+
+  return { ps, promise };
 }
