@@ -23,7 +23,7 @@ export default async function setScope(
 
   // child scopes
   const matches = children
-    .filter((child) => child.matcher(name))
+    .filter((child) => child.name.includes(name))
     .map((child) => child.directory);
 
   if (matches.length) {

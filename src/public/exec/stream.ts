@@ -98,7 +98,7 @@ function stream(
 
 /** @hidden */
 function getChild(name: string, children: IChild[]): IChild {
-  const matches = children.filter((child) => child.matcher(name));
+  const matches = children.filter((child) => child.name.includes(name));
   if (matches.length > 1) throw Error(`Several scopes matched name "${name}"`);
   if (matches.length < 1) throw Error(`Scope "${name}" not found`);
   return matches[0];

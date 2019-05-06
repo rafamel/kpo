@@ -23,10 +23,7 @@ export default async function getChildrenFromGlobs(
   const children = filter(dirs).map((dir) => ({
     name: path.parse(dir).name,
     // absolute path
-    directory: path.join(directory, dir),
-    matcher(name: string) {
-      return dir.includes(name);
-    }
+    directory: path.join(directory, dir)
   }));
 
   // Check for name conflicts

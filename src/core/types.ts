@@ -19,7 +19,6 @@ export interface IScope {
 export interface IChild {
   name: string;
   directory: string;
-  matcher: (scope: string) => boolean;
 }
 
 export interface ITask {
