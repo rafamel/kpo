@@ -11,7 +11,7 @@ export const state = {
     directory: null,
     env: {},
     silent: false,
-    log: environmentals('kpo_log').get() || DEFAULT_LOG_LEVEL
+    log: environmentals.default('kpo_log', DEFAULT_LOG_LEVEL)
   } as TCoreOptions,
   cli: {} as ICliOptions,
   scope: {} as IScopeOptions
@@ -66,7 +66,7 @@ function merge(): void {
   // Set logging level
   if (options.log) {
     setLevel(options.log);
-    environmentals('kpo_log').set(options.log);
+    environmentals.set('kpo_log', options.log);
   }
 }
 
