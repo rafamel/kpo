@@ -1,11 +1,11 @@
-import { ICliOptions, IScopeOptions, TCoreOptions, IOfType } from '~/types';
+import hash from 'object-hash';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
 import environmentals from '~/utils/environmentals';
-import initialize from './initialize';
+import { ICliOptions, IScopeOptions, TCoreOptions, IOfType } from '~/types';
 
 export const state = {
-  id: 0,
+  force: 0,
   base: {
     file: null,
     directory: null,
@@ -17,39 +17,32 @@ export const state = {
   scope: {} as IScopeOptions
 };
 
+let id = '';
 let options: TCoreOptions = {};
 merge();
 
 export default {
-  get id(): number {
-    return state.id;
+  get id(): string {
+    return id;
   },
   get<T extends keyof TCoreOptions>(key: T): TCoreOptions[T] {
     return options[key];
   },
-  async setCli(opts: ICliOptions): Promise<void> {
+  setCli(opts: ICliOptions): void {
     Object.assign(state.cli, stripUndefined(opts));
-    state.id += 1;
     merge();
-    await initialize();
   },
-  async setScope(opts: IScopeOptions = {}): Promise<void> {
+  setScope(opts: IScopeOptions = {}): void {
     Object.assign(state.scope, opts);
-    state.id += 1;
     merge();
-    await initialize();
   },
-  async resetScope(update: boolean): Promise<void> {
+  resetScope(): void {
     state.scope = {};
-    state.id += 1;
-    if (update) {
-      merge();
-      await initialize();
-    }
+    merge();
   },
-  async forceUpdate(): Promise<void> {
-    state.id += 1;
-    await initialize();
+  forceUpdate(): void {
+    state.force += 1;
+    merge();
   }
 };
 
@@ -68,6 +61,8 @@ function merge(): void {
     setLevel(options.log);
     environmentals.set('kpo_log', options.log);
   }
+
+  id = hash(options) + state.force;
 }
 
 function stripUndefined(obj: IOfType<any>): IOfType<any> {

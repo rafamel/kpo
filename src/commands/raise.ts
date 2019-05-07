@@ -120,6 +120,6 @@ function raise(options: IRaiseOptions = {}): () => Promise<void> {
     };
 
     await fs.writeFile(paths.pkg, JSON.stringify(pkg, null, 2));
-    await core.options.forceUpdate();
+    core.options.forceUpdate();
   };
 }

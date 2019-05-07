@@ -30,7 +30,7 @@ const core = {
   },
   children: cache(null, async function(): Promise<IChild[]> {
     const { paths } = await initialize();
-    const children = await core.options.get('children');
+    const children = core.options.get('children');
 
     return getChildren(
       {
@@ -72,9 +72,9 @@ const core = {
       // keep track of scope branches
       scopes = scopes.concat(scope.name);
       // reset scope options
-      await core.options.resetScope(false);
+      core.options.resetScope();
       // set current directory as the the one of the scope
-      await core.options.setCli({ file: null, directory: scope.directory });
+      core.options.setCli({ file: null, directory: scope.directory });
     }
     // Continue recursively
     if (next.length) return core.setScope(next);

@@ -52,7 +52,7 @@ export async function requireLocal(file: string): Promise<IOfType<any>> {
 export async function processKpo(
   kpo: IOfType<any>
 ): Promise<IOfType<any> | null> {
-  if (kpo.options) await options.setScope(kpo.options);
+  if (kpo.options) options.setScope(kpo.options);
 
   return kpo.scripts || null;
 }
@@ -71,6 +71,6 @@ export async function processPkg(
     opts.cwd = absolute({ path: opts.cwd, cwd: path.parse(file).dir });
   }
 
-  await options.setScope(opts);
+  options.setScope(opts);
   return pkg;
 }

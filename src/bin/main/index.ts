@@ -70,7 +70,7 @@ export default async function main(argv: string[]): Promise<void> {
     throw Error(`A command is required`);
   }
 
-  await core.options.setCli({
+  core.options.setCli({
     file: cmd['--file'],
     directory: cmd['--dir'],
     silent: cmd['--silent'],
