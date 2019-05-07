@@ -7,21 +7,22 @@ import { wait, status } from 'promist';
 export default function attach(): void {
   _attach();
   options({
-    async resolver(type, arg) {
-      const silent = core()
-        .get('silent')
-        .catch(() => false);
-
-      if (silent) {
-        logger.debug('Silent: exiting with code 0');
-        return resolver('exit', 0);
-      }
-      if (type === 'signal') {
-        logger.debug('Received a termination signal: exiting with code 1');
+    resolver(type, arg) {
+      try {
+        const silent = core.options.get('silent');
+        if (silent) {
+          logger.debug('Silent: exiting with code 0');
+          return resolver('exit', 0);
+        }
+        if (type === 'signal') {
+          logger.debug('Received a termination signal: exiting with code 1');
+          return resolver('exit', 1);
+        }
+        logger.debug(`${type} event: `, arg);
+        return resolver(type, arg);
+      } catch (err) {
         return resolver('exit', 1);
       }
-      logger.debug(`${type} event: `, arg);
-      return resolver(type, arg);
     }
   });
   add(async () => {

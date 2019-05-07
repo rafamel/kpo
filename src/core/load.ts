@@ -38,13 +38,18 @@ export async function loadFile(file: string): Promise<IOfType<any> | null> {
   }
 }
 
-export function processStatic(kpo: IOfType<any>): IOfType<any> | null {
-  if (kpo.options) options.setScope(kpo.options);
+export async function processStatic(
+  kpo: IOfType<any>
+): Promise<IOfType<any> | null> {
+  if (kpo.options) await options.setScope(kpo.options);
 
   return kpo.scripts || null;
 }
 
-export function processPkg(file: string, pkg: IOfType<any>): IOfType<any> {
+export async function processPkg(
+  file: string,
+  pkg: IOfType<any>
+): Promise<IOfType<any>> {
   if (!pkg || !pkg.kpo) return pkg;
 
   const opts: IPackageOptions = Object.assign({}, pkg.kpo);
@@ -55,7 +60,7 @@ export function processPkg(file: string, pkg: IOfType<any>): IOfType<any> {
     opts.cwd = absolute({ path: opts.cwd, cwd: path.parse(file).dir });
   }
 
-  options.setScope(opts);
+  await options.setScope(opts);
   return pkg;
 }
 
@@ -67,5 +72,6 @@ export async function requireLocal(file: string): Promise<IOfType<any>> {
     throw open(err);
   }
 
+  // TODO remove as fn
   return typeof scripts === 'function' ? scripts(_public) : scripts;
 }

@@ -7,10 +7,13 @@ import guardian from '~/utils/guardian';
 import { ICoreData } from './types';
 import getBinPaths from '~/utils/paths';
 import manager from '~/utils/env-manager';
+import cache from '~/utils/cache';
 
 const cwd = process.cwd();
 
-export default async function initialize(): Promise<ICoreData> {
+export default cache(() => options.id, async function initialize(): Promise<
+  ICoreData
+> {
   // Fail if main process is already exiting
   guardian();
 
@@ -19,8 +22,8 @@ export default async function initialize(): Promise<ICoreData> {
 
   const paths = await getSelfPaths({
     cwd: cwd,
-    directory: options.raw().directory || undefined,
-    file: options.raw().file || undefined
+    directory: options.get('directory') || undefined,
+    file: options.get('file') || undefined
   });
   process.chdir(paths.directory);
 
@@ -28,12 +31,12 @@ export default async function initialize(): Promise<ICoreData> {
   // path option that can change is cwd, which is dealt with below
   const loaded = await load(paths);
   // At this point options have been loaded: it's safe to save options on var
-  const raw = options.raw();
 
   // options cwd can only be set on scope options (on load())
-  paths.directory = raw.cwd
+  const _cwd = options.get('cwd');
+  paths.directory = _cwd
     ? absolute({
-        path: raw.cwd,
+        path: _cwd,
         // we're setting it relative to the file
         cwd: paths.kpo ? path.parse(paths.kpo).dir : paths.directory
       })
@@ -42,7 +45,7 @@ export default async function initialize(): Promise<ICoreData> {
 
   const root = await getRootPaths({
     cwd: paths.directory,
-    root: options.raw().root
+    root: options.get('root')
   });
 
   const bin = root
@@ -51,8 +54,9 @@ export default async function initialize(): Promise<ICoreData> {
 
   // At this point options have been loaded -at load()- and we have
   // paths; we assign them to our current environment variables
-  if (raw.env) manager.assign(raw.env);
+  const _env = options.get('env');
+  if (_env) manager.assign(_env);
   if (bin.length) manager.addPaths(bin);
 
   return { paths, loaded, root, bin };
-}
+});

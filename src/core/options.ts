@@ -1,11 +1,10 @@
 import { ICliOptions, IScopeOptions, TCoreOptions, IOfType } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
-import { globals, environmentals } from '~/globals';
-import cache from '~/utils/cache';
+import { environmentals } from '~/globals';
+import initialize from './initialize';
 
-/* Shared between instances: changes might imply a major version release */
-export const state = globals('options', {
+export const state = {
   id: 0,
   base: {
     file: null,
@@ -16,7 +15,7 @@ export const state = globals('options', {
   } as TCoreOptions,
   cli: {} as ICliOptions,
   scope: {} as IScopeOptions
-}).get();
+};
 
 let options: TCoreOptions = {};
 merge();
@@ -25,32 +24,32 @@ export default {
   get id(): number {
     return state.id;
   },
-  // Raw should only be called from core (after initialization)
-  raw: cache(
-    () => state.id,
-    (): TCoreOptions => {
-      merge();
-      return Object.assign({}, options);
-    }
-  ),
-  setBase(opts: TCoreOptions): void {
-    Object.assign(state.base, opts);
-    state.id += 1;
+  get<T extends keyof TCoreOptions>(key: T): TCoreOptions[T] {
+    return options[key];
   },
-  setCli(opts: ICliOptions): void {
+  async setCli(opts: ICliOptions): Promise<void> {
     Object.assign(state.cli, stripUndefined(opts));
     state.id += 1;
+    merge();
+    await initialize();
   },
-  setScope(opts: IScopeOptions = {}): void {
+  async setScope(opts: IScopeOptions = {}): Promise<void> {
     Object.assign(state.scope, opts);
     state.id += 1;
+    merge();
+    await initialize();
   },
-  resetScope(): void {
+  async resetScope(update: boolean): Promise<void> {
     state.scope = {};
     state.id += 1;
+    if (update) {
+      merge();
+      await initialize();
+    }
   },
-  forceUpdate(): void {
+  async forceUpdate(): Promise<void> {
     state.id += 1;
+    await initialize();
   }
 };
 

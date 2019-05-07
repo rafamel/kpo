@@ -26,7 +26,7 @@ export default expose(list);
  */
 function list(options: IListOptions = {}): () => Promise<void> {
   return async () => {
-    let tasks = Object.assign({}, await core().tasks());
+    let tasks = Object.assign({}, await core.tasks());
     if (!options.all) {
       if (tasks.kpo) tasks.kpo = tasks.kpo.filter((task) => !task.hidden);
       if (tasks.pkg) tasks.pkg = tasks.pkg.filter((task) => !task.hidden);
@@ -64,9 +64,9 @@ export function fromTasks(tasks: ITasks): string {
 
 /** @hidden */
 export async function fromScopes(): Promise<string> {
-  const paths = await core().paths();
-  const root = await core().root();
-  const scopes = await core().children();
+  const paths = await core.paths();
+  const root = await core.root();
+  const scopes = await core.children();
 
   let rows = scopes.map((child) => [
     child.name,

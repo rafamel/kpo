@@ -1,5 +1,5 @@
 import fs from 'fs-extra';
-import core, { options as _options } from '~/core';
+import core from '~/core';
 import toArgv from 'string-argv';
 import { IOfType } from '~/types';
 import chalk from 'chalk';
@@ -40,13 +40,13 @@ function raise(options: IRaiseOptions = {}): () => Promise<void> {
       );
     }
 
-    const paths = await core().paths();
-    const { pkg } = await core().load();
+    const paths = await core.paths();
+    const { pkg } = await core.load();
 
     if (!paths.kpo) throw Error(`No kpo scripts found`);
     if (!paths.pkg || !pkg) throw Error(`No package.json found`);
 
-    const tasks = await core().tasks();
+    const tasks = await core.tasks();
     const taskNames = (tasks.kpo || [])
       .filter((task) => !task.hidden)
       .map((task) => task.path);
@@ -120,6 +120,6 @@ function raise(options: IRaiseOptions = {}): () => Promise<void> {
     };
 
     await fs.writeFile(paths.pkg, JSON.stringify(pkg, null, 2));
-    _options.forceUpdate();
+    await core.options.forceUpdate();
   };
 }
