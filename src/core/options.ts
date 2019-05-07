@@ -1,7 +1,7 @@
 import { ICliOptions, IScopeOptions, TCoreOptions, IOfType } from '~/types';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { setLevel } from '~/utils/logger';
-import { environmentals } from '~/globals';
+import environmentals from '~/utils/environmentals';
 import initialize from './initialize';
 
 export const state = {
