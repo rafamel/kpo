@@ -13,6 +13,9 @@ import initialize from './initialize';
 let scopes: string[] = [];
 const core = {
   options,
+  async initialize(): Promise<void> {
+    await initialize();
+  },
   async scopes(): Promise<string[]> {
     return scopes;
   },

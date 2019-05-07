@@ -118,6 +118,7 @@ export default async function main(argv: string[]): Promise<void> {
       (plain.slice(-3) === ' --' ? plain.slice(0, -3) : plain)
   );
 
+  await core.initialize();
   switch (first) {
     case ':run':
       const [tasks, args] = splitBy(cmd._);
