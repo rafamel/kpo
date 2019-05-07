@@ -3,6 +3,7 @@ import chalk, { Chalk } from 'chalk';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { TLogger } from '~/types';
 
+// TODO: register exits logger once logger has been updated there
 const APP_NAME = 'kpo';
 const logger = loglevel.getLogger(`_${APP_NAME}_logger_`);
 logger.setDefaultLevel(DEFAULT_LOG_LEVEL);
@@ -14,6 +15,7 @@ function setLevel(level: TLogger): void {
 const colors: { [key in TLogger]?: Chalk } = {
   trace: chalk.magenta,
   debug: chalk.cyan,
+  info: chalk.bold.green,
   warn: chalk.bold.yellow,
   error: chalk.bold.red
 };
@@ -21,11 +23,12 @@ const colors: { [key in TLogger]?: Chalk } = {
 function prefix(level: TLogger): string {
   const color = colors[level];
   const name = level.toUpperCase();
-  // Don't log app name or info prefix when log level is 'info', 'warn', 'error'
+  // Don't prefix app name when log level is 'info', 'warn', 'error';
+  // don't prefix level 'info'
   if (logger.getLevel() >= 2) {
     return level === 'info' ? '' : color ? color(`${name}: `) : `${name}: `;
   }
-  return APP_NAME + ' ' + (color ? color(`${name}: `) : `${name}: `);
+  return (color ? color(`[${name}]`) : `[${name}]`) + ` ${APP_NAME}: `;
 }
 
 const factory = logger.methodFactory;
