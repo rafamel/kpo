@@ -18,4 +18,4 @@ export const CONCURRENTLY_PATH = require.resolve(
 export const OWNED_ENV_KEY = 'kpo_owned';
 export const GLOBALS_KEY = 'kpo_globals';
 export type TEnvironmental = 'kpo_log';
-export type TGlobal = 'version' | 'options' | 'processses';
+export type TGlobal = 'version' | 'options';

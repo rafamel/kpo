@@ -1,8 +1,8 @@
 import core from '~/core';
 import { attach as _attach, options, resolver, add } from 'exits';
-import manager from '~/utils/ps-manager';
+import PSManager from '~/utils/ps-manager';
 import logger from '~/utils/logger';
-import { wait } from 'promist';
+import { wait, status } from 'promist';
 
 export default function attach(): void {
   _attach();
@@ -25,25 +25,17 @@ export default function attach(): void {
     }
   });
   add(async () => {
-    if (manager.isDone()) return;
-    logger.debug('Sending SIGTERM to all children processes');
+    const manager = new PSManager(process.pid);
+    if (!(await manager.hasChildren())) return;
 
-    let start = Date.now();
-    manager.kill('SIGTERM');
-    while (!manager.isDone() && Date.now() - start < 2500) {
-      await Promise.race([manager.promise(), wait(Date.now() - start)]);
-    }
+    const term = status(manager.killAll('SIGTERM', 150));
+    await Promise.race([term, wait(3000)]);
+    if (term.status !== 'pending') return;
 
-    if (manager.isDone()) return;
-    logger.debug('Seding SIGKILL to all children processes');
+    const kill = status(manager.killAll('SIGKILL', 150));
+    await Promise.race([kill, wait(2000)]);
+    if (kill.status !== 'pending') return;
 
-    start = Date.now();
-    manager.kill('SIGKILL');
-    while (!manager.isDone() && Date.now() - start < 2500) {
-      await Promise.race([manager.promise(), wait(Date.now() - start)]);
-    }
-
-    if (manager.isDone()) return;
     logger.debug(
       'Children processes have timed out without terminating. Exiting main process.'
     );
