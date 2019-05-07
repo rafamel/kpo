@@ -9,6 +9,7 @@ export class KpoError<A> extends Error {
       if (typeof source === 'object' && source !== null) {
         message = (source as any).message;
       }
+      if (!message && typeof source === 'string') message = source;
       if (!message) message = 'An error occurred';
     }
 
