@@ -16,7 +16,9 @@ export default async function load(paths: IPaths): Promise<ILoaded> {
         .then((pkg) => processPkg(paths.pkg as string, pkg))
     : null;
 
-  const kpo = paths.kpo ? await loadFile(paths.kpo) : null;
+  const kpo = paths.kpo
+    ? await loadFile(paths.kpo).then((kpo) => (kpo ? processKpo(kpo) : null))
+    : null;
 
   return { kpo, pkg };
 }
@@ -28,17 +30,27 @@ export async function loadFile(file: string): Promise<IOfType<any> | null> {
     case '.js':
       return requireLocal(file);
     case '.json':
-      return fs.readJSON(file).then(processStatic);
+      return fs.readJSON(file);
     case '.yml':
     case '.yaml':
-      const kpo = yaml.safeLoad(await fs.readFile(file).then(String));
-      return processStatic(kpo);
+      return yaml.safeLoad(await fs.readFile(file).then(String));
     default:
       throw Error(`Extension not valid for ${file}`);
   }
 }
 
-export async function processStatic(
+export async function requireLocal(file: string): Promise<IOfType<any>> {
+  let kpo: any;
+  try {
+    kpo = require(file);
+  } catch (err) {
+    throw open(err);
+  }
+
+  return kpo;
+}
+
+export async function processKpo(
   kpo: IOfType<any>
 ): Promise<IOfType<any> | null> {
   if (kpo.options) await options.setScope(kpo.options);
@@ -62,16 +74,4 @@ export async function processPkg(
 
   await options.setScope(opts);
   return pkg;
-}
-
-export async function requireLocal(file: string): Promise<IOfType<any>> {
-  let scripts: any;
-  try {
-    scripts = require(file);
-  } catch (err) {
-    throw open(err);
-  }
-
-  // TODO remove as fn
-  return typeof scripts === 'function' ? scripts(_public) : scripts;
 }
