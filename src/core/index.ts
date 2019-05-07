@@ -28,7 +28,7 @@ const core = {
   async bin(): Promise<string[]> {
     return initialize().then((data) => data.bin);
   },
-  children: cache(null, async function(): Promise<IChild[]> {
+  children: cache(() => options.id, async function(): Promise<IChild[]> {
     const { paths } = await initialize();
     const children = core.options.get('children');
 
@@ -40,7 +40,7 @@ const core = {
       children
     );
   }),
-  tasks: cache(null, async function(): Promise<ITasks> {
+  tasks: cache(() => options.id, async function(): Promise<ITasks> {
     const { loaded } = await initialize();
     return getAllTasks(loaded.kpo || undefined, loaded.pkg || undefined);
   }),
