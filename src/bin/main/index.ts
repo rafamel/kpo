@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import join from 'command-join';
 import core from '~/core';
 import { TLogger, IOfType } from '~/types';
-import { run } from '~/public';
+import { run } from '~/commands';
 import _cmd from './cmd';
 import series from './series';
 import parallel from './parallel';

@@ -2,7 +2,7 @@
 import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import { flags, safePairs } from 'cli-belt';
-import { stream as command } from '~/public';
+import { stream as command } from '~/commands';
 
 export default async function stream(argv: string[]): Promise<void> {
   const help = indent`

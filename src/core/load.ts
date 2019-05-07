@@ -6,7 +6,6 @@ import { ILoaded, IPaths } from './types';
 import { IOfType, IPackageOptions } from '~/types';
 import options from './options';
 import { absolute } from '~/utils/file';
-import * as _public from '../public';
 
 export default async function load(paths: IPaths): Promise<ILoaded> {
   // pkg must be loaded first to set options first, if present at key `kpo`

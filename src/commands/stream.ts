@@ -1,8 +1,7 @@
 import core from '~/core';
 import expose from '~/utils/expose';
 import { IChild } from '~/core/types';
-import parallel from './parallel';
-import series from './series';
+import { parallel, series } from '~/public';
 import join from 'command-join';
 import { NODE_PATH, KPO_PATH } from '~/constants';
 import { IMultiExecOptions } from '~/types';
