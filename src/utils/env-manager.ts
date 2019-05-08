@@ -2,7 +2,7 @@ import pathKey from 'path-key';
 import alter from 'manage-path';
 import { IOfType } from '~/types';
 
-export class EnvManager {
+export default class EnvManager {
   public path: string;
   private env: IOfType<string | undefined>;
   private initial: IOfType<string | undefined>;
@@ -45,5 +45,3 @@ export class EnvManager {
     this.assigned = {};
   }
 }
-
-export default new EnvManager(process.env);

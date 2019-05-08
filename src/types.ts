@@ -36,6 +36,7 @@ export type TLogger = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
  * If the `task` above was a `kpo` task, it would run `echo "foo"`, `console.log('Almost done')`, `echo "done"`, and finally, error out. That being said, had we passed an argument `--foo` (`kpo task -- --foo`), then `echo "done"` wouldn't have run.
  */
 export type TScript =
+  | void
   | undefined
   | null
   | false
@@ -47,9 +48,7 @@ export type TScript =
 /**
  * Represents a `TScript` as a function
  */
-export type TScriptFn = (
-  args?: string[]
-) => TScript | void | Promise<TScript | void>;
+export type TScriptFn = (args?: string[]) => TScript | Promise<TScript>;
 
 /**
  * Represents a `TScript` array.
@@ -147,10 +146,6 @@ export interface IExecOptions {
    * Additional environment variables.
    */
   env?: IOfType<string>;
-  /**
-   * Additional paths for $PATH
-   */
-  paths?: string[];
   /**
    * `stdio` mode.
    */

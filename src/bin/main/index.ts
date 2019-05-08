@@ -4,7 +4,7 @@ import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import chalk from 'chalk';
 import join from 'command-join';
-import core from '~/core';
+import contain from '~/core';
 import { TLogger, IOfType } from '~/types';
 import { run } from '~/commands';
 import _cmd from './cmd';
@@ -14,6 +14,7 @@ import list from './list';
 import raise from './raise';
 import stream from './stream';
 import logger from '~/utils/logger';
+import { setSilent } from '../attach';
 
 export default async function main(argv: string[]): Promise<void> {
   const pkg = await loadPackage(__dirname, { title: true });
@@ -70,7 +71,7 @@ export default async function main(argv: string[]): Promise<void> {
     throw Error(`A command is required`);
   }
 
-  core.options.setCli({
+  const options = {
     file: cmd['--file'],
     directory: cmd['--dir'],
     silent: cmd['--silent'],
@@ -83,19 +84,19 @@ export default async function main(argv: string[]): Promise<void> {
       acc[arr[0]] = arr[1];
       return acc;
     }, {})
-  });
+  };
+  setSilent(options.silent);
 
   let first = cmd._.shift();
+  const scopes: string[] = [];
   while (!first || first[0] === '@') {
     if (!first) {
       console.log(help + '\n');
       throw Error(`A command is required`);
     }
-
     const command = first.split(':');
     const scope = command.shift() as string;
-
-    await core.setScope(scope === '@' ? ['root'] : [scope.slice(1)]);
+    scopes.push(scope === '@' ? 'root' : scope.slice(1));
     first = command.length
       ? `:${command.join(':')}`
       : (cmd._.shift() as string);
@@ -109,7 +110,6 @@ export default async function main(argv: string[]): Promise<void> {
   }
 
   // Log full command to be run w/ resolved scopes
-  const scopes = await core.scopes();
   const plain = join(cmd._);
   logger.info(
     chalk.bold('kpo') +
@@ -118,24 +118,27 @@ export default async function main(argv: string[]): Promise<void> {
       (plain.slice(-3) === ' --' ? plain.slice(0, -3) : plain)
   );
 
-  await core.initialize();
-  switch (first) {
-    case ':run':
-      const [tasks, args] = splitBy(cmd._);
-      return run(tasks)(args);
-    case ':list':
-      return list(cmd._);
-    case ':raise':
-      return raise(cmd._);
-    case ':cmd':
-      return _cmd(cmd._);
-    case ':series':
-      return series(cmd._);
-    case ':parallel':
-      return parallel(cmd._);
-    case ':stream':
-      return stream(cmd._);
-    default:
-      throw Error('Unknown command ' + first);
-  }
+  await contain(options, async function(core): Promise<void> {
+    core = await core.scope(scopes);
+
+    switch (first) {
+      case ':run':
+        const [tasks, args] = splitBy(cmd._);
+        return run(core, tasks, args);
+      case ':list':
+        return list(core, cmd._);
+      case ':raise':
+        return raise(core, cmd._);
+      case ':cmd':
+        return _cmd(cmd._);
+      case ':series':
+        return series(cmd._);
+      case ':parallel':
+        return parallel(cmd._);
+      case ':stream':
+        return stream(core, cmd._);
+      default:
+        throw Error('Unknown command ' + first);
+    }
+  });
 }

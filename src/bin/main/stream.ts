@@ -3,8 +3,12 @@ import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import { flags, safePairs } from 'cli-belt';
 import { stream as command } from '~/commands';
+import { ICore } from '~/core';
 
-export default async function stream(argv: string[]): Promise<void> {
+export default async function stream(
+  core: ICore,
+  argv: string[]
+): Promise<void> {
   const help = indent`
     Usage:
       $ kpo :stream [options] [commands]
@@ -41,7 +45,8 @@ export default async function stream(argv: string[]): Promise<void> {
     console.log(help + '\n');
     throw Error(`A command is required`);
   }
-  return command.fn(cmd._, {
+
+  return command(core, cmd._, {
     include: cmd['--include'] ? cmd['--include'].split(',') : undefined,
     exclude: cmd['--exclude'] ? cmd['--exclude'].split(',') : undefined,
     parallel: cmd['--parallel'],

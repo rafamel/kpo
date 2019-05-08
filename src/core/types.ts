@@ -1,11 +1,4 @@
-import { IScripts, IOfType, TScript } from '~/types';
-
-export interface ICoreData {
-  paths: IPaths;
-  loaded: ILoaded;
-  root: IPaths | null;
-  bin: string[];
-}
+import { IScripts, IOfType, TScript, IScopeOptions } from '~/types';
 
 export interface IPaths {
   pkg: string | null;
@@ -16,11 +9,7 @@ export interface IPaths {
 export interface ILoaded {
   kpo: IScripts | null;
   pkg: IOfType<any> | null;
-}
-
-export interface IScope {
-  name: string;
-  directory: string;
+  options: IScopeOptions;
 }
 
 export interface IChild {

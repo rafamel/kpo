@@ -3,23 +3,35 @@ import fs from 'fs-extra';
 import yaml from 'js-yaml';
 import { open } from '~/utils/errors';
 import { ILoaded, IPaths } from './types';
-import { IOfType, IPackageOptions } from '~/types';
-import options from './options';
+import { IOfType, IScopeOptions, IPackageOptions } from '~/types';
 import { absolute } from '~/utils/file';
 
 export default async function load(paths: IPaths): Promise<ILoaded> {
-  // pkg must be loaded first to set options first, if present at key `kpo`
-  const pkg = paths.pkg
-    ? await fs
-        .readJSON(paths.pkg)
-        .then((pkg) => processPkg(paths.pkg as string, pkg))
+  const kpo = paths.kpo ? await loadFile(paths.kpo) : null;
+  const pkg: IOfType<any> | null = paths.pkg
+    ? await fs.readJSON(paths.pkg)
     : null;
 
-  const kpo = paths.kpo
-    ? await loadFile(paths.kpo).then((kpo) => (kpo ? processKpo(kpo) : null))
-    : null;
+  const options: IScopeOptions = {};
+  if (paths.pkg && pkg && pkg.kpo) {
+    const pkgOpts: IPackageOptions = pkg.kpo;
+    // file was already read when getting paths; it's also not a IScopeOptions field
+    delete pkgOpts.file;
+    if (pkgOpts.cwd) {
+      pkgOpts.cwd = absolute({
+        path: pkgOpts.cwd,
+        cwd: path.parse(paths.pkg).dir
+      });
+    }
+    Object.assign(options, pkgOpts);
+  }
+  if (kpo && kpo.options) Object.assign(options, kpo.options);
 
-  return { kpo, pkg };
+  return {
+    kpo: (kpo && kpo.scripts) || null,
+    pkg,
+    options
+  };
 }
 
 export async function loadFile(file: string): Promise<IOfType<any> | null> {
@@ -47,30 +59,4 @@ export async function requireLocal(file: string): Promise<IOfType<any>> {
   }
 
   return kpo;
-}
-
-export async function processKpo(
-  kpo: IOfType<any>
-): Promise<IOfType<any> | null> {
-  if (kpo.options) options.setScope(kpo.options);
-
-  return kpo.scripts || null;
-}
-
-export async function processPkg(
-  file: string,
-  pkg: IOfType<any>
-): Promise<IOfType<any>> {
-  if (!pkg || !pkg.kpo) return pkg;
-
-  const opts: IPackageOptions = Object.assign({}, pkg.kpo);
-  // file was already read when getting paths;
-  // it's also not a IScopeOptions field
-  delete opts.file;
-  if (opts.cwd) {
-    opts.cwd = absolute({ path: opts.cwd, cwd: path.parse(file).dir });
-  }
-
-  options.setScope(opts);
-  return pkg;
 }

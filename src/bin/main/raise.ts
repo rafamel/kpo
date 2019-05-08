@@ -3,8 +3,9 @@ import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import { flags, safePairs } from 'cli-belt';
 import { raise as command } from '~/commands';
+import { ICore } from '~/core';
 
-export default async function list(argv: string[]): Promise<void> {
+export default async function list(core: ICore, argv: string[]): Promise<void> {
   const help = indent`
     Usage:
       $ kpo :raise [options]
@@ -33,7 +34,7 @@ export default async function list(argv: string[]): Promise<void> {
   if (cmd['--help']) return console.log(help);
   if (cmd._.length) throw Error('Unknown command: ' + cmd._[0]);
 
-  return command.fn({
+  return command(core, {
     confirm: cmd['--confirm'],
     dry: cmd['--dry'],
     fail: cmd['--fail']

@@ -1,15 +1,22 @@
-import core from '~/core';
 import { attach as _attach, options, resolver, add } from 'exits';
 import terminate from '~/utils/terminate-children';
 import logger from '~/utils/logger';
 import { wait, status } from 'promist';
+
+let silent: boolean | null = null;
+
+export function setSilent(value?: boolean): void {
+  // Only set on first call
+  if (typeof value === 'boolean') return;
+
+  silent = value || false;
+}
 
 export default function attach(): void {
   _attach();
   options({
     resolver(type, arg) {
       try {
-        const silent = core.options.get('silent');
         if (silent) {
           logger.debug('Silent: exiting with code 0');
           return resolver('exit', 0);
@@ -18,7 +25,7 @@ export default function attach(): void {
           logger.debug('Received a termination signal: exiting with code 1');
           return resolver('exit', 1);
         }
-        logger.debug(`${type} event:`, arg);
+        logger.debug(`Event: ${type}`, arg);
         return resolver(type, arg);
       } catch (err) {
         return resolver('exit', 1);

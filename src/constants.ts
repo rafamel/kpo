@@ -15,4 +15,4 @@ export const CONCURRENTLY_PATH = require.resolve(
   'concurrently/bin/concurrently'
 );
 /* Shared between instances: changes might imply a major version release */
-export type TEnvironmental = 'kpo_log';
+export const KPO_LOG_ENV = 'kpo_log';
