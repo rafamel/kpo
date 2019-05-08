@@ -4,8 +4,7 @@ import logger from '~/utils/logger';
 import join from 'command-join';
 import { IExecOptions } from '~/types';
 import { absolute } from './file';
-import manager, { EnvManager } from '~/utils/env-manager';
-import path from 'path';
+import EnvManager from '~/utils/env-manager';
 import getBinPaths from './paths';
 import guardian from './guardian';
 
@@ -25,14 +24,9 @@ export default async function exec(
     ? absolute({ path: options.cwd, cwd: process.cwd() })
     : process.cwd();
 
-  if (path.relative(cwd, process.cwd())) {
-    local.assign({ [local.path]: manager.purePaths });
-    local.addPaths(await getBinPaths(cwd));
-  }
   if (options.env) local.assign(options.env);
-  if (options.paths && options.paths.length) {
-    local.addPaths(options.paths);
-  }
+  // If a cwd is passed in options, we'll add in bin paths
+  if (options.cwd) local.addPaths(await getBinPaths(cwd));
 
   const opts: SpawnOptions | ForkOptions = {
     cwd,
