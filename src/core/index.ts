@@ -10,6 +10,7 @@ import { getAllTasks, getTask } from './tasks';
 import { IPaths, ILoaded, IChild, ITasks, ITask } from './types';
 import getBinPaths from '~/utils/paths';
 import logger from '~/utils/logger';
+import { SilentError } from '~/utils/errors';
 
 const lazy = <T>(fn: () => Promise<T>): Promise<T> =>
   _lazy((resolve, reject) =>
@@ -46,7 +47,8 @@ export default async function contain<T>(
     core.restore();
   } catch (err) {
     core.restore();
-    throw err;
+    const opts = await core.options.catch(() => options);
+    throw opts.silent ? new SilentError(undefined, err) : err;
   }
   return res;
 }

@@ -26,7 +26,7 @@ function silent(...args: any[]): (args?: string[]) => Promise<void> {
       await exec(command, argv || [], false);
     } catch (e) {
       const err = error(e);
-      logger.error(err.message);
+      logger.warn(err.message);
       if (err.root.stack) logger.trace(err.root.stack);
     }
   };

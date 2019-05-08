@@ -14,7 +14,6 @@ import list from './list';
 import raise from './raise';
 import stream from './stream';
 import logger from '~/utils/logger';
-import { setSilent } from '../attach';
 
 export default async function main(argv: string[]): Promise<void> {
   const pkg = await loadPackage(__dirname, { title: true });
@@ -85,7 +84,6 @@ export default async function main(argv: string[]): Promise<void> {
       return acc;
     }, {})
   };
-  setSilent(options.silent);
 
   let first = cmd._.shift();
   const scopes: string[] = [];

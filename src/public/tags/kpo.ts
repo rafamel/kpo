@@ -3,6 +3,8 @@ import expose, { TExposedOverload } from '~/utils/expose';
 import toArgv from 'string-argv';
 import { splitBy } from 'cli-belt';
 import main from '~/bin/main';
+import { isSilentError } from '~/utils/errors';
+import logger from '~/utils/logger';
 
 export default expose(kpo) as TExposedOverload<
   typeof kpo,
@@ -28,6 +30,15 @@ function kpo(...args: any[]): (args?: string[]) => Promise<void> {
     split[1] = split[1].concat(_argv || []);
     if (split[1].length) argv = split[0].concat('--').concat(split[1]);
 
-    await main(argv);
+    try {
+      await main(argv);
+    } catch (err) {
+      if (isSilentError(err)) {
+        logger.warn(err.message);
+        if (err.root.stack) logger.trace(err.root.stack);
+      } else {
+        throw err;
+      }
+    }
   };
 }
