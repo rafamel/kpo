@@ -1,7 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
 import glob from 'glob';
-import pify from 'pify';
 import { parallel } from 'promist';
 import { exists } from '~/utils/file';
 import { FILE_NAME, FILE_EXT } from '~/constants';
@@ -44,7 +43,11 @@ export async function fromGlob(
   directory: string
 ): Promise<string[]> {
   return parallel.filter(
-    await pify(glob)(pattern, { cwd: directory }),
+    await new Promise((resolve: (arg: string[]) => void, reject) =>
+      glob(pattern, { cwd: directory }, (err, matches) =>
+        err ? reject(err) : resolve(matches)
+      )
+    ),
     async (dir: string) => {
       // get absolute path
       dir = path.join(directory, dir);
