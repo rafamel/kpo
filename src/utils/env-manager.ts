@@ -13,8 +13,14 @@ export class EnvManager {
     this.initial = Object.assign({}, env);
     this.assigned = {};
   }
-  public get purePaths(): string | undefined {
-    return this.initial[this.path];
+  public get(key: string): string | undefined {
+    return this.env[key] || undefined;
+  }
+  public set(key: string, value?: string): void {
+    this.assign({ [key]: value });
+  }
+  public default(key: string, value: string): string {
+    return this.get(key) || this.set(value) || value;
   }
   public addPaths(paths: string[]): void {
     const env = { PATH: this.env[this.path] };
