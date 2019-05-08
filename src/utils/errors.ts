@@ -40,6 +40,12 @@ export class OpenError<T> extends KpoError<T> {
   }
 }
 
+export class SilentError<T> extends KpoError<T> {
+  public get name(): string {
+    return 'SilentError';
+  }
+}
+
 export function open(source?: any): KpoError<any> {
   return isKpoError(source) ? source : new OpenError(undefined, source);
 }
@@ -55,4 +61,8 @@ export function isKpoError(err: any): err is KpoError<any> {
 
 export function isOpenError(err: any): err is OpenError<any> {
   return isKpoError(err) && err.name === 'OpenError';
+}
+
+export function isSilentError(err: any): err is OpenError<any> {
+  return isKpoError(err) && err.name === 'SilentError';
 }
