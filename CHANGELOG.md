@@ -1,3 +1,56 @@
+# [0.4.0](https://github.com/rafamel/kpo/compare/v0.3.0...v0.4.0) (2019-05-08)
+
+
+### Bug Fixes
+
+* **core:** uses cache relative to options.id for children and tasks ([dc9e645](https://github.com/rafamel/kpo/commit/dc9e645))
+* **core/options:** fixes setters; doesn't call initialize on set on get; rolls back to using object ([05b6308](https://github.com/rafamel/kpo/commit/05b6308))
+* **deps:** moves slimconf to devDependencies ([5e3c765](https://github.com/rafamel/kpo/commit/5e3c765))
+* **public/exec:** fixes stream commands to match current globals management ([5600b8e](https://github.com/rafamel/kpo/commit/5600b8e))
+* **utils/terminate-children:** replaces ps-manager w/ terminate-children; actually sents kill signal ([30dac3a](https://github.com/rafamel/kpo/commit/30dac3a))
+
+
+### Code Refactoring
+
+* **public, commands:** removes internal kpo commands from public, moves them to commands ([7acaea6](https://github.com/rafamel/kpo/commit/7acaea6))
+
+
+### Features
+
+* **bin:** adds exits hook to manage child processes termination ([85b4ef8](https://github.com/rafamel/kpo/commit/85b4ef8))
+* **bin:** strips out -- fromk logged command when no arguments are passed after it ([3df0061](https://github.com/rafamel/kpo/commit/3df0061))
+* **bin, core:** explicitly calls initialize: ensures initialization has always happened -at least o ([b887980](https://github.com/rafamel/kpo/commit/b887980))
+* **bin, utils/exec:** uses exits to control spawned processes; exits w/ code 1 for signals ([572f5fe](https://github.com/rafamel/kpo/commit/572f5fe))
+* **core, utils:** uses globals to manage core and options state; removes unused utils ([f2674d9](https://github.com/rafamel/kpo/commit/f2674d9))
+* **core/scope:** uses only children names to identify childre; removes matcher from IChild ([685d023](https://github.com/rafamel/kpo/commit/685d023))
+* **globals:** adds globals ([b1e8f44](https://github.com/rafamel/kpo/commit/b1e8f44))
+* **globals:** doesn't pollute global when process is not kpo owned ([de56134](https://github.com/rafamel/kpo/commit/de56134))
+* **globals; utils:** globals manages environment variables; places version range validation in utils ([ba9d3d2](https://github.com/rafamel/kpo/commit/ba9d3d2))
+* **public:** removes public options; kpo file, when js, should also export an options and scripts o ([1508fc4](https://github.com/rafamel/kpo/commit/1508fc4))
+* **utils:** adds guardian ([5b5e698](https://github.com/rafamel/kpo/commit/5b5e698))
+* **utils/cache:** allows for getId to be null or return string or number types ([fad3fd6](https://github.com/rafamel/kpo/commit/fad3fd6))
+* **utils/env-manager:** adds environment variables manager ([442029b](https://github.com/rafamel/kpo/commit/442029b))
+* **utils/env-manager:** adds get, set, and default methods ([b83c138](https://github.com/rafamel/kpo/commit/b83c138))
+* **utils/env-manager:** adds purePaths; updates initial; exports initialized manager as default ([4c27842](https://github.com/rafamel/kpo/commit/4c27842))
+* **utils/errors:** uses source as message when it's a string ([bbf86d2](https://github.com/rafamel/kpo/commit/bbf86d2))
+* **utils/exec:** doesn't reset paths; doesn't add paths unless options.cwd exists ([fe9da49](https://github.com/rafamel/kpo/commit/fe9da49))
+* duck types errors to avoid issues w/ different instances; removes redundant error normalizatio ([97f2f8e](https://github.com/rafamel/kpo/commit/97f2f8e))
+* errors out on tasks, core, and spawned processes calls if exit has already been triggered ([201dc7a](https://github.com/rafamel/kpo/commit/201dc7a))
+* **utils/exec, core/exec:** uses child_process spawn and fork in order to manage child processes in ([19467fa](https://github.com/rafamel/kpo/commit/19467fa))
+* **utils/logger:** prefixes messages w/ level and app name ([05fce07](https://github.com/rafamel/kpo/commit/05fce07))
+* **utils/paths:** adds getPaths ([eda621b](https://github.com/rafamel/kpo/commit/eda621b))
+* **utils/ps-manager:** adds child processes manager ([c90f121](https://github.com/rafamel/kpo/commit/c90f121))
+* **utils/ps-manager:** can kill processes for all children of a process ([1157ff3](https://github.com/rafamel/kpo/commit/1157ff3))
+
+
+### BREAKING CHANGES
+
+* **public, commands:** run, list, raise, and stream are no longer exported
+* **public:** doesn't further export options(); kpo file should have a scripts and options key
+containing an object, even when a js file; kpo file can't export a default function
+
+
+
 # [0.3.0](https://github.com/rafamel/kpo/compare/v0.2.0...v0.3.0) (2019-05-05)
 
 
