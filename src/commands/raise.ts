@@ -8,6 +8,10 @@ import confirm from '~/utils/confirm';
 
 export interface IRaiseOptions {
   /**
+   * Purge all non-*kpo* scripts
+   */
+  purge?: boolean;
+  /**
    * Prompt for changes confirmation before performing a write operation
    */
   confirm?: boolean;
@@ -50,19 +54,21 @@ export default async function raise(
 
   const scripts: IOfType<string> = pkg.scripts || {};
 
-  const selected = Object.keys(scripts).filter((key) => {
-    const value = scripts[key];
-    let argv = toArgv(value);
-    if (argv.shift() !== 'kpo') return false;
-    if (argv[0] === ':run') argv.shift();
-    return (
-      argv.length === 2 &&
-      argv[0][0] !== ':' &&
-      argv[0][0] !== '@' &&
-      argv[0] === key &&
-      argv[1] === '--'
-    );
-  });
+  const selected = options.purge
+    ? Object.keys(scripts)
+    : Object.keys(scripts).filter((key) => {
+        const value = scripts[key];
+        let argv = toArgv(value);
+        if (argv.shift() !== 'kpo') return false;
+        if (argv[0] === ':run') argv.shift();
+        return (
+          argv.length === 2 &&
+          argv[0][0] !== ':' &&
+          argv[0][0] !== '@' &&
+          argv[0] === key &&
+          argv[1] === '--'
+        );
+      });
   const nonSelected = Object.keys(scripts).filter(
     (key) => !selected.includes(key)
   );
@@ -104,17 +110,23 @@ export default async function raise(
 
   if (!(await confirm('Confirm?', options))) return;
 
-  pkg.scripts = {
-    ...nonSelected.reduce((acc: IOfType<string>, key) => {
-      acc[key] = scripts[key];
-      return acc;
-    }, {}),
-    ...taskNames.reduce((acc: IOfType<string>, key) => {
-      acc[key] = `kpo ${key} --`;
-      return acc;
-    }, {})
-  };
+  pkg.scripts = options.purge
+    ? taskNames.reduce((acc: IOfType<string>, key) => {
+        acc[key] = `kpo ${key} --`;
+        return acc;
+      }, {})
+    : {
+        ...nonSelected.reduce((acc: IOfType<string>, key) => {
+          acc[key] = scripts[key];
+          return acc;
+        }, {}),
+        ...taskNames.reduce((acc: IOfType<string>, key) => {
+          acc[key] = `kpo ${key} --`;
+          return acc;
+        }, {})
+      };
 
   await fs.writeFile(paths.pkg, JSON.stringify(pkg, null, 2));
+  // As package.json has changed, we need to refetch on core
   core.reset();
 }

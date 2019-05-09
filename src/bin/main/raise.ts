@@ -13,6 +13,7 @@ export default async function list(core: ICore, argv: string[]): Promise<void> {
     Raises kpo tasks to package.json
     
     Options:
+      --purge          Purge all non-kpo scripts
       --confirm        Prompt for changes confirmation before performing a write operation
       --dry            Dry run
       --fail           Fails if there are any changes to be made on dry mode, or if the user cancels the action when confirmation is required
@@ -20,6 +21,7 @@ export default async function list(core: ICore, argv: string[]): Promise<void> {
   `;
 
   const types = {
+    '--purge': Boolean,
     '--confirm': Boolean,
     '--dry': Boolean,
     '--fail': Boolean,
@@ -35,6 +37,7 @@ export default async function list(core: ICore, argv: string[]): Promise<void> {
   if (cmd._.length) throw Error('Unknown command: ' + cmd._[0]);
 
   return command(core, {
+    purge: cmd['--purge'],
     confirm: cmd['--confirm'],
     dry: cmd['--dry'],
     fail: cmd['--fail']
