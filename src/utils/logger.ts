@@ -3,10 +3,8 @@ import chalk, { Chalk } from 'chalk';
 import { DEFAULT_LOG_LEVEL } from '~/constants';
 import { TLogger } from '~/types';
 
-// TODO: register exits logger once logger has been updated there
 const APP_NAME = 'kpo';
 const logger = loglevel.getLogger(`_${APP_NAME}_logger_`);
-logger.setDefaultLevel(DEFAULT_LOG_LEVEL);
 
 function setLevel(level: TLogger): void {
   logger.setLevel(level);
@@ -38,5 +36,8 @@ logger.methodFactory = (...args) => (...inner: any[]) => {
     ...inner.slice(1)
   );
 };
+
+// Must be set -at least once- after overwriting methodFactory
+logger.setDefaultLevel(DEFAULT_LOG_LEVEL);
 
 export { logger as default, setLevel };
