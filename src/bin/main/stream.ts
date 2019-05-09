@@ -47,8 +47,12 @@ export default async function stream(
   }
 
   return command(core, cmd._, {
-    include: cmd['--include'] ? cmd['--include'].split(',') : undefined,
-    exclude: cmd['--exclude'] ? cmd['--exclude'].split(',') : undefined,
+    include: cmd['--include']
+      ? cmd['--include'].split(',').filter(Boolean)
+      : undefined,
+    exclude: cmd['--exclude']
+      ? cmd['--exclude'].split(',').filter(Boolean)
+      : undefined,
     parallel: cmd['--parallel'],
     force: cmd['--force']
   });

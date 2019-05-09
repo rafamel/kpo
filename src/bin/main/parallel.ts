@@ -42,8 +42,12 @@ export default async function parallel(argv: string[]): Promise<void> {
   }
 
   return command(cmds, {
-    names: cmd['--names'] ? cmd['--names'].split(',') : undefined,
-    colors: cmd['--colors'] ? cmd['--colors'].split(',') : undefined,
+    names: cmd['--names']
+      ? cmd['--names'].split(',').filter(Boolean)
+      : undefined,
+    colors: cmd['--colors']
+      ? cmd['--colors'].split(',').filter(Boolean)
+      : undefined,
     force: cmd['--force'],
     silent: false
   })(args);
