@@ -101,6 +101,7 @@ Usage:
 Raises kpo tasks to package.json
 
 Options:
+  --purge          Purge all non-kpo scripts
   --confirm        Prompt for changes confirmation before performing a write operation
   --dry            Dry run
   --fail           Fails if there are any changes to be made on dry mode, or if the user cancels the action when confirmation is required
@@ -139,4 +140,23 @@ Options:
 
 Examples:
   $ kpo :parallel -n foo,baz -c blue,magenta "foo --bar" "baz --foobar"
+```
+
+### `kpo :stream`
+
+```
+Usage:
+  $ kpo :stream [options] [commands]
+
+Streams kpo commands for children projects
+
+Options:
+  --include <values>     Include children by name, comma separated
+  --exclude <values>     Exclude children by name, comma separated
+  --parallel             Execute streaming in parallel
+  --force                Continue execution even if some process fails
+  -h, --help       Show help
+
+Examples:
+  $ kpo :stream :cmd foo --bar --baz
 ```
