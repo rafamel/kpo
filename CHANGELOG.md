@@ -1,3 +1,25 @@
+# [0.5.0](https://github.com/rafamel/kpo/compare/v0.4.0...v0.5.0) (2019-05-11)
+
+
+### Bug Fixes
+
+* **bin:** filters empty values for comma separated flags ([33c67dd](https://github.com/rafamel/kpo/commit/33c67dd))
+* fixes logging level restore; initializes on reset ([48da81b](https://github.com/rafamel/kpo/commit/48da81b))
+* **deps:** updates dependencies ([b5bd7df](https://github.com/rafamel/kpo/commit/b5bd7df))
+* **utils/env-manager:** fixes environment variables setting and restoring when undefined ([db4dda5](https://github.com/rafamel/kpo/commit/db4dda5))
+* **utils/logger:** ensures methodFactory is used immediately after it is set ([2bace5a](https://github.com/rafamel/kpo/commit/2bace5a))
+
+
+### Features
+
+* uses SilentError to fail silently; logs it as warning ([f9d8ad3](https://github.com/rafamel/kpo/commit/f9d8ad3))
+* **commands/raise, bin/raise:** adds purge option ([626ead1](https://github.com/rafamel/kpo/commit/626ead1))
+* **public/fs:** adds read ([41b3118](https://github.com/rafamel/kpo/commit/41b3118))
+* **utils/errors:** adds SilentError ([c72844d](https://github.com/rafamel/kpo/commit/c72844d))
+* **utils/logger:** exits messages are logged w/ the same level as kpo's ones ([c4333be](https://github.com/rafamel/kpo/commit/c4333be))
+
+
+
 # [0.4.0](https://github.com/rafamel/kpo/compare/v0.3.0...v0.4.0) (2019-05-08)
 
 

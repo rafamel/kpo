@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>kpo 0.4.0</title>
+	<title>kpo 0.5.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">kpo 0.4.0</a>
+					<a href="index.html" class="title">kpo 0.5.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -54,7 +54,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> kpo 0.4.0</h1>
+			<h1> kpo 0.5.0</h1>
 		</div>
 	</div>
 </header>
@@ -131,15 +131,16 @@ Option<span class="hljs-variable">s:</span>
   --scopes         List scopes
   -h, --<span class="hljs-keyword">help</span>       Show <span class="hljs-keyword">help</span></code></pre><h3 id="kpo-raise"><code>kpo :raise</code></h3>
 				<pre><code>Usage:
-  $ kpo :raise [options]
+  $ kpo :raise [<span class="hljs-keyword">options</span>]
 
 Raises kpo tasks <span class="hljs-keyword">to</span> package.json
 
-Options:
-  --confirm        Prompt <span class="hljs-keyword">for</span> changes confirmation before performing a write operation
-  --dry            Dry <span class="hljs-builtin-name">run</span>
-  --fail           Fails <span class="hljs-keyword">if</span> there are any changes <span class="hljs-keyword">to</span> be made on dry mode, <span class="hljs-keyword">or</span> <span class="hljs-keyword">if</span> the<span class="hljs-built_in"> user </span>cancels the action when confirmation is required
-  -h, --help       Show help</code></pre><h3 id="kpo-series"><code>kpo :series</code></h3>
+Option<span class="hljs-variable">s:</span>
+  --purge          Purge <span class="hljs-keyword">all</span> non-kpo scripts
+  --<span class="hljs-keyword">confirm</span>        Prompt <span class="hljs-keyword">for</span> <span class="hljs-keyword">changes</span> confirmation before performing <span class="hljs-keyword">a</span> <span class="hljs-keyword">write</span> operation
+  --dry            Dry run
+  --fail           Fails <span class="hljs-keyword">if</span> there are any <span class="hljs-keyword">changes</span> <span class="hljs-keyword">to</span> <span class="hljs-keyword">be</span> made <span class="hljs-keyword">on</span> dry <span class="hljs-keyword">mode</span>, <span class="hljs-built_in">or</span> <span class="hljs-keyword">if</span> the user cancels the action when confirmation <span class="hljs-keyword">is</span> required
+  -h, --<span class="hljs-keyword">help</span>       Show <span class="hljs-keyword">help</span></code></pre><h3 id="kpo-series"><code>kpo :series</code></h3>
 				<pre><code><span class="hljs-symbol">Usage:</span>
   $ kpo <span class="hljs-symbol">:series</span> [options] [commands] -- [streamArgs]
 
@@ -163,7 +164,21 @@ Options:
   -h, <span class="hljs-comment">--help                Show help</span>
 
 Examples:
-  $ kpo :parallel -n foo,baz -c blue,magenta <span class="hljs-string">"foo --bar"</span> <span class="hljs-string">"baz --foobar"</span></code></pre>
+  $ kpo :parallel -n foo,baz -c blue,magenta <span class="hljs-string">"foo --bar"</span> <span class="hljs-string">"baz --foobar"</span></code></pre><h3 id="kpo-stream"><code>kpo :stream</code></h3>
+				<pre><code><span class="hljs-symbol">Usage</span>:
+  $ kpo :<span class="hljs-keyword">stream </span>[options] [commands]
+
+<span class="hljs-keyword">Streams </span>kpo commands for children projects
+<span class="hljs-symbol">
+Options:</span>
+  --<span class="hljs-meta">include</span> &lt;values&gt;     <span class="hljs-meta">Include</span> children <span class="hljs-keyword">by </span>name, comma separated
+  --exclude &lt;values&gt;     Exclude children <span class="hljs-keyword">by </span>name, comma separated
+  --parallel             Execute <span class="hljs-keyword">streaming </span>in parallel
+  --force                Continue execution even <span class="hljs-meta">if</span> some process fails
+  -h, --help       Show help
+<span class="hljs-symbol">
+Examples:</span>
+  $ kpo :<span class="hljs-keyword">stream </span>:cmd foo --<span class="hljs-keyword">bar </span>--<span class="hljs-keyword">baz</span></code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -187,6 +202,9 @@ Examples:
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/ifsoptions.html" class="tsd-kind-icon">IFs<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ifsreadoptions.html" class="tsd-kind-icon">IFs<wbr>Read<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/ifswriteoptions.html" class="tsd-kind-icon">IFs<wbr>Write<wbr>Options</a>
@@ -277,6 +295,9 @@ Examples:
 					</li>
 					<li class=" tsd-kind-function tsd-is-not-exported">
 						<a href="globals.html#move" class="tsd-kind-icon">move</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-not-exported">
+						<a href="globals.html#read" class="tsd-kind-icon">read</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-not-exported">
 						<a href="globals.html#remove" class="tsd-kind-icon">remove</a>

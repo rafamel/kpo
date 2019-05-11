@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IFsWriteOptions | kpo 0.4.0</title>
+	<title>IFsWriteOptions | kpo 0.5.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">kpo 0.4.0</a>
+					<a href="../index.html" class="title">kpo 0.5.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -67,7 +67,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Options taken by <em>fs</em> read functions.</p>
+						<p>Options taken by <em>fs</em> write functions.</p>
 					</div>
 				</div>
 			</section>
@@ -92,7 +92,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ifswriteoptions.html#confirm" class="tsd-kind-icon">confirm</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ifswriteoptions.html#fail" class="tsd-kind-icon">fail</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited"><a href="ifswriteoptions.html#fail" class="tsd-kind-icon">fail</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ifswriteoptions.html#overwrite" class="tsd-kind-icon">overwrite</a></li>
 							</ul>
 						</section>
@@ -108,7 +108,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="ifsoptions.html">IFsOptions</a>.<a href="ifsoptions.html#confirm">confirm</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/2e18b9b/src/public/fs/types.ts#L8">public/fs/types.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/1843540/src/public/fs/types.ts#L18">public/fs/types.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -117,14 +117,15 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited">
 					<a name="fail" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> fail</h3>
 					<div class="tsd-signature tsd-kind-icon">fail<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="ifsoptions.html">IFsOptions</a>.<a href="ifsoptions.html#fail">fail</a></p>
+						<p>Overrides <a href="ifsreadoptions.html">IFsReadOptions</a>.<a href="ifsreadoptions.html#fail">fail</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/2e18b9b/src/public/fs/types.ts#L12">public/fs/types.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/1843540/src/public/fs/types.ts#L22">public/fs/types.ts:22</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -139,7 +140,7 @@
 					<div class="tsd-signature tsd-kind-icon">overwrite<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/2e18b9b/src/public/fs/types.ts#L22">public/fs/types.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/1843540/src/public/fs/types.ts#L32">public/fs/types.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -160,18 +161,6 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface">
-						<a href="iclioptions.html" class="tsd-kind-icon">ICli<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="iconfirmoptions.html" class="tsd-kind-icon">IConfirm<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="iexecoptions.html" class="tsd-kind-icon">IExec<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="ifsoptions.html" class="tsd-kind-icon">IFs<wbr>Options</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
@@ -180,7 +169,7 @@
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="ifswriteoptions.html#confirm" class="tsd-kind-icon">confirm</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited">
 								<a href="ifswriteoptions.html#fail" class="tsd-kind-icon">fail</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
@@ -190,111 +179,6 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface">
-						<a href="imultiexecoptions.html" class="tsd-kind-icon">IMulti<wbr>Exec<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="ioftype.html" class="tsd-kind-icon">IOf<wbr>Type</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="ioptions.html" class="tsd-kind-icon">IOptions</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="ipackageoptions.html" class="tsd-kind-icon">IPackage<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="iparallel.html" class="tsd-kind-icon">IParallel</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="iparalleloptions.html" class="tsd-kind-icon">IParallel<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="iscopeoptions.html" class="tsd-kind-icon">IScope<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="iscripts.html" class="tsd-kind-icon">IScripts</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
-						<a href="iscriptsarray.html" class="tsd-kind-icon">IScripts<wbr>Array</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="iselectoptions.html" class="tsd-kind-icon">ISelect<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="iseries.html" class="tsd-kind-icon">ISeries</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="../globals.html#tchildrendefinition" class="tsd-kind-icon">TChildren<wbr>Definition</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="../globals.html#tcopyfilterfn" class="tsd-kind-icon">TCopy<wbr>Filter<wbr>Fn</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="../globals.html#tcoreoptions" class="tsd-kind-icon">TCore<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="../globals.html#tlogger" class="tsd-kind-icon">TLogger</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="../globals.html#tscript" class="tsd-kind-icon">TScript</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="../globals.html#tscriptfn" class="tsd-kind-icon">TScript<wbr>Fn</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="../globals.html#parallel" class="tsd-kind-icon">parallel</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="../globals.html#series" class="tsd-kind-icon">series</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#confirm" class="tsd-kind-icon">confirm</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#copy" class="tsd-kind-icon">copy</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#ensure" class="tsd-kind-icon">ensure</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#exists" class="tsd-kind-icon">exists</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#json" class="tsd-kind-icon">json</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#kpo" class="tsd-kind-icon">kpo</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#line" class="tsd-kind-icon">line</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#log" class="tsd-kind-icon">log</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#mkdir" class="tsd-kind-icon">mkdir</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#move" class="tsd-kind-icon">move</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#remove" class="tsd-kind-icon">remove</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#rm" class="tsd-kind-icon">rm</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#rw" class="tsd-kind-icon">rw</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#select" class="tsd-kind-icon">select</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#silent" class="tsd-kind-icon">silent</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="../globals.html#write" class="tsd-kind-icon">write</a>
-					</li>
 				</ul>
 			</nav>
 		</div>
