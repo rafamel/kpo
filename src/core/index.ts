@@ -11,6 +11,7 @@ import { IPaths, ILoaded, IChild, ITasks, ITask } from './types';
 import getBinPaths from '~/utils/paths';
 import logger from '~/utils/logger';
 import { SilentError } from '~/utils/errors';
+import { KPO_LOG_ENV } from '~/constants';
 
 const lazy = <T>(fn: () => Promise<T>): Promise<T> =>
   _lazy((resolve, reject) =>
@@ -53,10 +54,8 @@ export default async function contain<T>(
   return res;
 }
 
-export function getCore(options: ICliOptions, nesting: ICore[] = []): ICore {
-  const manager = nesting.length
-    ? nesting[0].manager
-    : new EnvManager(process.env);
+export function getCore(options: ICliOptions, parent?: ICore): ICore {
+  const manager = parent ? parent.manager : new EnvManager(process.env);
   const cli = merge(manager, options);
   const restoreLogger = setLogger(manager, cli);
   const cwd = process.cwd();
@@ -131,7 +130,7 @@ export function getCore(options: ICliOptions, nesting: ICore[] = []): ICore {
       if (scope) {
         const core = await getCore(
           { ...options, file: null, directory: scope.directory },
-          nesting.concat(this)
+          this
         ).scope(names.slice(1));
         await core.initialize();
         return core;
@@ -141,27 +140,31 @@ export function getCore(options: ICliOptions, nesting: ICore[] = []): ICore {
       return this.scope(['root'].concat(names));
     },
     async initialize(): Promise<void> {
-      const { paths, options } = await promise;
-      const bin = await this.bin;
+      this.restore();
 
+      const { paths, options: opts } = await promise;
+      const bin = await this.bin;
       logger.debug(`Initializing scope with path: ${paths.directory}`);
-      setLogger(manager, options);
+
+      // Use cli options to set hard logging level
+      if (options.log) manager.set(KPO_LOG_ENV, options.log);
+
+      // Set environmentals
+      setLogger(manager, opts);
       process.chdir(paths.directory);
-      if (options.env) manager.assign(options.env);
+      if (opts.env) manager.assign(opts.env);
       if (bin.length) manager.addPaths(bin);
     },
     restore(): void {
-      if (nesting.length) {
-        nesting[0].restore();
-      } else {
-        restoreLogger();
-        manager.restore();
-        process.chdir(cwd);
-      }
+      if (parent) return parent.restore();
+
+      restoreLogger();
+      manager.restore();
+      process.chdir(cwd);
     },
-    reset(): void {
-      const current = Object.assign({}, this);
-      Object.assign(this, getCore(options, nesting.concat(current)));
+    async reset(): Promise<void> {
+      Object.assign(this, getCore(options, parent));
+      await this.initialize();
     }
   };
 }

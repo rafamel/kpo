@@ -24,10 +24,14 @@ export default function mergeOptions(
 ): TCoreOptions {
   const options: TCoreOptions = {
     ...initial,
-    log: (manager.get(KPO_LOG_ENV) as TLogger) || initial.log,
     ...scope,
     ...stripUndefined(cli),
-    env: Object.assign({}, initial.env, scope.env, cli.env)
+    env: Object.assign({}, initial.env, scope.env, cli.env),
+    log:
+      cli.log ||
+      (manager.get(KPO_LOG_ENV) as TLogger) ||
+      scope.log ||
+      initial.log
   };
 
   // ensure cli own properties are of cli
@@ -49,12 +53,9 @@ export function setLogger(
   options: TCoreOptions
 ): () => void {
   const initial = logger.getLevel();
-  const level = (options.log ||
-    manager.get(KPO_LOG_ENV) ||
-    DEFAULT_LOG_LEVEL) as TLogger;
-
+  const level: TLogger =
+    options.log || (manager.get(KPO_LOG_ENV) as any) || DEFAULT_LOG_LEVEL;
   setLevel(level);
-  manager.set(KPO_LOG_ENV, level);
 
   return function restore() {
     setLevel(initial as any);

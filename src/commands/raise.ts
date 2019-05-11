@@ -128,5 +128,5 @@ export default async function raise(
 
   await fs.writeFile(paths.pkg, JSON.stringify(pkg, null, 2));
   // As package.json has changed, we need to refetch on core
-  core.reset();
+  await core.reset();
 }
