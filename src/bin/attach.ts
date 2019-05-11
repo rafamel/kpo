@@ -6,13 +6,16 @@ import { wait, status } from 'promist';
 export default function attach(): void {
   _attach();
   options({
+    spawned: {
+      signals: 'none',
+      wait: 'none'
+    },
     resolver(type, arg) {
       try {
         if (type === 'signal') {
           logger.debug('Received a termination signal: exiting with code 1');
           return resolver('exit', 1);
         }
-        logger.debug(`Event: ${type}`, arg);
         return resolver(type, arg);
       } catch (err) {
         return resolver('exit', 1);
