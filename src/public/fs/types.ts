@@ -1,7 +1,17 @@
 /**
+ * Options taken by read *fs* functions.
+ */
+export interface IFsReadOptions {
+  /**
+   * If `false`, it won't fail if a path doesn't exist for a read, or if it already exists for a write. Defaults to `false`.
+   */
+  fail?: boolean;
+}
+
+/**
  * Options taken by *fs* functions.
  */
-export interface IFsOptions {
+export interface IFsOptions extends IFsReadOptions {
   /**
    * If `true`, it will require user confirmation for removal. Defaults to `false`.
    */
@@ -13,7 +23,7 @@ export interface IFsOptions {
 }
 
 /**
- * Options taken by *fs* read functions.
+ * Options taken by *fs* write functions.
  */
 export interface IFsWriteOptions extends IFsOptions {
   /**
