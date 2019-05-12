@@ -50,7 +50,7 @@ function write(file: string, ...args: any[]): () => Promise<void> {
 
     if (!(await confirm(`Write "${relative}"?`, options))) return;
 
-    await fs.ensureDir(file);
+    await fs.ensureDir(path.parse(file).dir);
     await fs.writeFile(file, String(raw));
     logger.info(`Written: ${relative}`);
   };
