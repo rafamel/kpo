@@ -1,3 +1,14 @@
+## [0.5.2](https://github.com/rafamel/kpo/compare/v0.5.1...v0.5.2) (2019-05-13)
+
+
+### Bug Fixes
+
+* **bin/attach, utils/guardian:** identifies triggered exit via environment variable to account for d ([dc77e13](https://github.com/rafamel/kpo/commit/dc77e13))
+* **deps:** updates dependencies ([d5f9fa3](https://github.com/rafamel/kpo/commit/d5f9fa3))
+* **utils/env-manager:** fixes setting of default environment variables; sets empty as undefined ([9a09e8c](https://github.com/rafamel/kpo/commit/9a09e8c))
+
+
+
 ## [0.5.1](https://github.com/rafamel/kpo/compare/v0.5.0...v0.5.1) (2019-05-12)
 
 
