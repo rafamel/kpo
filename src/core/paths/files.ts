@@ -59,6 +59,7 @@ export async function getDefault(
 
   let kpo: string | null | undefined = await find(
     FILE_EXT.map((ext) => FILE_NAME + ext),
+    'file',
     directory,
     strict
   );
@@ -103,5 +104,5 @@ export async function getPackage(
   directory: string,
   strict: boolean
 ): Promise<string | null> {
-  return find('package.json', directory, strict);
+  return find('package.json', 'file', directory, strict);
 }

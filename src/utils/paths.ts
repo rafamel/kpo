@@ -19,6 +19,10 @@ export default async function getPaths(
 }
 
 export async function each(directory: string): Promise<string[]> {
-  const bin = await up('node_modules/.bin', { cwd: directory });
+  const bin = await up('node_modules/.bin', {
+    cwd: directory,
+    type: 'directory'
+  });
+
   return bin ? [bin].concat(await each(path.join(directory, '../'))) : [];
 }

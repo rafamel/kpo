@@ -40,49 +40,78 @@ describe(`exists`, () => {
 describe(`find`, () => {
   describe(`!strict`, () => {
     test(`succeeds`, async () => {
-      await expect(find('foo', 'bar/baz')).resolves.toBe('foo/bar.js');
-      await expect(find(['bar'], 'foobar', false)).resolves.toBe('foo/bar.js');
+      await expect(find('foo', 'directory', 'bar/baz')).resolves.toBe(
+        'foo/bar.js'
+      );
+      await expect(find(['bar'], 'file', 'foobar', false)).resolves.toBe(
+        'foo/bar.js'
+      );
       expect(mocks.up).toHaveBeenCalledTimes(2);
       expect(mocks.up).toHaveBeenNthCalledWith(1, 'foo', {
-        cwd: 'bar/baz'
+        cwd: 'bar/baz',
+        type: 'directory'
       });
       expect(mocks.up).toHaveBeenNthCalledWith(2, ['bar'], {
-        cwd: 'foobar'
+        cwd: 'foobar',
+        type: 'file'
       });
     });
     test(`fails`, async () => {
       mocks.up.mockImplementation(() => Promise.reject(Error()));
-      await expect(find('foo', 'bar')).rejects.toThrowError();
-      await expect(find('foo', 'bar', false)).rejects.toThrowError();
+      await expect(find('foo', 'file', 'bar')).rejects.toThrowError();
+      await expect(find('foo', 'file', 'bar', false)).rejects.toThrowError();
       mocks.up.mockImplementation(() => 'foo/bar.js');
     });
   });
   describe(`strict`, () => {
     test(`succeeds w/ single file`, async () => {
-      await expect(find('kpo.scripts.js', at('js'), true)).resolves.toBe(
-        at('js/kpo.scripts.js')
-      );
+      await expect(
+        find('kpo.scripts.js', 'file', at('js'), true)
+      ).resolves.toBe(at('js/kpo.scripts.js'));
+      expect(mocks.up).not.toHaveBeenCalled();
+    });
+    test(`succeeds w/ directory`, async () => {
+      await expect(
+        find('package', 'directory', at('nested'), true)
+      ).resolves.toBe(at('nested/package'));
       expect(mocks.up).not.toHaveBeenCalled();
     });
     test(`succeeds w/ array`, async () => {
       await expect(
-        find(['foo.bar.js', 'kpo.scripts.js'], at('js'), true)
+        find(['foo.bar.js', 'kpo.scripts.js'], 'file', at('js'), true)
       ).resolves.toBe(at('js/kpo.scripts.js'));
       expect(mocks.up).not.toHaveBeenCalled();
     });
     test(`succeeds on non existent file`, async () => {
       await expect(
-        find(['foo.bar.js', 'bar.foo.js'], at('js'), true)
+        find(['foo.bar.js', 'bar.foo.js'], 'file', at('js'), true)
       ).resolves.toBe(null);
     });
-    test(`fails on non existent dir`, async () => {
+    test(`returns null on existing files for 'directory'`, async () => {
       await expect(
-        find(['foo.bar.js', 'bar.foo.js'], at('foo'), true)
+        find(['foo.bar.js', 'kpo.scripts.js'], 'directory', at('js'), true)
+      ).resolves.toBe(null);
+      expect(mocks.up).not.toHaveBeenCalled();
+    });
+    test(`returns null on existing directory for 'file'`, async () => {
+      await expect(find('package', 'file', at('nested'), true)).resolves.toBe(
+        null
+      );
+      expect(mocks.up).not.toHaveBeenCalled();
+    });
+    test(`fails on non existent cwd`, async () => {
+      await expect(
+        find(['foo.bar.js', 'bar.foo.js'], 'file', at('foo'), true)
       ).rejects.toThrowError();
     });
-    test(`fails if dir is a file`, async () => {
+    test(`fails if cwd is a file`, async () => {
       await expect(
-        find(['foo.bar.js', 'bar.foo.js'], at('js/kpo.scripts.js'), true)
+        find(
+          ['foo.bar.js', 'bar.foo.js'],
+          'file',
+          at('js/kpo.scripts.js'),
+          true
+        )
       ).rejects.toThrowError();
     });
   });

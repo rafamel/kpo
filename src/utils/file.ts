@@ -22,20 +22,28 @@ export async function exists(
 
 export async function find(
   filename: string | string[],
-  directory: string,
+  type: 'file' | 'directory',
+  cwd: string,
   strict?: boolean
 ): Promise<string | null> {
-  if (!strict) return up(filename, { cwd: directory });
+  if (!strict) {
+    const file = await up(filename, { cwd, type });
+    return file || null;
+  }
 
-  await exists(directory, { fail: true });
-  const stat = await fs.stat(directory);
-  if (!stat.isDirectory()) throw Error(`${directory} is not a directory`);
+  await exists(cwd, { fail: true });
+  const stat = await fs.stat(cwd);
+  if (!stat.isDirectory()) throw Error(`${cwd} is not a directory`);
 
   const filenames: string[] = Array.isArray(filename) ? filename : [filename];
   for (let name of filenames) {
-    const file = path.join(directory, name);
+    const file = path.join(cwd, name);
     // prettier-ignore
-    if (await exists(file)) return file;
+    if (await exists(file)) {
+      const stat = await fs.stat(file);
+      if (type === 'file' && !stat.isDirectory()) return file;
+      else if (type === 'directory' && stat.isDirectory()) return file;
+    }
   }
   return null;
 }
