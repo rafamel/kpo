@@ -1,5 +1,7 @@
-import { state } from 'exits';
+import EnvManager from './env-manager';
+import { KPO_EXIT_ENV } from '~/constants';
 
+const manager = new EnvManager(process.env);
 export default function guardian(): void {
-  if (state().triggered) throw Error(`Process is terminating`);
+  if (manager.get(KPO_EXIT_ENV)) throw Error(`Process is terminating`);
 }

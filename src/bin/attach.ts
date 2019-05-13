@@ -2,6 +2,8 @@ import { attach as _attach, options, resolver, add } from 'exits';
 import terminate from '~/utils/terminate-children';
 import logger from '~/utils/logger';
 import { wait, status } from 'promist';
+import { KPO_EXIT_ENV } from '~/constants';
+import EnvManager from '~/utils/env-manager';
 
 export default function attach(): void {
   _attach();
@@ -23,6 +25,8 @@ export default function attach(): void {
     }
   });
   add(async () => {
+    new EnvManager(process.env).set(KPO_EXIT_ENV, 'triggered');
+
     const term = status(terminate(process.pid, 'SIGTERM', 150));
     await Promise.race([term, wait(3000)]);
     if (term.status !== 'pending') return;
