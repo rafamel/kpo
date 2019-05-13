@@ -17,10 +17,10 @@ export default class EnvManager {
     return this.env[key] || undefined;
   }
   public set(key: string, value?: string): void {
-    this.assign({ [key]: value || '' });
+    this.assign({ [key]: value });
   }
   public default(key: string, value: string): string {
-    return this.get(key) || this.set(value) || value;
+    return this.get(key) || this.set(key, value) || value;
   }
   public addPaths(paths: string[]): void {
     const env = { PATH: this.env[this.path] };
@@ -35,7 +35,7 @@ export default class EnvManager {
     const toRestore = Object.keys(this.assigned).reduce(
       (acc: IOfType<string | undefined>, key) => {
         if (this.env[key] === this.assigned[key]) {
-          acc[key] = this.initial[key] || '';
+          acc[key] = this.initial[key];
         }
         return acc;
       },
