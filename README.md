@@ -1,4 +1,4 @@
-# *kpo*
+# kpo
 
 [![Version](https://img.shields.io/npm/v/kpo.svg)](https://www.npmjs.com/package/kpo)
 [![Build Status](https://img.shields.io/travis/rafamel/kpo/master.svg)](https://travis-ci.org/rafamel/kpo)
@@ -28,6 +28,7 @@ To install *kpo* globally, run: [`npm install -g kpo`](https://www.npmjs.com/pac
 
 These are common options for all *kpo* subcommands. They must always be passed before any subcommand or scope.
 
+<!-- markdownlint-disable MD040 MD031 -->
 ```
 Usage:
   $ kpo [options] [@scope] [tasks] -- [streamArgs]
@@ -55,6 +56,7 @@ Examples:
   $ kpo foo bar baz
   $ kpo -e NODE_ENV=development -e BABEL_ENV=browser :run foo bar baz
 ```
+<!-- markdownlint-enable MD040 MD031 -->
 
 ### `kpo :run` - default command
 
@@ -64,6 +66,7 @@ Note that **the `:run` command can be omitted,** that is, if no command is passe
 
 ### `kpo :cmd` - aliased `kpo :`
 
+<!-- markdownlint-disable MD040 MD031 -->
 ```
 Usage:
   $ kpo :cmd [options] [command] [arguments]
@@ -77,9 +80,11 @@ Examples:
   $ kpo : foo --bar --baz
   $ kpo :cmd foo --bar --baz
 ```
+<!-- markdownlint-enable MD040 MD031 -->
 
 ### `kpo :list`
 
+<!-- markdownlint-disable MD040 MD031 -->
 ```
 Usage:
   $ kpo :list [options]
@@ -91,9 +96,11 @@ Options:
   --scopes         List scopes
   -h, --help       Show help
 ```
+<!-- markdownlint-enable MD040 MD031 -->
 
 ### `kpo :raise`
 
+<!-- markdownlint-disable MD040 MD031 -->
 ```
 Usage:
   $ kpo :raise [options]
@@ -107,9 +114,11 @@ Options:
   --fail           Fails if there are any changes to be made on dry mode, or if the user cancels the action when confirmation is required
   -h, --help       Show help
 ```
+<!-- markdownlint-enable MD040 MD031 -->
 
 ### `kpo :series`
 
+<!-- markdownlint-disable MD040 MD031 -->
 ```
 Usage:
   $ kpo :series [options] [commands] -- [streamArgs]
@@ -123,9 +132,11 @@ Options:
 Examples:
   $ kpo :series "foo --bar" "baz --foobar"
 ```
+<!-- markdownlint-enable MD040 MD031 -->
 
 ### `kpo :parallel`
 
+<!-- markdownlint-disable MD040 MD031 -->
 ```
 Usage:
   $ kpo :parallel [options] [commands] -- [streamArgs]
@@ -141,9 +152,11 @@ Options:
 Examples:
   $ kpo :parallel -n foo,baz -c blue,magenta "foo --bar" "baz --foobar"
 ```
+<!-- markdownlint-enable MD040 MD031 -->
 
 ### `kpo :stream`
 
+<!-- markdownlint-disable MD040 MD031 -->
 ```
 Usage:
   $ kpo :stream [options] [commands]
@@ -160,3 +173,4 @@ Options:
 Examples:
   $ kpo :stream :cmd foo --bar --baz
 ```
+<!-- markdownlint-enable MD040 MD031 -->
