@@ -77,7 +77,6 @@
     "@types/loglevel": "^1.5.4",
     "@types/prompts": "^2.4.0",
     "@types/ps-tree": "^1.1.0",
-    "@types/semver": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^1.9.0",
     "@typescript-eslint/parser": "^1.9.0",
     "@zerollup/ts-transform-paths": "^1.7.1",
@@ -130,7 +129,6 @@
     "promist": "^0.7.0",
     "prompts": "^2.0.4",
     "ps-tree": "^1.2.0",
-    "semver": "^6.0.0",
     "string-argv": "^0.3.0"
   },
   "husky": {
