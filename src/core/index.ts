@@ -1,7 +1,7 @@
 import path from 'path';
 import { getSelfPaths, getRootPaths } from './paths';
 import load from './load';
-import { lazy as _lazy } from 'promist';
+import { lazy } from 'promist';
 import { ICliOptions, TCoreOptions } from '~/types';
 import EnvManager from '~/utils/env-manager';
 import merge, { setLogger } from './merge-options';
@@ -12,13 +12,6 @@ import getBinPaths from '~/utils/paths';
 import logger from '~/utils/logger';
 import { SilentError } from '~/utils/errors';
 import { KPO_LOG_ENV } from '~/constants';
-
-const lazy = <T>(fn: () => Promise<T>): Promise<T> =>
-  _lazy((resolve, reject) =>
-    fn()
-      .then(resolve)
-      .catch(reject)
-  );
 
 export interface ICore {
   manager: EnvManager;
@@ -60,7 +53,7 @@ export function getCore(options: ICliOptions, parent?: ICore): ICore {
   const restoreLogger = setLogger(manager, cli);
   const cwd = process.cwd();
 
-  const promise = lazy(async () => {
+  const promise = lazy.fn(async () => {
     const paths = await getSelfPaths({
       cwd,
       directory: options.directory || undefined,
@@ -74,7 +67,7 @@ export function getCore(options: ICliOptions, parent?: ICore): ICore {
     return { paths, loaded, options: scope };
   });
 
-  const root = lazy(() =>
+  const root = lazy.fn(() =>
     promise.then((data) =>
       getRootPaths({ cwd: data.paths.directory, root: data.options.root })
     )
@@ -83,10 +76,10 @@ export function getCore(options: ICliOptions, parent?: ICore): ICore {
   return {
     manager,
     root,
-    paths: lazy(() => promise.then((data) => data.paths)),
-    loaded: lazy(() => promise.then((data) => data.loaded)),
-    options: lazy(() => promise.then((data) => data.options)),
-    children: lazy(() =>
+    paths: lazy.fn(() => promise.then((data) => data.paths)),
+    loaded: lazy.fn(() => promise.then((data) => data.loaded)),
+    options: lazy.fn(() => promise.then((data) => data.options)),
+    children: lazy.fn(() =>
       promise.then((data) =>
         getChildren(
           {
@@ -99,14 +92,14 @@ export function getCore(options: ICliOptions, parent?: ICore): ICore {
         )
       )
     ),
-    bin: lazy(() =>
+    bin: lazy.fn(() =>
       Promise.all([promise, root]).then(([data, root]) =>
         root
           ? getBinPaths(data.paths.directory, root.directory)
           : getBinPaths(data.paths.directory)
       )
     ),
-    tasks: lazy(() =>
+    tasks: lazy.fn(() =>
       promise.then((data) =>
         getAllTasks(data.loaded.kpo || undefined, data.loaded.pkg || undefined)
       )
