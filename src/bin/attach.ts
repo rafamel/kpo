@@ -1,9 +1,9 @@
 import { attach as _attach, options, resolver, add } from 'exits';
-import terminate from '~/utils/terminate-children';
+import terminate from 'terminate-children';
 import logger from '~/utils/logger';
-import { wait, status } from 'promist';
 import { KPO_EXIT_ENV } from '~/constants';
 import EnvManager from '~/utils/env-manager';
+import { oneLine } from 'common-tags';
 
 export default function attach(): void {
   _attach();
@@ -27,16 +27,27 @@ export default function attach(): void {
   add(async () => {
     new EnvManager(process.env).set(KPO_EXIT_ENV, 'triggered');
 
-    const term = status(terminate(process.pid, 'SIGTERM', 150));
-    await Promise.race([term, wait(3000)]);
-    if (term.status !== 'pending') return;
+    logger.debug('Sending SIGTERM to all children processes');
+    const children = await terminate(process.pid, {
+      signal: 'SIGTERM',
+      timeout: 3000,
+      interval: 150
+    }).then((children) => {
+      if (!children.length) return children;
 
-    const kill = status(terminate(process.pid, 'SIGKILL', 150));
-    await Promise.race([kill, wait(2000)]);
-    if (kill.status !== 'pending') return;
+      logger.debug('Sending SIGKILL to all children processes');
+      return terminate(process.pid, {
+        signal: 'SIGKILL',
+        timeout: 2000,
+        interval: 150
+      });
+    });
 
-    logger.debug(
-      'Children processes have timed out without terminating. Exiting main process.'
-    );
+    if (children.length) {
+      logger.debug(
+        oneLine`Children processes have timed out without terminating.
+            Exiting main process.`
+      );
+    }
   });
 }

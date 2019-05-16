@@ -76,7 +76,6 @@
     "@types/js-yaml": "^3.12.1",
     "@types/loglevel": "^1.5.4",
     "@types/prompts": "^2.4.0",
-    "@types/ps-tree": "^1.1.0",
     "@typescript-eslint/eslint-plugin": "^1.9.0",
     "@typescript-eslint/parser": "^1.9.0",
     "@zerollup/ts-transform-paths": "^1.7.1",
@@ -128,8 +127,8 @@
     "path-key": "^3.1.0",
     "promist": "^0.7.0",
     "prompts": "^2.0.4",
-    "ps-tree": "^1.2.0",
-    "string-argv": "^0.3.0"
+    "string-argv": "^0.3.0",
+    "terminate-children": "^0.1.0"
   },
   "husky": {
     "hooks": {
