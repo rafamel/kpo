@@ -14,7 +14,7 @@ export default class EnvManager {
     this.assigned = {};
   }
   public get(key: string): string | undefined {
-    return this.env[key] || undefined;
+    return this.env[key];
   }
   public set(key: string, value?: string): void {
     this.assign({ [key]: value });
@@ -28,8 +28,18 @@ export default class EnvManager {
     this.assign({ [this.path]: env.PATH });
   }
   public assign(env: IOfType<string | undefined>): void {
+    // Making undefined into an empty string is a must
+    // as undefined is coherced into "undefined" otherwise for process.env
     Object.assign(this.env, env);
     Object.assign(this.assigned, env);
+
+    // Undefined values must be deleted from this.env as
+    // they are coherced into "undefined" (string) for process.env
+    Object.entries(env).forEach(([key, value]) => {
+      if (typeof value !== 'string' && !value) {
+        delete this.env[key];
+      }
+    });
   }
   public restore(): void {
     const toRestore = Object.keys(this.assigned).reduce(
@@ -43,6 +53,14 @@ export default class EnvManager {
     );
 
     Object.assign(this.env, toRestore);
+    // Undefined values must be deleted from this.env as
+    // they are coherced into "undefined" (string) for process.env
+    Object.entries(toRestore).forEach(([key, value]) => {
+      if (typeof value !== 'string' && !value) {
+        delete this.env[key];
+      }
+    });
+
     this.initial = Object.assign({}, this.env);
     this.assigned = {};
   }
