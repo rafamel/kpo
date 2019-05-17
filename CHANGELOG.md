@@ -1,3 +1,23 @@
+# [0.6.0](https://github.com/rafamel/kpo/compare/v0.5.2...v0.6.0) (2019-05-17)
+
+
+### Bug Fixes
+
+* **core:** sets project directory as cwd before scripts file is loaded ([9985cfd](https://github.com/rafamel/kpo/commit/9985cfd))
+* **deps:** removes semver as a dependency ([ded943f](https://github.com/rafamel/kpo/commit/ded943f))
+* **deps:** updates dependencies ([87de4de](https://github.com/rafamel/kpo/commit/87de4de))
+* **deps:** updates dependencies ([eab831b](https://github.com/rafamel/kpo/commit/eab831b))
+* **deps:** updates exits to v1 ([13594e2](https://github.com/rafamel/kpo/commit/13594e2))
+* **public/fs:** fixes copy types ([5446492](https://github.com/rafamel/kpo/commit/5446492))
+* **utils/logger:** prevents logger methodFactory from being registered twice ([1958d56](https://github.com/rafamel/kpo/commit/1958d56))
+
+
+### Features
+
+* **utils/errors:** KpoError takes data as third argument; ensures isKpoError returns a boolean; imp ([b75f82c](https://github.com/rafamel/kpo/commit/b75f82c))
+
+
+
 ## [0.5.2](https://github.com/rafamel/kpo/compare/v0.5.1...v0.5.2) (2019-05-13)
 
 

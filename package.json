@@ -1,6 +1,6 @@
 {
   "name": "kpo",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "author": "Rafa Mel",
   "description": "A task runner that goes where npm scripts won't, for the true capo",
   "keywords": [
