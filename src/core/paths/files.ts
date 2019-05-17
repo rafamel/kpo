@@ -23,7 +23,6 @@ export default async function getFiles(
 ): Promise<IGetFiles> {
   const directory =
     opts.directory && absolute({ path: opts.directory, cwd: opts.cwd });
-
   const file =
     opts.file && absolute({ path: opts.file, cwd: directory || opts.cwd });
 
@@ -57,7 +56,7 @@ export async function getDefault(
 ): Promise<IGetFiles> {
   let dir = path.join(path.parse(directory).dir, path.parse(directory).base);
 
-  let kpo: string | null | undefined = await find(
+  let kpo: string | null = await find(
     FILE_EXT.map((ext) => FILE_NAME + ext),
     'file',
     directory,
@@ -77,11 +76,11 @@ export async function getDefault(
   // Otherwise, check whether there is a package.json w/ kpo.path
   // closer to directory
   const pkg = await getPackage(dir, strict);
-  if (pkg && (!kpo || pkg.length > path.parse(kpo).dir.length)) {
+  if (pkg && (!kpo || path.dirname(pkg).length > path.dirname(kpo).length)) {
     kpo = await getFromPackage(pkg);
   }
 
-  return { kpo: kpo, pkg };
+  return { kpo, pkg };
 }
 
 export async function getFromPackage(
@@ -89,7 +88,7 @@ export async function getFromPackage(
 ): Promise<string | null> {
   if (!pkg) return null;
 
-  const dir = path.parse(pkg).dir;
+  const dir = path.dirname(pkg);
   const parsed = await fs.readJSON(pkg);
 
   if (!parsed.kpo || !parsed.kpo.file) return null;
