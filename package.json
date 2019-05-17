@@ -113,11 +113,11 @@
   "dependencies": {
     "arg": "^4.1.0",
     "as-table": "^1.0.38",
-    "cli-belt": "^0.3.0",
+    "cli-belt": "^0.3.1",
     "command-join": "^2.0.0",
     "common-tags": "^1.8.0",
     "concurrently": "^4.1.0",
-    "exits": "^1.0.0",
+    "exits": "^1.0.2",
     "find-up": "^4.0.0",
     "fs-extra": "^8.0.1",
     "glob": "^7.1.4",
