@@ -13,9 +13,11 @@ export default async function load(paths: IPaths): Promise<ILoaded> {
     : null;
 
   const options: IScopeOptions = {};
+
   if (paths.pkg && pkg && pkg.kpo) {
     const pkgOpts: IPackageOptions = pkg.kpo;
-    // file was already read when getting paths; it's also not a IScopeOptions field
+    // file was already read when getting paths;
+    // it's also not a IScopeOptions field
     delete pkgOpts.file;
     if (pkgOpts.cwd) {
       pkgOpts.cwd = absolute({
@@ -25,7 +27,16 @@ export default async function load(paths: IPaths): Promise<ILoaded> {
     }
     Object.assign(options, pkgOpts);
   }
-  if (kpo && kpo.options) Object.assign(options, kpo.options);
+
+  if (paths.kpo && kpo && kpo.options) {
+    if (kpo.options.cwd) {
+      kpo.options.cwd = absolute({
+        path: kpo.options.cwd,
+        cwd: path.parse(paths.kpo).dir
+      });
+    }
+    Object.assign(options, kpo.options);
+  }
 
   return {
     kpo: (kpo && kpo.scripts) || null,

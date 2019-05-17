@@ -60,16 +60,21 @@ export function getCore(options: ICliOptions, parent?: ICore): ICore {
       file: options.file || undefined
     });
 
+    // Load should be called with directory as cwd (for js files)
+    process.chdir(paths.directory);
     const loaded = await load(paths);
-    const scope = merge(manager, options, loaded.options);
-    setLogger(manager, scope);
+    const scope = {
+      ...merge(manager, options, loaded.options),
+      cwd: loaded.options.cwd || paths.directory
+    };
+    process.chdir(scope.cwd);
 
     return { paths, loaded, options: scope };
   });
 
   const root = lazy.fn(() =>
     promise.then((data) =>
-      getRootPaths({ cwd: data.paths.directory, root: data.options.root })
+      getRootPaths({ cwd: data.options.cwd, root: data.options.root })
     )
   );
 
@@ -83,10 +88,10 @@ export function getCore(options: ICliOptions, parent?: ICore): ICore {
       promise.then((data) =>
         getChildren(
           {
-            cwd: data.paths.directory,
+            cwd: data.options.cwd,
             pkg: data.paths.pkg
               ? path.parse(data.paths.pkg).dir
-              : data.paths.directory
+              : data.options.cwd
           },
           data.options.children
         )
@@ -95,8 +100,8 @@ export function getCore(options: ICliOptions, parent?: ICore): ICore {
     bin: lazy.fn(() =>
       Promise.all([promise, root]).then(([data, root]) =>
         root
-          ? getBinPaths(data.paths.directory, root.directory)
-          : getBinPaths(data.paths.directory)
+          ? getBinPaths(data.options.cwd, root.directory)
+          : getBinPaths(data.options.cwd)
       )
     ),
     tasks: lazy.fn(() =>
@@ -144,7 +149,7 @@ export function getCore(options: ICliOptions, parent?: ICore): ICore {
 
       // Set environmentals
       setLogger(manager, opts);
-      process.chdir(paths.directory);
+      process.chdir(opts.cwd || paths.directory);
       if (opts.env) manager.assign(opts.env);
       if (bin.length) manager.addPaths(bin);
     },
