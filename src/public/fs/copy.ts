@@ -12,19 +12,19 @@ export type TCopyFilterFn =
 
 export default expose(copy) as TExposedOverload<
   typeof copy,
-  | [string, string]
-  | [string, string, IFsWriteOptions]
-  | [string, string, TCopyFilterFn]
-  | [string, string, IFsWriteOptions | undefined, TCopyFilterFn]
+  | [string | string[], string]
+  | [string | string[], string, IFsWriteOptions]
+  | [string | string[], string, TCopyFilterFn]
+  | [string | string[], string, IFsWriteOptions | undefined, TCopyFilterFn]
 >;
 
 function copy(
-  src: string,
+  src: string | string[],
   dest: string,
   filter?: TCopyFilterFn
 ): () => Promise<void>;
 function copy(
-  src: string,
+  src: string | string[],
   dest: string,
   options?: IFsWriteOptions,
   filter?: TCopyFilterFn
