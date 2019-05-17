@@ -126,6 +126,7 @@ export function getCore(options: ICliOptions, parent?: ICore): ICore {
       });
 
       if (scope) {
+        this.restore();
         const core = await getCore(
           { ...options, file: null, directory: scope.directory },
           this
