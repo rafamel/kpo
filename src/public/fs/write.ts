@@ -5,20 +5,24 @@ import { IFsWriteOptions } from './types';
 import { exists, absolute } from '~/utils/file';
 import confirm from '~/utils/confirm';
 import logger from '~/utils/logger';
+import { open } from '~/utils/errors';
 
 export default expose(write) as TExposedOverload<
   typeof write,
   | [string]
-  | [string, string]
+  | [string, string | (() => string | Promise<string>)]
   | [string, IFsWriteOptions]
-  | [string, string, IFsWriteOptions]
+  | [string, string | (() => string | Promise<string>), IFsWriteOptions]
 >;
 
-function write(file: string, raw?: string): () => Promise<void>;
+function write(
+  file: string,
+  raw?: string | (() => string | Promise<string>)
+): () => Promise<void>;
 function write(file: string, options?: IFsWriteOptions): () => Promise<void>;
 function write(
   file: string,
-  raw: string,
+  raw: string | (() => string | Promise<string>),
   options?: IFsWriteOptions
 ): () => Promise<void>;
 /**
@@ -28,11 +32,19 @@ function write(
  */
 function write(file: string, ...args: any[]): () => Promise<void> {
   return async () => {
-    const raw: string = args.find((x) => typeof x === 'string') || '';
+    const hasRaw = typeof args[0] === 'string' || typeof args[0] === 'function';
     const options: IFsWriteOptions = Object.assign(
       { overwrite: true },
-      args.find((x) => typeof x === 'object') || {}
+      (hasRaw ? args[1] : args[0]) || {}
     );
+    let raw: string | (() => string | Promise<string>) = hasRaw ? args[0] : '';
+    if (typeof raw === 'function') {
+      try {
+        raw = await raw();
+      } catch (err) {
+        throw open(err);
+      }
+    }
 
     const cwd = process.cwd();
     file = absolute({ path: file, cwd });
