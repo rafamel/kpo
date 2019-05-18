@@ -30,7 +30,12 @@ function rw(
 
     const raw = doesExist ? await fs.readFile(file).then(String) : undefined;
 
-    const response: string | void = await fn(raw);
+    let response: string | void;
+    try {
+      response = await fn(raw);
+    } catch (e) {
+      throw open(e);
+    }
 
     if (response === undefined || (doesExist && !options.overwrite)) {
       logger.info(`Write skipped: ${relative}`);

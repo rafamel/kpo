@@ -5,6 +5,7 @@ import { IFsWriteOptions } from './types';
 import expose, { TExposedOverload } from '~/utils/expose';
 import confirm from '~/utils/confirm';
 import logger from '~/utils/logger';
+import { open } from '~/utils/errors';
 
 export type TCopyFilterFn =
   | ((src: string, dest: string) => boolean)
@@ -60,7 +61,7 @@ export async function trunk(
     { overwrite: true },
     args.find((x) => typeof x === 'object') || {}
   );
-  const filter: TCopyFilterFn =
+  let filter: TCopyFilterFn =
     args.find((x) => typeof x === 'function') || (() => true);
 
   const cwd = process.cwd();
@@ -84,7 +85,13 @@ export async function trunk(
   await fs.copy(src, dest, {
     overwrite: options.overwrite,
     errorOnExist: options.fail,
-    filter
+    async filter(src: string, dest: string): Promise<boolean> {
+      try {
+        return await filter(src, dest);
+      } catch (err) {
+        throw open(err);
+      }
+    }
   });
   logger.info(`Copied: "${relatives.src}" to "${relatives.dest}"`);
 }
