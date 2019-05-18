@@ -17,11 +17,12 @@ export default expose(remove);
  * @returns An asynchronous function -hence, calling `remove` won't have any effect until the returned function is called.
  */
 function remove(
-  paths: string | string[],
+  paths: string | string[] | Promise<string | string[]>,
   options: IFsOptions = {}
 ): () => Promise<void> {
   return async () => {
     const cwd = process.cwd();
+    paths = await paths;
     paths = Array.isArray(paths) ? paths : [paths];
     paths = paths.map((path) => absolute({ path, cwd }));
 

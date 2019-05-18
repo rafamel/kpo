@@ -13,19 +13,24 @@ export type TCopyFilterFn =
 
 export default expose(copy) as TExposedOverload<
   typeof copy,
-  | [string | string[], string]
-  | [string | string[], string, IFsWriteOptions]
-  | [string | string[], string, TCopyFilterFn]
-  | [string | string[], string, IFsWriteOptions | undefined, TCopyFilterFn]
+  | [string | string[] | Promise<string | string[]>, string]
+  | [string | string[] | Promise<string | string[]>, string, IFsWriteOptions]
+  | [string | string[] | Promise<string | string[]>, string, TCopyFilterFn]
+  | [
+      string | string[] | Promise<string | string[]>,
+      string,
+      IFsWriteOptions | undefined,
+      TCopyFilterFn
+    ]
 >;
 
 function copy(
-  src: string | string[],
+  src: string | string[] | Promise<string | string[]>,
   dest: string,
   filter?: TCopyFilterFn
 ): () => Promise<void>;
 function copy(
-  src: string | string[],
+  src: string | string[] | Promise<string | string[]>,
   dest: string,
   options?: IFsWriteOptions,
   filter?: TCopyFilterFn
@@ -36,11 +41,12 @@ function copy(
  * @returns An asynchronous function -hence, calling `copy` won't have any effect until the returned function is called.
  */
 function copy(
-  src: string | string[],
+  src: string | string[] | Promise<string | string[]>,
   dest: string,
   ...args: any[]
 ): () => Promise<void> {
   return async () => {
+    src = await src;
     if (Array.isArray(src)) {
       for (let source of src) {
         await trunk(source, path.join(dest, path.parse(source).base), args);

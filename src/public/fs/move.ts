@@ -14,11 +14,12 @@ export default expose(move);
  * @returns An asynchronous function -hence, calling `move` won't have any effect until the returned function is called.
  */
 function move(
-  src: string | string[],
+  src: string | string[] | Promise<string | string[]>,
   dest: string,
   options: IFsWriteOptions = {}
 ): () => Promise<void> {
   return async () => {
+    src = await src;
     if (Array.isArray(src)) {
       for (let source of src) {
         await trunk(source, path.join(dest, path.parse(source).base), options);
