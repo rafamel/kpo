@@ -3,8 +3,9 @@ import fs from 'fs-extra';
 import { exists, absolute } from '~/utils/file';
 import expose from '~/utils/expose';
 import confirm from '~/utils/confirm';
-import { IFsOptions } from './types';
+import { IFsWriteOptions } from './types';
 import logger from '~/utils/logger';
+import { open } from '~/utils/errors';
 
 export default expose(rw);
 
@@ -16,9 +17,11 @@ export default expose(rw);
 function rw(
   file: string,
   fn: (raw?: string) => string | void | Promise<string | void>,
-  options: IFsOptions = {}
+  options: IFsWriteOptions = {}
 ): () => Promise<void> {
   return async () => {
+    options = Object.assign({ overwrite: true }, options);
+
     const cwd = process.cwd();
     file = absolute({ path: file, cwd });
     const relative = './' + path.relative(cwd, file);
@@ -27,8 +30,9 @@ function rw(
 
     const raw = doesExist ? await fs.readFile(file).then(String) : undefined;
 
-    const response = await fn(raw);
-    if (response === undefined) {
+    const response: string | void = await fn(raw);
+
+    if (response === undefined || (doesExist && !options.overwrite)) {
       logger.info(`Write skipped: ${relative}`);
       return;
     }
