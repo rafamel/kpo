@@ -1,5 +1,6 @@
 export { default as ensure } from './ensure';
 export { default as exists } from './exists';
+export { default as glob } from './glob';
 export { default as kpo } from './kpo';
 export { default as line } from './line';
 export { default as log } from './log';
