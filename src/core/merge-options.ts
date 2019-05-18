@@ -7,7 +7,6 @@ import {
 } from '~/types';
 import { DEFAULT_LOG_LEVEL, KPO_LOG_ENV } from '~/constants';
 import EnvManager from '~/utils/env-manager';
-import logger, { setLevel } from '~/utils/logger';
 
 const initial: TCoreOptions = {
   file: null,
@@ -46,18 +45,4 @@ export function stripUndefined(obj: IOfType<any>): IOfType<any> {
     if (value !== undefined) acc[key] = value;
     return acc;
   }, {});
-}
-
-export function setLogger(
-  manager: EnvManager,
-  options: TCoreOptions
-): () => void {
-  const initial = logger.getLevel();
-  const level: TLogger =
-    options.log || (manager.get(KPO_LOG_ENV) as any) || DEFAULT_LOG_LEVEL;
-  setLevel(level);
-
-  return function restore() {
-    setLevel(initial as any);
-  };
 }

@@ -41,14 +41,12 @@ export default async function raise(
     );
   }
 
-  const paths = await core.paths;
-  const { pkg } = await core.loaded;
+  const { pkg } = core.loaded;
 
-  if (!paths.kpo) throw Error(`No kpo scripts found`);
-  if (!paths.pkg || !pkg) throw Error(`No package.json found`);
+  if (!core.paths.kpo) throw Error(`No kpo scripts found`);
+  if (!core.paths.pkg || !pkg) throw Error(`No package.json found`);
 
-  const tasks = await core.tasks;
-  const taskNames = (tasks.kpo || [])
+  const taskNames = (core.tasks.kpo || [])
     .filter((task) => !task.hidden)
     .map((task) => task.path);
 
@@ -126,7 +124,7 @@ export default async function raise(
         }, {})
       };
 
-  await fs.writeFile(paths.pkg, JSON.stringify(pkg, null, 2));
+  await fs.writeFile(core.paths.pkg, JSON.stringify(pkg, null, 2));
   // As package.json has changed, we need to refetch on core
   await core.reset();
 }

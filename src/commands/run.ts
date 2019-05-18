@@ -30,12 +30,12 @@ export default async function run(
   }
 
   for (let path of tasks) {
-    const task = await core.task(path);
+    const task = core.task(path);
     logger.info('Running ' + chalk.bold.green(task.path));
 
-    await core.initialize();
-    await runner(task.script, core, args);
     core.restore();
+    core.initialize();
+    await runner(task.script, core, args);
 
     logger.debug('Done with task: ' + task.path);
   }

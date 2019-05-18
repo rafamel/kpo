@@ -1,11 +1,13 @@
 import loglevel from 'loglevel';
 import chalk, { Chalk } from 'chalk';
-import { DEFAULT_LOG_LEVEL } from '~/constants';
+import { DEFAULT_LOG_LEVEL, KPO_LOG_ENV } from '~/constants';
 import { TLogger } from '~/types';
 import { options } from 'exits';
+import EnvManger from './env-manager';
 
 const APP_NAME = 'kpo';
 const logger = loglevel.getLogger(`_${APP_NAME}_logger_`);
+const manager = new EnvManger(process.env);
 
 function setLevel(level: TLogger): void {
   logger.setLevel(level);
@@ -50,7 +52,8 @@ if (!factory.registered) {
 }
 
 // Must be set -at least once- after overwriting methodFactory
-logger.setDefaultLevel(DEFAULT_LOG_LEVEL);
-options({ logger: DEFAULT_LOG_LEVEL });
+const level = (manager.get(KPO_LOG_ENV) as TLogger) || DEFAULT_LOG_LEVEL;
+logger.setDefaultLevel(level);
+options({ logger: level });
 
 export { logger as default, setLevel };

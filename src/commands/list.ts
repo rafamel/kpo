@@ -23,7 +23,7 @@ export default async function list(
   core: ICore,
   options: IListOptions = {}
 ): Promise<void> {
-  let tasks = Object.assign({}, await core.tasks);
+  let tasks = Object.assign({}, core.tasks);
   if (!options.all) {
     if (tasks.kpo) tasks.kpo = tasks.kpo.filter((task) => !task.hidden);
     if (tasks.pkg) tasks.pkg = tasks.pkg.filter((task) => !task.hidden);
@@ -58,16 +58,17 @@ export function fromTasks(tasks: ITasks): string {
 }
 
 export async function fromScopes(core: ICore): Promise<string> {
-  const paths = await core.paths;
-  const root = await core.root;
   const scopes = await core.children;
 
   let rows = scopes.map((child) => [
     child.name,
-    path.relative(paths.directory, child.directory)
+    path.relative(core.paths.directory, child.directory)
   ]);
-  if (root) {
-    rows.unshift(['root', path.relative(paths.directory, root.directory)]);
+  if (core.root) {
+    rows.unshift([
+      'root',
+      path.relative(core.paths.directory, core.root.directory)
+    ]);
   }
 
   const nonUnique = rows
