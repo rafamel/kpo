@@ -20,10 +20,11 @@ main(process.argv.slice(2)).catch(async (err) => {
   }
 
   err = error(err);
-  logger.error(err.message);
-  if (err.root.stack) {
-    if (isOpenError(err)) logger.error(err.root.stack);
-    else logger.trace(err.root.stack);
+  if (isOpenError(err) && err.root.stack) {
+    logger.error(err.message + '\n' + err.root.stack);
+  } else {
+    logger.error(err.message);
+    if (err.root.stack) logger.trace(err.root.stack);
   }
 
   return terminate('exit', 1);
