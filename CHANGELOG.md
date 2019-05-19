@@ -1,3 +1,23 @@
+# [0.7.0](https://github.com/rafamel/kpo/compare/v0.6.0...v0.7.0) (2019-05-19)
+
+
+### Bug Fixes
+
+* **core/paths:** gets kpo scripts file path when not in cwd and a sibling to package.json ([02b0548](https://github.com/rafamel/kpo/commit/02b0548))
+* **public/tags:** resets logger level after kpo calls ([83ed074](https://github.com/rafamel/kpo/commit/83ed074))
+* **utils/env-manager:** fixes undefined being coherced into a string when setting environment variab ([885c26d](https://github.com/rafamel/kpo/commit/885c26d))
+
+
+### Features
+
+* **public/fs:** allows copy, move, remove to take promises as src ([3747dba](https://github.com/rafamel/kpo/commit/3747dba))
+* **public/fs:** allows rw and json to take overwrite option (IFsWriteOptions) ([cc6db76](https://github.com/rafamel/kpo/commit/cc6db76))
+* **public/fs:** allows write to take a function for the file content ([4419db2](https://github.com/rafamel/kpo/commit/4419db2))
+* **public/fs:** makes errors occurred in user provided callbacks instances of OpenError ([a5784f5](https://github.com/rafamel/kpo/commit/a5784f5))
+* **public/tags:** adds glob tag ([69e3d9a](https://github.com/rafamel/kpo/commit/69e3d9a))
+
+
+
 # [0.6.0](https://github.com/rafamel/kpo/compare/v0.5.2...v0.6.0) (2019-05-17)
 
 
