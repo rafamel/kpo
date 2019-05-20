@@ -1,7 +1,7 @@
-import { IOfType } from '~/types';
 import expose from '~/utils/expose';
 import rw from './rw';
-import { IFsUpdateOptions, TContentFn, TSource } from './types';
+import { IFsUpdateOptions, TContentFn, TSource, TJsonFn } from './types';
+import { IOfType } from '~/types';
 
 export default expose(json);
 
@@ -12,15 +12,16 @@ export default expose(json);
  */
 function json(
   file: TSource,
-  fn: (
-    file: string,
-    json?: IOfType<any>
-  ) => IOfType<any> | void | Promise<IOfType<any> | void>,
+  fn: TJsonFn,
   options?: IFsUpdateOptions
 ): () => Promise<void> {
   return async () => {
-    const _fn: TContentFn = async (file, raw) => {
-      const json = await fn(file, raw ? JSON.parse(raw) : undefined);
+    const _fn: TContentFn = async (data) => {
+      Object.defineProperty(data, 'json', {
+        enumerable: true,
+        get: (): IOfType<any> => (data.raw ? JSON.parse(data.raw) : undefined)
+      });
+      const json = await fn(data);
       return json ? JSON.stringify(json, null, 2) : undefined;
     };
 

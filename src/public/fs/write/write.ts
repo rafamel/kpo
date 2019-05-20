@@ -29,7 +29,7 @@ export async function each(
 
   if (typeof raw === 'function') {
     try {
-      raw = await raw(file);
+      raw = await raw({ file });
     } catch (err) {
       throw open(err);
     }

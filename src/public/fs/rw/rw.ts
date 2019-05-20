@@ -26,14 +26,12 @@ export async function each(
   const cwd = process.cwd();
   file = absolute({ path: file, cwd });
   const relative = './' + path.relative(cwd, file);
-
   const doesExist = await exists(file, { fail: options.fail });
-
   const raw = doesExist ? await fs.readFile(file).then(String) : undefined;
 
   let response: string | void;
   try {
-    response = await fn(file, raw);
+    response = await fn({ file, raw });
   } catch (e) {
     throw open(e);
   }
