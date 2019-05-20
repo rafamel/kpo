@@ -3,9 +3,9 @@ import fs from 'fs-extra';
 import { absolute, exists } from '~/utils/file';
 import confirm from '~/utils/confirm';
 import { parallel } from 'promist';
-import logger from '~/utils/logger';
 import chalk from 'chalk';
 import { IFsCreateDeleteOptions } from '../types';
+import log from '../log';
 
 export default async function mkdir(
   paths: string | string[],
@@ -29,7 +29,7 @@ export default async function mkdir(
   }
 
   // eslint-disable-next-line no-console
-  (options.confirm ? console.log : logger.debug)(
+  (options.confirm ? console.log : log(options, 'debug'))(
     chalk.bold.yellow(
       relatives.existing.length
         ? 'Directories to create'
@@ -44,7 +44,7 @@ export default async function mkdir(
   );
 
   if (!nonExistingPaths.length) {
-    logger.info(
+    log(options, 'info')(
       `Create skipped: "${relatives.existing
         .concat(relatives.nonExisting)
         .join('", "')}"`
@@ -57,7 +57,7 @@ export default async function mkdir(
     await fs.ensureDir(absolute);
 
     const relative = relatives.nonExisting[i];
-    logger.debug(`Created: ${relative}`);
+    log(options, 'debug')(`Created: ${relative}`);
   });
-  logger.info(`Created: "${relatives.nonExisting.join('", "')}"`);
+  log(options, 'info')(`Created: "${relatives.nonExisting.join('", "')}"`);
 }

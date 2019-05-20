@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import { absolute, exists } from '~/utils/file';
 import { IFsUpdateOptions, TCopyFilterFn, TDestination } from '../types';
 import confirm from '~/utils/confirm';
-import logger from '~/utils/logger';
+import log from '../log';
 import { open } from '~/utils/errors';
 
 export default async function copy(
@@ -73,7 +73,9 @@ export async function each(
 
   const srcExist = await exists(src, { fail: options.fail });
   if (!srcExist) {
-    logger.info(`Copy skipped: "${relatives.src}" to "${relatives.dest}"`);
+    log(options, 'info')(
+      `Copy skipped: "${relatives.src}" to "${relatives.dest}"`
+    );
     return;
   }
 
@@ -91,5 +93,5 @@ export async function each(
       }
     }
   });
-  logger.info(`Copied: "${relatives.src}" to "${relatives.dest}"`);
+  log(options, 'info')(`Copied: "${relatives.src}" to "${relatives.dest}"`);
 }

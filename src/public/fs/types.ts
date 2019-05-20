@@ -20,7 +20,11 @@ export type TContentFn = (
  */
 export interface IFsReadOptions {
   /**
-   * If `false`, it won't fail if a path doesn't exist for a read, or if it already exists for a write. Defaults to `false`.
+   * Whether to enable logging. Default: `true`.
+   */
+  logger?: boolean;
+  /**
+   * If `false`, it won't fail if a path doesn't exist for a read, or if it already exists for a write. Default: `false`.
    */
   fail?: boolean;
 }
@@ -30,7 +34,7 @@ export interface IFsReadOptions {
  */
 export interface IFsCreateDeleteOptions extends IFsReadOptions {
   /**
-   * If `true`, it will require user confirmation for removal. Defaults to `false`.
+   * If `true`, it will require user confirmation for removal. Default: `false`.
    */
   confirm?: boolean;
 }
@@ -40,7 +44,7 @@ export interface IFsCreateDeleteOptions extends IFsReadOptions {
  */
 export interface IFsUpdateOptions extends IFsCreateDeleteOptions {
   /**
-   * Overwrites files if they already exist. Defaults to `true`.
+   * Overwrites files if they already exist. Default: `true`.
    */
   overwrite?: boolean;
 }

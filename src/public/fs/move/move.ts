@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import { absolute, exists } from '~/utils/file';
 import { IFsUpdateOptions, TDestination } from '../types';
 import confirm from '~/utils/confirm';
-import logger from '~/utils/logger';
+import log from '../log';
 
 export default async function move(
   src: string | string[],
@@ -69,7 +69,9 @@ export async function each(
 
   const srcExist = await exists(src, { fail: options.fail });
   if (!srcExist) {
-    logger.info(`Move skipped: "${relatives.src}" to "${relatives.dest}"`);
+    log(options, 'info')(
+      `Move skipped: "${relatives.src}" to "${relatives.dest}"`
+    );
     return;
   }
 
@@ -79,7 +81,9 @@ export async function each(
       throw Error(`Destination already exists: ${relatives.dest}`);
     }
     if (!options.overwrite) {
-      logger.info(`Move skipped: "${relatives.src}" to "${relatives.dest}"`);
+      log(options, 'info')(
+        `Move skipped: "${relatives.src}" to "${relatives.dest}"`
+      );
       return;
     }
   }
@@ -88,5 +92,5 @@ export async function each(
   if (!(await confirm(msg, options))) return;
 
   await fs.move(src, dest, { overwrite: options.overwrite });
-  logger.info(`Moved: "${relatives.src}" to "${relatives.dest}"`);
+  log(options, 'info')(`Moved: "${relatives.src}" to "${relatives.dest}"`);
 }

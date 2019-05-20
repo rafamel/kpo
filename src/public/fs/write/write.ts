@@ -3,8 +3,8 @@ import path from 'path';
 import { IFsUpdateOptions, TContentFn } from '../types';
 import { exists, absolute } from '~/utils/file';
 import confirm from '~/utils/confirm';
-import logger from '~/utils/logger';
 import { open } from '~/utils/errors';
+import log from '../log';
 
 export default async function write(
   file: string | string[],
@@ -41,7 +41,7 @@ export async function each(
   }
 
   if (doesExist && !options.overwrite) {
-    logger.info(`Write skipped: ${relative}`);
+    log(options, 'info')(`Write skipped: ${relative}`);
     return;
   }
 
@@ -49,5 +49,5 @@ export async function each(
 
   await fs.ensureDir(path.parse(file).dir);
   await fs.writeFile(file, raw ? String(raw) : '');
-  logger.info(`Written: ${relative}`);
+  log(options, 'info')(`Written: ${relative}`);
 }

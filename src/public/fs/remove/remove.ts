@@ -3,9 +3,9 @@ import fs from 'fs-extra';
 import { absolute, exists } from '~/utils/file';
 import confirm from '~/utils/confirm';
 import { parallel } from 'promist';
-import logger from '~/utils/logger';
 import chalk from 'chalk';
 import { IFsCreateDeleteOptions } from '../types';
+import log from '../log';
 
 export default async function remove(
   paths: string | string[],
@@ -29,7 +29,7 @@ export default async function remove(
   }
 
   // eslint-disable-next-line no-console
-  (options.confirm ? console.log : logger.debug)(
+  (options.confirm ? console.log : log(options, 'debug'))(
     chalk.bold.yellow(
       relatives.existing.length ? 'Paths to remove' : 'No paths to remove'
     ) +
@@ -42,7 +42,7 @@ export default async function remove(
   );
 
   if (!existingPaths.length) {
-    logger.info(
+    log(options, 'info')(
       `Remove skipped: "${relatives.existing
         .concat(relatives.nonExisting)
         .join('", "')}"`
@@ -55,7 +55,7 @@ export default async function remove(
     await fs.remove(absolute);
 
     const relative = relatives.existing[i];
-    logger.debug(`Removed: ${relative}`);
+    log(options, 'debug')(`Removed: ${relative}`);
   });
-  logger.info(`Removed: "${relatives.existing.join('", "')}"`);
+  log(options, 'info')(`Removed: "${relatives.existing.join('", "')}"`);
 }
