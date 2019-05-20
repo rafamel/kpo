@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import { exists, absolute } from '~/utils/file';
 import expose from '~/utils/expose';
 import confirm from '~/utils/confirm';
-import { IFsWriteOptions } from './types';
+import { IFsUpdateOptions } from './types';
 import logger from '~/utils/logger';
 import { open } from '~/utils/errors';
 
@@ -17,7 +17,7 @@ export default expose(rw);
 function rw(
   file: string,
   fn: (raw?: string) => string | void | Promise<string | void>,
-  options: IFsWriteOptions = {}
+  options: IFsUpdateOptions = {}
 ): () => Promise<void> {
   return async () => {
     options = Object.assign({ overwrite: true }, options);

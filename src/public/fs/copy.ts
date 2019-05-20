@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { absolute, exists } from '~/utils/file';
-import { IFsWriteOptions } from './types';
+import { IFsUpdateOptions } from './types';
 import expose, { TExposedOverload } from '~/utils/expose';
 import confirm from '~/utils/confirm';
 import logger from '~/utils/logger';
@@ -14,12 +14,12 @@ export type TCopyFilterFn =
 export default expose(copy) as TExposedOverload<
   typeof copy,
   | [string | string[] | Promise<string | string[]>, string]
-  | [string | string[] | Promise<string | string[]>, string, IFsWriteOptions]
+  | [string | string[] | Promise<string | string[]>, string, IFsUpdateOptions]
   | [string | string[] | Promise<string | string[]>, string, TCopyFilterFn]
   | [
       string | string[] | Promise<string | string[]>,
       string,
-      IFsWriteOptions | undefined,
+      IFsUpdateOptions | undefined,
       TCopyFilterFn
     ]
 >;
@@ -32,7 +32,7 @@ function copy(
 function copy(
   src: string | string[] | Promise<string | string[]>,
   dest: string,
-  options?: IFsWriteOptions,
+  options?: IFsUpdateOptions,
   filter?: TCopyFilterFn
 ): () => Promise<void>;
 /**
@@ -63,7 +63,7 @@ export async function trunk(
   dest: string,
   args: any[]
 ): Promise<void> {
-  const options: IFsWriteOptions = Object.assign(
+  const options: IFsUpdateOptions = Object.assign(
     { overwrite: true },
     args.find((x) => typeof x === 'object') || {}
   );

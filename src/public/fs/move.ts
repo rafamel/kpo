@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { absolute, exists } from '~/utils/file';
-import { IFsWriteOptions } from './types';
+import { IFsUpdateOptions } from './types';
 import expose from '~/utils/expose';
 import confirm from '~/utils/confirm';
 import logger from '~/utils/logger';
@@ -16,7 +16,7 @@ export default expose(move);
 function move(
   src: string | string[] | Promise<string | string[]>,
   dest: string,
-  options: IFsWriteOptions = {}
+  options: IFsUpdateOptions = {}
 ): () => Promise<void> {
   return async () => {
     src = await src;
@@ -34,7 +34,7 @@ function move(
 export async function trunk(
   src: string,
   dest: string,
-  options: IFsWriteOptions
+  options: IFsUpdateOptions
 ): Promise<void> {
   options = Object.assign({ overwrite: true }, options);
 

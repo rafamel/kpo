@@ -6,19 +6,19 @@ import { parallel } from 'promist';
 import logger from '~/utils/logger';
 import chalk from 'chalk';
 import expose from '~/utils/expose';
-import { IFsOptions } from './types';
+import { IFsCreateDeleteOptions } from './types';
 
 export default expose(mkdir);
 /**
  * Deep creates a directory or an array of them.
  * It is an *exposed* function: call `mkdir.fn()`, which takes the same arguments, in order to execute on call.
  * @param paths a path for a directory, or an array of them.
- * @param options an `IFsOptions` object.
+ * @param options an `IFsCreateDeleteOptions` object.
  * @returns An asynchronous function -hence, calling `mkdir` won't have any effect until the returned function is called.
  */
 function mkdir(
   paths: string | string[],
-  options: IFsOptions = {}
+  options: IFsCreateDeleteOptions = {}
 ): () => Promise<void> {
   return async () => {
     const cwd = process.cwd();

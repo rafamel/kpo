@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import expose, { TExposedOverload } from '~/utils/expose';
-import { IFsWriteOptions } from './types';
+import { IFsUpdateOptions } from './types';
 import { exists, absolute } from '~/utils/file';
 import confirm from '~/utils/confirm';
 import logger from '~/utils/logger';
@@ -11,19 +11,19 @@ export default expose(write) as TExposedOverload<
   typeof write,
   | [string]
   | [string, string | (() => string | Promise<string>)]
-  | [string, IFsWriteOptions]
-  | [string, string | (() => string | Promise<string>), IFsWriteOptions]
+  | [string, IFsUpdateOptions]
+  | [string, string | (() => string | Promise<string>), IFsUpdateOptions]
 >;
 
 function write(
   file: string,
   raw?: string | (() => string | Promise<string>)
 ): () => Promise<void>;
-function write(file: string, options?: IFsWriteOptions): () => Promise<void>;
+function write(file: string, options?: IFsUpdateOptions): () => Promise<void>;
 function write(
   file: string,
   raw: string | (() => string | Promise<string>),
-  options?: IFsWriteOptions
+  options?: IFsUpdateOptions
 ): () => Promise<void>;
 /**
  * Writes a `file` with `raw`. If no `raw` content is passed, it will simply ensure it does exist.
@@ -33,7 +33,7 @@ function write(
 function write(file: string, ...args: any[]): () => Promise<void> {
   return async () => {
     const hasRaw = typeof args[0] === 'string' || typeof args[0] === 'function';
-    const options: IFsWriteOptions = Object.assign(
+    const options: IFsUpdateOptions = Object.assign(
       { overwrite: true },
       (hasRaw ? args[1] : args[0]) || {}
     );
