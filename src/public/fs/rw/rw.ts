@@ -1,37 +1,35 @@
 import path from 'path';
 import fs from 'fs-extra';
-import { exists, absolute } from '~/utils/file';
+import { exists } from '~/utils/file';
 import confirm from '~/utils/confirm';
-import { IFsUpdateOptions, TContentFn } from '../types';
+import { IFsUpdateOptions, TReadWriteFn, TDestination } from '../types';
 import { open } from '~/utils/errors';
-import { log } from '../utils';
+import { log, resolver } from '../utils';
 
 export default async function rw(
-  file: string | string[],
-  fn: TContentFn,
+  src: string | string[],
+  dest: TDestination,
+  fn: TReadWriteFn,
   options: IFsUpdateOptions = {}
 ): Promise<void> {
   options = Object.assign({ overwrite: true }, options);
-
-  Array.isArray(file)
-    ? await Promise.all(file.map((item) => each(item, fn, options)))
-    : await each(file, fn, options);
+  await resolver(src, dest, (src, dest) => each(src, dest, fn, options));
 }
 
 export async function each(
-  file: string,
-  fn: TContentFn,
+  src: string,
+  dest: string,
+  fn: TReadWriteFn,
   options: IFsUpdateOptions
 ): Promise<void> {
   const cwd = process.cwd();
-  file = absolute({ path: file, cwd });
-  const relative = './' + path.relative(cwd, file);
-  const doesExist = await exists(file, { fail: options.fail });
-  const raw = doesExist ? await fs.readFile(file).then(String) : undefined;
+  const relative = './' + path.relative(cwd, dest);
+  const doesExist = await exists(src, { fail: options.fail });
+  const raw = doesExist ? await fs.readFile(src).then(String) : undefined;
 
   let response: string | void;
   try {
-    response = await fn({ file, raw });
+    response = await fn({ src, dest, raw });
   } catch (e) {
     throw open(e);
   }
@@ -43,7 +41,7 @@ export async function each(
 
   if (!(await confirm(`Write "${relative}"?`, options))) return;
 
-  await fs.ensureDir(path.parse(file).dir);
-  await fs.writeFile(file, String(response));
+  await fs.ensureDir(path.dirname(dest));
+  await fs.writeFile(dest, String(response));
   log(options, 'info')(`Written: ${relative}`);
 }

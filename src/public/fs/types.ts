@@ -1,4 +1,4 @@
-import { IOfType } from '~/types';
+import { IOfType, TScript } from '~/types';
 
 export type TSource =
   | string
@@ -12,13 +12,15 @@ export type TCopyFilterFn =
   | ((src: string, dest: string) => boolean)
   | ((src: string, dest: string) => Promise<boolean>);
 
-export type TContentFn = (data: {
-  file: string;
+export type TReadWriteFn = (data: {
+  src: string;
+  dest: string;
   raw?: string;
 }) => string | void | Promise<string | void>;
 
 export type TJsonFn = (data: {
-  file: string;
+  src: string;
+  dest: string;
   raw?: string;
   json?: IOfType<any>;
 }) => IOfType<any> | void | Promise<IOfType<any> | void>;
