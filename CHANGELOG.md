@@ -1,3 +1,22 @@
+# [0.8.0](https://github.com/rafamel/kpo/compare/v0.7.0...v0.8.0) (2019-05-20)
+
+
+### Features
+
+* **fs/tags:** globs is an exposed function ([cf99127](https://github.com/rafamel/kpo/commit/cf99127))
+* **public/fs:** allows all fs functions to take sources arrays; unifies behavior ([d0f6536](https://github.com/rafamel/kpo/commit/d0f6536))
+* **public/fs:** allows destination to be a from/to map for copy and move ([8369346](https://github.com/rafamel/kpo/commit/8369346))
+* **public/fs:** allows sources to be array returning functions ([1c5786b](https://github.com/rafamel/kpo/commit/1c5786b))
+* **public/fs:** exports types ([ee7a7b6](https://github.com/rafamel/kpo/commit/ee7a7b6))
+* **public/fs:** options take a logger key to disable logging ([33209be](https://github.com/rafamel/kpo/commit/33209be))
+
+
+### BREAKING CHANGES
+
+* **fs/tags:** Glob previously returned a promise; it now returns a promise returning function
+
+
+
 # [0.7.0](https://github.com/rafamel/kpo/compare/v0.6.0...v0.7.0) (2019-05-19)
 
 

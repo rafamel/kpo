@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IFsOptions | kpo 0.7.0</title>
+	<title>IFsCreateDeleteOptions | kpo 0.8.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">kpo 0.7.0</a>
+					<a href="../index.html" class="title">kpo 0.8.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -54,10 +54,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="ifsoptions.html">IFsOptions</a>
+					<a href="ifscreatedeleteoptions.html">IFsCreateDeleteOptions</a>
 				</li>
 			</ul>
-			<h1>Interface IFsOptions</h1>
+			<h1>Interface IFsCreateDeleteOptions</h1>
 		</div>
 	</div>
 </header>
@@ -78,10 +78,10 @@
 						<a href="ifsreadoptions.html" class="tsd-signature-type">IFsReadOptions</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">IFsOptions</span>
+								<span class="target">IFsCreateDeleteOptions</span>
 								<ul class="tsd-hierarchy">
 									<li>
-										<a href="ifswriteoptions.html" class="tsd-signature-type">IFsWriteOptions</a>
+										<a href="ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a>
 									</li>
 								</ul>
 							</li>
@@ -96,8 +96,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ifsoptions.html#confirm" class="tsd-kind-icon">confirm</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="ifsoptions.html#fail" class="tsd-kind-icon">fail</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ifscreatedeleteoptions.html#confirm" class="tsd-kind-icon">confirm</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ifscreatedeleteoptions.html#fail" class="tsd-kind-icon">fail</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ifscreatedeleteoptions.html#logger" class="tsd-kind-icon">logger</a></li>
 							</ul>
 						</section>
 					</div>
@@ -111,28 +112,44 @@
 					<div class="tsd-signature tsd-kind-icon">confirm<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/83ed074/src/public/fs/types.ts#L18">public/fs/types.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/types.ts#L39">public/fs/types.ts:39</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>If <code>true</code>, it will require user confirmation for removal. Defaults to <code>false</code>.</p>
+							<p>If <code>true</code>, it will require user confirmation for removal. Default: <code>false</code>.</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="fail" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> fail</h3>
 					<div class="tsd-signature tsd-kind-icon">fail<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
-						<p>Overrides <a href="ifsreadoptions.html">IFsReadOptions</a>.<a href="ifsreadoptions.html#fail">fail</a></p>
+						<p>Inherited from <a href="ifsreadoptions.html">IFsReadOptions</a>.<a href="ifsreadoptions.html#fail">fail</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/83ed074/src/public/fs/types.ts#L22">public/fs/types.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/types.ts#L29">public/fs/types.ts:29</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>If <code>false</code>, it won&#39;t fail if a path doesn&#39;t exist for a read, or if it already exists for a write. Defaults to <code>false</code>.</p>
+							<p>If <code>false</code>, it won&#39;t fail if a path doesn&#39;t exist for a read, or if it already exists for a write. Default: <code>false</code>.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="logger" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> logger</h3>
+					<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="ifsreadoptions.html">IFsReadOptions</a>.<a href="ifsreadoptions.html#logger">logger</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/types.ts#L25">public/fs/types.ts:25</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether to enable logging. Default: <code>true</code>.</p>
 						</div>
 					</div>
 				</section>
@@ -151,13 +168,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="ifsoptions.html" class="tsd-kind-icon">IFs<wbr>Options</a>
+						<a href="ifscreatedeleteoptions.html" class="tsd-kind-icon">IFs<wbr>Create<wbr>Delete<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ifsoptions.html#confirm" class="tsd-kind-icon">confirm</a>
+								<a href="ifscreatedeleteoptions.html#confirm" class="tsd-kind-icon">confirm</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
-								<a href="ifsoptions.html#fail" class="tsd-kind-icon">fail</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="ifscreatedeleteoptions.html#fail" class="tsd-kind-icon">fail</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="ifscreatedeleteoptions.html#logger" class="tsd-kind-icon">logger</a>
 							</li>
 						</ul>
 					</li>
