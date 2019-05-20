@@ -4,6 +4,8 @@ export type TSource =
   | Promise<string[]>
   | (() => string[] | Promise<string[]>);
 
+export type TDestination = string | { from?: string; to: string };
+
 export type TCopyFilterFn =
   | ((src: string, dest: string) => boolean)
   | ((src: string, dest: string) => Promise<boolean>);

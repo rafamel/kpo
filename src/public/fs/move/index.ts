@@ -1,4 +1,4 @@
-import { TSource, IFsUpdateOptions } from '../types';
+import { TSource, IFsUpdateOptions, TDestination } from '../types';
 import expose from '~/utils/expose';
 import trunk from './move';
 
@@ -11,7 +11,7 @@ export default expose(move);
  */
 function move(
   src: TSource,
-  dest: string,
+  dest: TDestination,
   options?: IFsUpdateOptions
 ): () => Promise<void> {
   return async () => {
