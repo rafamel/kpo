@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>kpo 0.8.0</title>
+	<title>kpo 0.9.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">kpo 0.8.0</a>
+					<a href="index.html" class="title">kpo 0.9.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -54,7 +54,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> kpo 0.8.0</h1>
+			<h1> kpo 0.9.0</h1>
 		</div>
 	</div>
 </header>
@@ -91,14 +91,17 @@
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias"><a href="globals.html#tchildrendefinition" class="tsd-kind-icon">TChildren<wbr>Definition</a></li>
-								<li class="tsd-kind-type-alias"><a href="globals.html#tcontentfn" class="tsd-kind-icon">TContent<wbr>Fn</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#tcopyfilterfn" class="tsd-kind-icon">TCopy<wbr>Filter<wbr>Fn</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#tcoreoptions" class="tsd-kind-icon">TCore<wbr>Options</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#tdestination" class="tsd-kind-icon">TDestination</a></li>
+								<li class="tsd-kind-type-alias"><a href="globals.html#tjsonfn" class="tsd-kind-icon">TJson<wbr>Fn</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#tlogger" class="tsd-kind-icon">TLogger</a></li>
+								<li class="tsd-kind-type-alias"><a href="globals.html#treadfn" class="tsd-kind-icon">TRead<wbr>Fn</a></li>
+								<li class="tsd-kind-type-alias"><a href="globals.html#treadwritefn" class="tsd-kind-icon">TRead<wbr>Write<wbr>Fn</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#tscript" class="tsd-kind-icon">TScript</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#tscriptfn" class="tsd-kind-icon">TScript<wbr>Fn</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#tsource" class="tsd-kind-icon">TSource</a></li>
+								<li class="tsd-kind-type-alias"><a href="globals.html#twritefn" class="tsd-kind-icon">TWrite<wbr>Fn</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -142,7 +145,7 @@
 					<div class="tsd-signature tsd-kind-icon">TChildren<wbr>Definition<span class="tsd-signature-symbol">:</span> <a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/types.ts#L135">types.ts:135</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/types.ts#L135">types.ts:135</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -156,12 +159,42 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="tcontentfn" class="tsd-anchor"></a>
-					<h3>TContent<wbr>Fn</h3>
-					<div class="tsd-signature tsd-kind-icon">TContent<wbr>Fn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<a name="tcopyfilterfn" class="tsd-anchor"></a>
+					<h3>TCopy<wbr>Filter<wbr>Fn</h3>
+					<div class="tsd-signature tsd-kind-icon">TCopy<wbr>Filter<wbr>Fn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/types.ts#L13">public/fs/types.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/types.ts#L11">public/fs/types.ts:11</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tcoreoptions" class="tsd-anchor"></a>
+					<h3>TCore<wbr>Options</h3>
+					<div class="tsd-signature tsd-kind-icon">TCore<wbr>Options<span class="tsd-signature-symbol">:</span> <a href="interfaces/iclioptions.html" class="tsd-signature-type">ICliOptions</a><span class="tsd-signature-symbol"> &amp; </span><a href="interfaces/ipackageoptions.html" class="tsd-signature-type">IPackageOptions</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/types.ts#L128">types.ts:128</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tdestination" class="tsd-anchor"></a>
+					<h3>TDestination</h3>
+					<div class="tsd-signature tsd-kind-icon">TDestination<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/types.ts#L9">public/fs/types.ts:9</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tjsonfn" class="tsd-anchor"></a>
+					<h3>TJson<wbr>Fn</h3>
+					<div class="tsd-signature tsd-kind-icon">TJson<wbr>Fn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/types.ts#L30">public/fs/types.ts:30</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -169,17 +202,132 @@
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-siganture">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias tsd-is-not-exported">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>file<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, raw<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
 										<h4 class="tsd-parameters-title">Parameters</h4>
 										<ul class="tsd-parameters">
 											<li>
-												<h5>file: <span class="tsd-signature-type">string</span></h5>
+												<h5>data: <span class="tsd-signature-type">object</span></h5>
+												<ul class="tsd-parameters">
+													<li class="tsd-parameter">
+														<h5>dest<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+													</li>
+													<li class="tsd-parameter">
+														<h5><span class="tsd-flag ts-flagOptional">Optional</span> json<span class="tsd-signature-symbol">?: </span><a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+													</li>
+													<li class="tsd-parameter">
+														<h5><span class="tsd-flag ts-flagOptional">Optional</span> raw<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+													</li>
+													<li class="tsd-parameter">
+														<h5>src<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+													</li>
+												</ul>
 											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>
+											<span class="tsd-signature-symbol"> | </span>
+											<span class="tsd-signature-type">void</span>
+											<span class="tsd-signature-symbol"> | </span>
+											<span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span>
+										</h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tlogger" class="tsd-anchor"></a>
+					<h3>TLogger</h3>
+					<div class="tsd-signature tsd-kind-icon">TLogger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"trace"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"debug"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"info"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"warn"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"error"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"silent"</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/types.ts#L11">types.ts:11</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A logging level value.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="treadfn" class="tsd-anchor"></a>
+					<h3>TRead<wbr>Fn</h3>
+					<div class="tsd-signature tsd-kind-icon">TRead<wbr>Fn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/types.ts#L15">public/fs/types.ts:15</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#tscript" class="tsd-signature-type">TScript</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#tscript" class="tsd-signature-type">TScript</a><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
 											<li>
-												<h5><span class="tsd-flag ts-flagOptional">Optional</span> raw: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+												<h5>data: <span class="tsd-signature-type">object</span></h5>
+												<ul class="tsd-parameters">
+													<li class="tsd-parameter">
+														<h5><span class="tsd-flag ts-flagOptional">Optional</span> raw<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+													</li>
+													<li class="tsd-parameter">
+														<h5>src<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+													</li>
+												</ul>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="globals.html#tscript" class="tsd-signature-type">TScript</a>
+											<span class="tsd-signature-symbol"> | </span>
+											<span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#tscript" class="tsd-signature-type">TScript</a><span class="tsd-signature-symbol">&gt;</span>
+										</h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="treadwritefn" class="tsd-anchor"></a>
+					<h3>TRead<wbr>Write<wbr>Fn</h3>
+					<div class="tsd-signature tsd-kind-icon">TRead<wbr>Write<wbr>Fn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/types.ts#L24">public/fs/types.ts:24</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>data: <span class="tsd-signature-type">object</span></h5>
+												<ul class="tsd-parameters">
+													<li class="tsd-parameter">
+														<h5>dest<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+													</li>
+													<li class="tsd-parameter">
+														<h5><span class="tsd-flag ts-flagOptional">Optional</span> raw<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+													</li>
+													<li class="tsd-parameter">
+														<h5>src<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+													</li>
+												</ul>
 											</li>
 										</ul>
 										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span>
@@ -195,57 +343,12 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="tcopyfilterfn" class="tsd-anchor"></a>
-					<h3>TCopy<wbr>Filter<wbr>Fn</h3>
-					<div class="tsd-signature tsd-kind-icon">TCopy<wbr>Filter<wbr>Fn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/types.ts#L9">public/fs/types.ts:9</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="tcoreoptions" class="tsd-anchor"></a>
-					<h3>TCore<wbr>Options</h3>
-					<div class="tsd-signature tsd-kind-icon">TCore<wbr>Options<span class="tsd-signature-symbol">:</span> <a href="interfaces/iclioptions.html" class="tsd-signature-type">ICliOptions</a><span class="tsd-signature-symbol"> &amp; </span><a href="interfaces/ipackageoptions.html" class="tsd-signature-type">IPackageOptions</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/types.ts#L128">types.ts:128</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="tdestination" class="tsd-anchor"></a>
-					<h3>TDestination</h3>
-					<div class="tsd-signature tsd-kind-icon">TDestination<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/types.ts#L7">public/fs/types.ts:7</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="tlogger" class="tsd-anchor"></a>
-					<h3>TLogger</h3>
-					<div class="tsd-signature tsd-kind-icon">TLogger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"trace"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"debug"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"info"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"warn"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"error"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"silent"</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/types.ts#L11">types.ts:11</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>A logging level value.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
 					<a name="tscript" class="tsd-anchor"></a>
 					<h3>TScript</h3>
 					<div class="tsd-signature tsd-kind-icon">TScript<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Error</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#tscriptfn" class="tsd-signature-type">TScriptFn</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/iscriptsarray.html" class="tsd-signature-type">IScriptsArray</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/types.ts#L38">types.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/types.ts#L38">types.ts:38</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -280,7 +383,7 @@
 					<div class="tsd-signature tsd-kind-icon">TScript<wbr>Fn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/types.ts#L51">types.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/types.ts#L51">types.ts:51</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -319,9 +422,50 @@
 					<div class="tsd-signature tsd-kind-icon">TSource<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/types.ts#L1">public/fs/types.ts:1</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/types.ts#L3">public/fs/types.ts:3</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="twritefn" class="tsd-anchor"></a>
+					<h3>TWrite<wbr>Fn</h3>
+					<div class="tsd-signature tsd-kind-icon">TWrite<wbr>Fn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/types.ts#L20">public/fs/types.ts:20</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>data: <span class="tsd-signature-type">object</span></h5>
+												<ul class="tsd-parameters">
+													<li class="tsd-parameter">
+														<h5>dest<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+													</li>
+												</ul>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span>
+											<span class="tsd-signature-symbol"> | </span>
+											<span class="tsd-signature-type">void</span>
+											<span class="tsd-signature-symbol"> | </span>
+											<span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span>
+										</h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -332,7 +476,7 @@
 					<div class="tsd-signature tsd-kind-icon">parallel<span class="tsd-signature-symbol">:</span> <a href="interfaces/iparallel.html" class="tsd-signature-type">IParallel</a><span class="tsd-signature-symbol"> =&nbsp;create()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/exec/parallel.ts#L36">public/exec/parallel.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/exec/parallel.ts#L36">public/exec/parallel.ts:36</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -353,7 +497,7 @@
 					<div class="tsd-signature tsd-kind-icon">series<span class="tsd-signature-symbol">:</span> <a href="interfaces/iseries.html" class="tsd-signature-type">ISeries</a><span class="tsd-signature-symbol"> =&nbsp;create()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/exec/series.ts#L25">public/exec/series.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/exec/series.ts#L25">public/exec/series.ts:25</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -382,7 +526,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/prompts/confirm.ts#L33">public/prompts/confirm.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/prompts/confirm.ts#L33">public/prompts/confirm.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -418,7 +562,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/prompts/confirm.ts#L37">public/prompts/confirm.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/prompts/confirm.ts#L37">public/prompts/confirm.ts:37</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -461,7 +605,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/copy/index.ts#L18">public/fs/copy/index.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/copy/index.ts#L18">public/fs/copy/index.ts:18</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -500,7 +644,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/copy/index.ts#L23">public/fs/copy/index.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/copy/index.ts#L23">public/fs/copy/index.ts:23</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -552,7 +696,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/ensure.ts#L10">public/tags/ensure.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/ensure.ts#L10">public/tags/ensure.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -585,7 +729,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/ensure.ts#L11">public/tags/ensure.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/ensure.ts#L11">public/tags/ensure.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -631,7 +775,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/exists.ts#L10">public/tags/exists.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/exists.ts#L10">public/tags/exists.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -664,7 +808,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/exists.ts#L11">public/tags/exists.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/exists.ts#L11">public/tags/exists.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -710,7 +854,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/glob.ts#L11">public/tags/glob.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/glob.ts#L11">public/tags/glob.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -743,7 +887,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/glob.ts#L12">public/tags/glob.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/glob.ts#L12">public/tags/glob.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -782,54 +926,71 @@
 					<a name="json" class="tsd-anchor"></a>
 					<h3>json</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">json<span class="tsd-signature-symbol">(</span>file<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, fn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
+						<li class="tsd-signature tsd-kind-icon">json<span class="tsd-signature-symbol">(</span>src<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, dest<span class="tsd-signature-symbol">: </span><a href="globals.html#tdestination" class="tsd-signature-type">TDestination</a>, fn<span class="tsd-signature-symbol">: </span><a href="globals.html#tjsonfn" class="tsd-signature-type">TJsonFn</a>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
+						<li class="tsd-signature tsd-kind-icon">json<span class="tsd-signature-symbol">(</span>src<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, fn<span class="tsd-signature-symbol">: </span><a href="globals.html#tjsonfn" class="tsd-signature-type">TJsonFn</a>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/json.ts#L13">public/fs/json.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/json.ts#L20">public/fs/json.ts:20</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Reads a JSON <code>file</code> and passes it as an argument to a callback <code>fn</code>. If the callback returns other than <code>undefined</code>, <strong><code>file</code> will be overwritten</strong> with the JSON parsed response. <code>file</code> can be relative to the project&#39;s directory.
+									<p>Reads a JSON <code>file</code> and passes it as an argument to a callback <code>fn</code>. If the callback returns other than <code>undefined</code>, <strong><code>file</code> will be overwritten</strong> with the JSON parsed response. <code>file</code> can be relative to the project&#39;s directory. If a <code>dest</code> destination is provided, the original file won&#39;t be overwritten or removed.
 									It is an <em>exposed</em> function: call <code>json.fn()</code>, which takes the same arguments, in order to execute on call.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>file: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
+									<h5>src: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
 								</li>
 								<li>
-									<h5>fn: <span class="tsd-signature-type">function</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-siganture">
-											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>file<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, json<span class="tsd-signature-symbol">?: </span><a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>file: <span class="tsd-signature-type">string</span></h5>
-														</li>
-														<li>
-															<h5><span class="tsd-flag ts-flagOptional">Optional</span> json: <a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>
-														<span class="tsd-signature-symbol"> | </span>
-														<span class="tsd-signature-type">void</span>
-														<span class="tsd-signature-symbol"> | </span>
-														<span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/ioftype.html" class="tsd-signature-type">IOfType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span>
-													</h4>
-												</li>
-											</ul>
+									<h5>dest: <a href="globals.html#tdestination" class="tsd-signature-type">TDestination</a></h5>
+								</li>
+								<li>
+									<h5>fn: <a href="globals.html#tjsonfn" class="tsd-signature-type">TJsonFn</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">function</span></h4>
+							<p>An asynchronous function -hence, calling <code>json</code> won&#39;t have any effect until the returned function is called.</p>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter-siganture">
+									<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+										<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+									</ul>
+									<ul class="tsd-descriptions">
+										<li class="tsd-description">
+											<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 										</li>
 									</ul>
+								</li>
+							</ul>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/json.ts#L26">public/fs/json.ts:26</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Reads a JSON <code>file</code> and passes it as an argument to a callback <code>fn</code>. If the callback returns other than <code>undefined</code>, <strong><code>file</code> will be overwritten</strong> with the JSON parsed response. <code>file</code> can be relative to the project&#39;s directory. If a <code>dest</code> destination is provided, the original file won&#39;t be overwritten or removed.
+									It is an <em>exposed</em> function: call <code>json.fn()</code>, which takes the same arguments, in order to execute on call.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>src: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
+								</li>
+								<li>
+									<h5>fn: <a href="globals.html#tjsonfn" class="tsd-signature-type">TJsonFn</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a></h5>
@@ -863,7 +1024,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/kpo.ts#L14">public/tags/kpo.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/kpo.ts#L14">public/tags/kpo.ts:14</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -902,7 +1063,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/kpo.ts#L15">public/tags/kpo.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/kpo.ts#L15">public/tags/kpo.ts:15</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -954,7 +1115,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/line.ts#L6">public/tags/line.ts:6</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/line.ts#L6">public/tags/line.ts:6</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -977,7 +1138,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/line.ts#L7">public/tags/line.ts:7</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/line.ts#L7">public/tags/line.ts:7</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1013,7 +1174,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/log.ts#L9">public/tags/log.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/log.ts#L9">public/tags/log.ts:9</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1046,7 +1207,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/log.ts#L10">public/tags/log.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/log.ts#L10">public/tags/log.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1091,7 +1252,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/mkdir/index.ts#L14">public/fs/mkdir/index.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/mkdir/index.ts#L14">public/fs/mkdir/index.ts:14</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1142,7 +1303,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/move/index.ts#L12">public/fs/move/index.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/move/index.ts#L12">public/fs/move/index.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1184,13 +1345,13 @@
 					<a name="read" class="tsd-anchor"></a>
 					<h3>read</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">read<span class="tsd-signature-symbol">(</span>file<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, fn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsreadoptions.html" class="tsd-signature-type">IFsReadOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
+						<li class="tsd-signature tsd-kind-icon">read<span class="tsd-signature-symbol">(</span>src<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, fn<span class="tsd-signature-symbol">: </span><a href="globals.html#treadfn" class="tsd-signature-type">TReadFn</a>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsreadoptions.html" class="tsd-signature-type">IFsReadOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/read/index.ts#L13">public/fs/read/index.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/read/index.ts#L13">public/fs/read/index.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1202,28 +1363,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>file: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
+									<h5>src: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
 								</li>
 								<li>
-									<h5>fn: <span class="tsd-signature-type">function</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-siganture">
-											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>raw<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#tscript" class="tsd-signature-type">TScript</a></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5><span class="tsd-flag ts-flagOptional">Optional</span> raw: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <a href="globals.html#tscript" class="tsd-signature-type">TScript</a></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
+									<h5>fn: <a href="globals.html#treadfn" class="tsd-signature-type">TReadFn</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="interfaces/ifsreadoptions.html" class="tsd-signature-type">IFsReadOptions</a></h5>
@@ -1256,7 +1399,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/remove/index.ts#L14">public/fs/remove/index.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/remove/index.ts#L14">public/fs/remove/index.ts:14</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1308,7 +1451,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/rm.ts#L10">public/tags/rm.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/rm.ts#L10">public/tags/rm.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1341,7 +1484,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/rm.ts#L11">public/tags/rm.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/rm.ts#L11">public/tags/rm.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1380,28 +1523,71 @@
 					<a name="rw" class="tsd-anchor"></a>
 					<h3>rw</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">rw<span class="tsd-signature-symbol">(</span>file<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, fn<span class="tsd-signature-symbol">: </span><a href="globals.html#tcontentfn" class="tsd-signature-type">TContentFn</a>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
+						<li class="tsd-signature tsd-kind-icon">rw<span class="tsd-signature-symbol">(</span>src<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, dest<span class="tsd-signature-symbol">: </span><a href="globals.html#tdestination" class="tsd-signature-type">TDestination</a>, fn<span class="tsd-signature-symbol">: </span><a href="globals.html#treadwritefn" class="tsd-signature-type">TReadWriteFn</a>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
+						<li class="tsd-signature tsd-kind-icon">rw<span class="tsd-signature-symbol">(</span>src<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, fn<span class="tsd-signature-symbol">: </span><a href="globals.html#treadwritefn" class="tsd-signature-type">TReadWriteFn</a>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/rw/index.ts#L12">public/fs/rw/index.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/rw/index.ts#L18">public/fs/rw/index.ts:18</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Reads a <code>file</code> and passes it as an argument to a callback <code>fn</code>. If the callback returns other than <code>undefined</code>, <strong><code>file</code> will be overwritten</strong> with its contents. <code>file</code> can be relative to the project&#39;s directory.
+									<p>Reads a <code>file</code> and passes it as an argument to a callback <code>fn</code>. If the callback returns other than <code>undefined</code>, <strong><code>file</code> will be overwritten</strong> with its contents. <code>file</code> can be relative to the project&#39;s directory. If a <code>dest</code> destination is provided, the original file won&#39;t be overwritten or removed.
 									It is an <em>exposed</em> function: call <code>rw.fn()</code>, which takes the same arguments, in order to execute on call.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>file: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
+									<h5>src: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
 								</li>
 								<li>
-									<h5>fn: <a href="globals.html#tcontentfn" class="tsd-signature-type">TContentFn</a></h5>
+									<h5>dest: <a href="globals.html#tdestination" class="tsd-signature-type">TDestination</a></h5>
+								</li>
+								<li>
+									<h5>fn: <a href="globals.html#treadwritefn" class="tsd-signature-type">TReadWriteFn</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">function</span></h4>
+							<p>An asynchronous function -hence, calling <code>rw</code> won&#39;t have any effect until the returned function is called.</p>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter-siganture">
+									<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+										<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+									</ul>
+									<ul class="tsd-descriptions">
+										<li class="tsd-description">
+											<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/rw/index.ts#L24">public/fs/rw/index.ts:24</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Reads a <code>file</code> and passes it as an argument to a callback <code>fn</code>. If the callback returns other than <code>undefined</code>, <strong><code>file</code> will be overwritten</strong> with its contents. <code>file</code> can be relative to the project&#39;s directory. If a <code>dest</code> destination is provided, the original file won&#39;t be overwritten or removed.
+									It is an <em>exposed</em> function: call <code>rw.fn()</code>, which takes the same arguments, in order to execute on call.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>src: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
+								</li>
+								<li>
+									<h5>fn: <a href="globals.html#treadwritefn" class="tsd-signature-type">TReadWriteFn</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a></h5>
@@ -1435,7 +1621,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/prompts/select.ts#L24">public/prompts/select.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/prompts/select.ts#L24">public/prompts/select.ts:24</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1471,7 +1657,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/prompts/select.ts#L28">public/prompts/select.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/prompts/select.ts#L28">public/prompts/select.ts:28</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1514,7 +1700,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/silent.ts#L12">public/tags/silent.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/silent.ts#L12">public/tags/silent.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1553,7 +1739,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/tags/silent.ts#L13">public/tags/silent.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/tags/silent.ts#L13">public/tags/silent.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1598,15 +1784,15 @@
 					<a name="write" class="tsd-anchor"></a>
 					<h3>write</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">write<span class="tsd-signature-symbol">(</span>file<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, raw<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#tcontentfn" class="tsd-signature-type">TContentFn</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
-						<li class="tsd-signature tsd-kind-icon">write<span class="tsd-signature-symbol">(</span>file<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
-						<li class="tsd-signature tsd-kind-icon">write<span class="tsd-signature-symbol">(</span>file<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, raw<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#tcontentfn" class="tsd-signature-type">TContentFn</a>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
+						<li class="tsd-signature tsd-kind-icon">write<span class="tsd-signature-symbol">(</span>dest<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, content<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#twritefn" class="tsd-signature-type">TWriteFn</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
+						<li class="tsd-signature tsd-kind-icon">write<span class="tsd-signature-symbol">(</span>dest<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
+						<li class="tsd-signature tsd-kind-icon">write<span class="tsd-signature-symbol">(</span>dest<span class="tsd-signature-symbol">: </span><a href="globals.html#tsource" class="tsd-signature-type">TSource</a>, content<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#twritefn" class="tsd-signature-type">TWriteFn</a>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/write/index.ts#L13">public/fs/write/index.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/write/index.ts#L13">public/fs/write/index.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1618,10 +1804,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>file: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
+									<h5>dest: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> raw: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#tcontentfn" class="tsd-signature-type">TContentFn</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> content: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#twritefn" class="tsd-signature-type">TWriteFn</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">function</span></h4>
@@ -1642,7 +1828,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/write/index.ts#L14">public/fs/write/index.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/write/index.ts#L14">public/fs/write/index.ts:14</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1654,7 +1840,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>file: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
+									<h5>dest: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a></h5>
@@ -1678,7 +1864,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/e3d6f5c/src/public/fs/write/index.ts#L15">public/fs/write/index.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/rafamel/kpo/blob/6e17b02/src/public/fs/write/index.ts#L15">public/fs/write/index.ts:15</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1690,10 +1876,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>file: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
+									<h5>dest: <a href="globals.html#tsource" class="tsd-signature-type">TSource</a></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> raw: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#tcontentfn" class="tsd-signature-type">TContentFn</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> content: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#twritefn" class="tsd-signature-type">TWriteFn</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="interfaces/ifsupdateoptions.html" class="tsd-signature-type">IFsUpdateOptions</a></h5>
@@ -1783,9 +1969,6 @@
 						<a href="globals.html#tchildrendefinition" class="tsd-kind-icon">TChildren<wbr>Definition</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#tcontentfn" class="tsd-kind-icon">TContent<wbr>Fn</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#tcopyfilterfn" class="tsd-kind-icon">TCopy<wbr>Filter<wbr>Fn</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
@@ -1795,7 +1978,16 @@
 						<a href="globals.html#tdestination" class="tsd-kind-icon">TDestination</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#tjsonfn" class="tsd-kind-icon">TJson<wbr>Fn</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#tlogger" class="tsd-kind-icon">TLogger</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#treadfn" class="tsd-kind-icon">TRead<wbr>Fn</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#treadwritefn" class="tsd-kind-icon">TRead<wbr>Write<wbr>Fn</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#tscript" class="tsd-kind-icon">TScript</a>
@@ -1805,6 +1997,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#tsource" class="tsd-kind-icon">TSource</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#twritefn" class="tsd-kind-icon">TWrite<wbr>Fn</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#parallel" class="tsd-kind-icon">parallel</a>

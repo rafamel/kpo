@@ -1,3 +1,25 @@
+# [0.9.0](https://github.com/rafamel/kpo/compare/v0.8.0...v0.9.0) (2019-05-20)
+
+
+### Code Refactoring
+
+* **public/fs:** armonizes callbacks behavior for fs functions ([74f0bec](https://github.com/rafamel/kpo/commit/74f0bec))
+* **public/fs:** write, rw, and json callbacks take an object instead of several params ([d43f33a](https://github.com/rafamel/kpo/commit/d43f33a))
+
+
+### Features
+
+* **public/fs:** rw and json can take a dest param ([d6bbd0a](https://github.com/rafamel/kpo/commit/d6bbd0a))
+
+
+### BREAKING CHANGES
+
+* **public/fs:** Callbacks for fs functions now receive an object with the appropriate data for each
+case
+* **public/fs:** write, rw, and json callbacks signature has changed
+
+
+
 # [0.8.0](https://github.com/rafamel/kpo/compare/v0.7.0...v0.8.0) (2019-05-20)
 
 
