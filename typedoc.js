@@ -14,5 +14,11 @@ module.exports = {
   excludePrivate: true,
   excludeNotExported: false,
   readme: path.join(project.get('paths.root'), 'README.md'),
-  exclude: ['**/__mocks__/**/*', '**/src/!(types)*', '**/src/!(public)/**/*']
+  exclude: [
+    '**/__mocks__/**/*',
+    '**/src/!(types)*',
+    '**/src/!(public)/**/*',
+    '**/src/public/fs/*/!(index)*',
+    '**/src/public/fs/log.ts'
+  ]
 };
