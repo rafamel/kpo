@@ -1,3 +1,9 @@
+export type TSource =
+  | string
+  | string[]
+  | Promise<string[]>
+  | (() => string[] | Promise<string[]>);
+
 /**
  * Options taken by read *fs* functions.
  */

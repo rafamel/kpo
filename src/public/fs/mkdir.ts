@@ -6,7 +6,7 @@ import { parallel } from 'promist';
 import logger from '~/utils/logger';
 import chalk from 'chalk';
 import expose from '~/utils/expose';
-import { IFsCreateDeleteOptions } from './types';
+import { IFsCreateDeleteOptions, TSource } from './types';
 
 export default expose(mkdir);
 /**
@@ -17,11 +17,12 @@ export default expose(mkdir);
  * @returns An asynchronous function -hence, calling `mkdir` won't have any effect until the returned function is called.
  */
 function mkdir(
-  paths: string | string[],
+  paths: TSource,
   options: IFsCreateDeleteOptions = {}
 ): () => Promise<void> {
   return async () => {
     const cwd = process.cwd();
+    paths = typeof paths === 'function' ? await paths() : await paths;
     paths = Array.isArray(paths) ? paths : [paths];
     paths = paths.map((path) => absolute({ path, cwd }));
 

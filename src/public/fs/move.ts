@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { absolute, exists } from '~/utils/file';
-import { IFsUpdateOptions } from './types';
+import { IFsUpdateOptions, TSource } from './types';
 import expose from '~/utils/expose';
 import confirm from '~/utils/confirm';
 import logger from '~/utils/logger';
@@ -14,13 +14,21 @@ export default expose(move);
  * @returns An asynchronous function -hence, calling `move` won't have any effect until the returned function is called.
  */
 function move(
-  src: string | string[] | Promise<string | string[]>,
+  src: TSource,
   dest: string,
   options: IFsUpdateOptions = {}
 ): () => Promise<void> {
   return async () => {
-    src = await src;
+    src = typeof src === 'function' ? await src() : await src;
+
     if (Array.isArray(src)) {
+      // Check dest is a folder
+      if (await exists(dest)) {
+        const stat = await fs.stat(dest);
+        if (!stat.isDirectory()) {
+          throw Error('Destination must be a folder for an array of sources');
+        }
+      }
       for (let source of src) {
         await trunk(source, path.join(dest, path.parse(source).base), options);
       }

@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { absolute, exists } from '~/utils/file';
-import { IFsUpdateOptions } from './types';
+import { IFsUpdateOptions, TSource } from './types';
 import expose, { TExposedOverload } from '~/utils/expose';
 import confirm from '~/utils/confirm';
 import logger from '~/utils/logger';
@@ -13,24 +13,20 @@ export type TCopyFilterFn =
 
 export default expose(copy) as TExposedOverload<
   typeof copy,
-  | [string | string[] | Promise<string | string[]>, string]
-  | [string | string[] | Promise<string | string[]>, string, IFsUpdateOptions]
-  | [string | string[] | Promise<string | string[]>, string, TCopyFilterFn]
-  | [
-      string | string[] | Promise<string | string[]>,
-      string,
-      IFsUpdateOptions | undefined,
-      TCopyFilterFn
-    ]
+  | [TSource, string]
+  | [TSource, string, IFsUpdateOptions]
+  | [TSource, string, TCopyFilterFn]
+  | [TSource, string, IFsUpdateOptions | undefined, TCopyFilterFn]
 >;
 
+// TODO allow to take an option to duplicate folder structure on dest from a base + don't allow it when src is upwards instead of nested in that folder
 function copy(
-  src: string | string[] | Promise<string | string[]>,
+  src: TSource,
   dest: string,
   filter?: TCopyFilterFn
 ): () => Promise<void>;
 function copy(
-  src: string | string[] | Promise<string | string[]>,
+  src: TSource,
   dest: string,
   options?: IFsUpdateOptions,
   filter?: TCopyFilterFn
@@ -40,14 +36,18 @@ function copy(
  * It is an *exposed* function: call `copy.fn()`, which takes the same arguments, in order to execute on call.
  * @returns An asynchronous function -hence, calling `copy` won't have any effect until the returned function is called.
  */
-function copy(
-  src: string | string[] | Promise<string | string[]>,
-  dest: string,
-  ...args: any[]
-): () => Promise<void> {
+function copy(src: TSource, dest: string, ...args: any[]): () => Promise<void> {
   return async () => {
-    src = await src;
+    src = typeof src === 'function' ? await src() : await src;
+
     if (Array.isArray(src)) {
+      // Check dest is a folder
+      if (await exists(dest)) {
+        const stat = await fs.stat(dest);
+        if (!stat.isDirectory()) {
+          throw Error('Destination must be a folder for an array of sources');
+        }
+      }
       for (let source of src) {
         await trunk(source, path.join(dest, path.parse(source).base), args);
       }
