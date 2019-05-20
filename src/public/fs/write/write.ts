@@ -1,41 +1,41 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { IFsUpdateOptions, TContentFn } from '../types';
+import { IFsUpdateOptions, TWriteFn } from '../types';
 import { exists, absolute } from '~/utils/file';
 import confirm from '~/utils/confirm';
 import { open } from '~/utils/errors';
 import { log } from '../utils';
 
 export default async function write(
-  file: string | string[],
-  raw?: string | TContentFn,
+  dest: string | string[],
+  content?: string | TWriteFn,
   options: IFsUpdateOptions = {}
 ): Promise<void> {
   options = Object.assign({ overwrite: true }, options);
 
-  Array.isArray(file)
-    ? await Promise.all(file.map((item) => each(item, raw, options)))
-    : await each(file, raw, options);
+  Array.isArray(dest)
+    ? await Promise.all(dest.map((file) => each(file, content, options)))
+    : await each(dest, content, options);
 }
 
 export async function each(
-  file: string,
-  raw: void | string | TContentFn,
+  dest: string,
+  content: void | string | TWriteFn,
   options: IFsUpdateOptions
 ): Promise<void> {
   const cwd = process.cwd();
-  file = absolute({ path: file, cwd });
-  const relative = './' + path.relative(process.cwd(), file);
+  dest = absolute({ path: dest, cwd });
+  const relative = './' + path.relative(process.cwd(), dest);
 
-  if (typeof raw === 'function') {
+  if (typeof content === 'function') {
     try {
-      raw = await raw({ file });
+      content = await content({ dest });
     } catch (err) {
       throw open(err);
     }
   }
 
-  const doesExist = await exists(file);
+  const doesExist = await exists(dest);
   if (options.fail && doesExist) {
     throw Error(`File already exists: ${relative}`);
   }
@@ -47,7 +47,7 @@ export async function each(
 
   if (!(await confirm(`Write "${relative}"?`, options))) return;
 
-  await fs.ensureDir(path.parse(file).dir);
-  await fs.writeFile(file, raw ? String(raw) : '');
+  await fs.ensureDir(path.dirname(dest));
+  await fs.writeFile(dest, content ? String(content) : '');
   log(options, 'info')(`Written: ${relative}`);
 }

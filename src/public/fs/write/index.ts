@@ -1,20 +1,20 @@
 import expose, { TExposedOverload } from '~/utils/expose';
-import { IFsUpdateOptions, TContentFn, TSource } from '../types';
+import { IFsUpdateOptions, TWriteFn, TSource } from '../types';
 import trunk from './write';
 
 export default expose(write) as TExposedOverload<
   typeof write,
   | [TSource]
-  | [TSource, undefined | string | TContentFn]
+  | [TSource, undefined | string | TWriteFn]
   | [TSource, IFsUpdateOptions]
-  | [TSource, undefined | string | TContentFn, IFsUpdateOptions]
+  | [TSource, undefined | string | TWriteFn, IFsUpdateOptions]
 >;
 
-function write(file: TSource, raw?: string | TContentFn): () => Promise<void>;
-function write(file: TSource, options?: IFsUpdateOptions): () => Promise<void>;
+function write(dest: TSource, content?: string | TWriteFn): () => Promise<void>;
+function write(dest: TSource, options?: IFsUpdateOptions): () => Promise<void>;
 function write(
-  file: TSource,
-  raw?: string | TContentFn,
+  dest: TSource,
+  content?: string | TWriteFn,
   options?: IFsUpdateOptions
 ): () => Promise<void>;
 /**
@@ -22,7 +22,7 @@ function write(
  * It is an *exposed* function: call `write.fn()`, which takes the same arguments, in order to execute on call.
  * @returns An asynchronous function -hence, calling `write` won't have any effect until the returned function is called.
  */
-function write(file: TSource, ...args: any[]): () => Promise<void> {
+function write(dest: TSource, ...args: any[]): () => Promise<void> {
   return async () => {
     const hasRaw =
       typeof args[0] === 'string' ||
@@ -30,7 +30,7 @@ function write(file: TSource, ...args: any[]): () => Promise<void> {
       typeof args[0] === 'undefined';
 
     return trunk(
-      typeof file === 'function' ? await file() : await file,
+      typeof dest === 'function' ? await dest() : await dest,
       hasRaw ? args[0] : undefined,
       hasRaw ? args[1] : args[0]
     );

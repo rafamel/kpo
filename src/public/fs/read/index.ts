@@ -1,6 +1,6 @@
 import expose from '~/utils/expose';
 import { TScript } from '~/types';
-import { TSource, IFsReadOptions } from '../types';
+import { TSource, IFsReadOptions, TReadFn } from '../types';
 import trunk from './read';
 
 export default expose(read);
@@ -11,13 +11,13 @@ export default expose(read);
  * @returns An asynchronous function -hence, calling `read` won't have any effect until the returned function is called.
  */
 function read(
-  file: TSource,
-  fn: (raw?: string) => TScript,
+  src: TSource,
+  fn: TReadFn,
   options?: IFsReadOptions
 ): () => Promise<TScript> {
   return async () => {
     return trunk(
-      typeof file === 'function' ? await file() : await file,
+      typeof src === 'function' ? await src() : await src,
       fn,
       options
     );

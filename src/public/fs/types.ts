@@ -12,6 +12,15 @@ export type TCopyFilterFn =
   | ((src: string, dest: string) => boolean)
   | ((src: string, dest: string) => Promise<boolean>);
 
+export type TReadFn = (data: {
+  src: string;
+  raw?: string;
+}) => TScript | Promise<TScript>;
+
+export type TWriteFn = (data: {
+  dest: string;
+}) => string | void | Promise<string | void>;
+
 export type TReadWriteFn = (data: {
   src: string;
   dest: string;
