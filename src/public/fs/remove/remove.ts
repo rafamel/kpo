@@ -5,7 +5,7 @@ import confirm from '~/utils/confirm';
 import { parallel } from 'promist';
 import chalk from 'chalk';
 import { IFsCreateDeleteOptions } from '../types';
-import log from '../log';
+import { log } from '../utils';
 
 export default async function remove(
   paths: string | string[],

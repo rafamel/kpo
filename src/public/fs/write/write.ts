@@ -4,7 +4,7 @@ import { IFsUpdateOptions, TContentFn } from '../types';
 import { exists, absolute } from '~/utils/file';
 import confirm from '~/utils/confirm';
 import { open } from '~/utils/errors';
-import log from '../log';
+import { log } from '../utils';
 
 export default async function write(
   file: string | string[],
