@@ -19,6 +19,6 @@ module.exports = {
     '**/src/!(types)*',
     '**/src/!(public)/**/*',
     '**/src/public/fs/*/!(index)*',
-    '**/src/public/fs/log.ts'
+    '**/src/public/fs/utils.ts'
   ]
 };
