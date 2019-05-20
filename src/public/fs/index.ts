@@ -6,3 +6,4 @@ export { default as move } from './move';
 export { default as read } from './read';
 export { default as rw } from './rw';
 export { default as write } from './write';
+export * from './types';

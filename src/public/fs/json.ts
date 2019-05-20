@@ -20,7 +20,7 @@ function json(
 ): () => Promise<void> {
   return async () => {
     const _fn: TContentFn = async (file, raw) => {
-      const json = await fn(raw ? JSON.parse(raw) : undefined);
+      const json = await fn(file, raw ? JSON.parse(raw) : undefined);
       return json ? JSON.stringify(json, null, 2) : undefined;
     };
 
