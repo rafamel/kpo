@@ -1,51 +1,38 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { absolute, exists } from '~/utils/file';
-import { IFsUpdateOptions, TSource } from './types';
-import expose from '~/utils/expose';
+import { IFsUpdateOptions } from '../types';
 import confirm from '~/utils/confirm';
 import logger from '~/utils/logger';
 
-export default expose(move);
-
-/**
- * Move files or directories. If an array of paths is passed as `src`, `dest` will be expected to be a directory.
- * It is an *exposed* function: call `move.fn()`, which takes the same arguments, in order to execute on call.
- * @returns An asynchronous function -hence, calling `move` won't have any effect until the returned function is called.
- */
-function move(
-  src: TSource,
+export default async function move(
+  src: string | string[],
   dest: string,
   options: IFsUpdateOptions = {}
-): () => Promise<void> {
-  return async () => {
-    src = typeof src === 'function' ? await src() : await src;
+): Promise<void> {
+  options = Object.assign({ overwrite: true }, options);
 
-    if (Array.isArray(src)) {
-      // Check dest is a folder
-      if (await exists(dest)) {
-        const stat = await fs.stat(dest);
-        if (!stat.isDirectory()) {
-          throw Error('Destination must be a folder for an array of sources');
-        }
+  if (Array.isArray(src)) {
+    // Check dest is a folder
+    if (await exists(dest)) {
+      const stat = await fs.stat(dest);
+      if (!stat.isDirectory()) {
+        throw Error('Destination must be a folder for an array of sources');
       }
-      for (let source of src) {
-        await trunk(source, path.join(dest, path.parse(source).base), options);
-      }
-    } else {
-      await trunk(src, dest, options);
     }
-  };
+    for (let source of src) {
+      await each(source, path.join(dest, path.parse(source).base), options);
+    }
+  } else {
+    await each(src, dest, options);
+  }
 }
 
-/** @hidden */
-export async function trunk(
+export async function each(
   src: string,
   dest: string,
   options: IFsUpdateOptions
 ): Promise<void> {
-  options = Object.assign({ overwrite: true }, options);
-
   const cwd = process.cwd();
   src = absolute({ path: src, cwd });
   dest = absolute({ path: dest, cwd });

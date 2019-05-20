@@ -4,6 +4,15 @@ export type TSource =
   | Promise<string[]>
   | (() => string[] | Promise<string[]>);
 
+export type TCopyFilterFn =
+  | ((src: string, dest: string) => boolean)
+  | ((src: string, dest: string) => Promise<boolean>);
+
+export type TContentFn = (
+  file: string,
+  raw?: string
+) => string | void | Promise<string | void>;
+
 /**
  * Options taken by read *fs* functions.
  */

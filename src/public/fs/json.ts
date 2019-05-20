@@ -1,7 +1,7 @@
 import { IOfType } from '~/types';
 import expose from '~/utils/expose';
 import rw from './rw';
-import { IFsUpdateOptions } from './types';
+import { IFsUpdateOptions, TContentFn, TSource } from './types';
 
 export default expose(json);
 
@@ -11,14 +11,15 @@ export default expose(json);
  * @returns An asynchronous function -hence, calling `json` won't have any effect until the returned function is called.
  */
 function json(
-  file: string,
+  file: TSource,
   fn: (
+    file: string,
     json?: IOfType<any>
   ) => IOfType<any> | void | Promise<IOfType<any> | void>,
-  options: IFsUpdateOptions = {}
+  options?: IFsUpdateOptions
 ): () => Promise<void> {
   return async () => {
-    const _fn = async (raw?: string): Promise<string | undefined> => {
+    const _fn: TContentFn = async (file, raw) => {
       const json = await fn(raw ? JSON.parse(raw) : undefined);
       return json ? JSON.stringify(json, null, 2) : undefined;
     };

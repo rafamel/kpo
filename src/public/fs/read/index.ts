@@ -1,8 +1,7 @@
-import fs from 'fs-extra';
-import { exists, absolute } from '~/utils/file';
 import expose from '~/utils/expose';
-import { IFsReadOptions } from './types';
 import { TScript } from '~/types';
+import { TSource, IFsReadOptions } from '../types';
+import trunk from './read';
 
 export default expose(read);
 
@@ -12,16 +11,15 @@ export default expose(read);
  * @returns An asynchronous function -hence, calling `read` won't have any effect until the returned function is called.
  */
 function read(
-  file: string,
+  file: TSource,
   fn: (raw?: string) => TScript,
-  options: IFsReadOptions = {}
+  options?: IFsReadOptions
 ): () => Promise<TScript> {
   return async () => {
-    const cwd = process.cwd();
-    file = absolute({ path: file, cwd });
-    const doesExist = await exists(file, { fail: options.fail });
-    const raw = doesExist ? await fs.readFile(file).then(String) : undefined;
-
-    return fn(raw);
+    return trunk(
+      typeof file === 'function' ? await file() : await file,
+      fn,
+      options
+    );
   };
 }
