@@ -117,7 +117,7 @@
     "command-join": "^2.0.0",
     "common-tags": "^1.8.0",
     "concurrently": "^4.1.0",
-    "exits": "^1.0.2",
+    "exits": "^2.0.0",
     "find-up": "^4.0.0",
     "fs-extra": "^8.0.1",
     "glob": "^7.1.4",
@@ -126,7 +126,7 @@
     "manage-path": "^2.0.0",
     "path-key": "^3.1.0",
     "promist": "^0.7.0",
-    "prompts": "^2.0.4",
+    "prompts": "^2.1.0",
     "string-argv": "^0.3.0",
     "terminate-children": "^0.1.0"
   },
