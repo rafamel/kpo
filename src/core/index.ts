@@ -37,6 +37,7 @@ export default async function contain<T>(
     const core = await getCore(manager, options);
     options = core.options;
 
+    core.initialize();
     const response = await fn(core);
     manager.restore();
     return response;
