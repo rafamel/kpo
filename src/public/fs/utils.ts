@@ -1,6 +1,7 @@
 /* eslint-disable eqeqeq */
 import fs from 'fs-extra';
 import path from 'path';
+import { series } from 'promist';
 import { absolute, exists } from '~/utils/file';
 import logger from '~/utils/logger';
 import { IFsReadOptions, TDestination } from './types';
@@ -56,7 +57,7 @@ export async function resolver<T>(
     return { source, destination };
   });
 
-  return Promise.all(
-    items.map(({ source, destination }) => fn(source, destination))
+  return series.map(items, ({ source, destination }) =>
+    fn(source, destination)
   );
 }
