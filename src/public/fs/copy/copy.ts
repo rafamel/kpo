@@ -30,7 +30,12 @@ export async function each(
   };
 
   const srcExist = await exists(src, { fail: options.fail });
-  if (!srcExist) {
+  const skip =
+    !srcExist ||
+    (!options.overwrite &&
+      (await exists(dest)) &&
+      (await fs.stat(dest).then((stat) => !stat.isDirectory())));
+  if (skip) {
     log(options, 'info')(
       `Copy skipped: "${relatives.src}" to "${relatives.dest}"`
     );
