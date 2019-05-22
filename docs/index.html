@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>kpo 0.9.0</title>
+	<title>kpo 0.9.1</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">kpo 0.9.0</a>
+					<a href="index.html" class="title">kpo 0.9.1</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -54,7 +54,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> kpo 0.9.0</h1>
+			<h1> kpo 0.9.1</h1>
 		</div>
 	</div>
 </header>
@@ -82,7 +82,6 @@
 				<h2 id="commands">Commands</h2>
 				<h3 id="cli-options">CLI options</h3>
 				<p>These are common options for all <em>kpo</em> subcommands. They must always be passed before any subcommand or scope.</p>
-				<!-- markdownlint-disable MD040 MD031 -->
 				<pre><code>Usage:
   $ kpo [options] [@scope] [tasks] -- [streamArgs]
   $ kpo [options] [@scope] [:command] [arguments]
@@ -107,12 +106,10 @@ Commands:
 
 Examples:
   $ kpo foo bar baz
-  $ kpo -e <span class="hljs-attribute">NODE_ENV</span>=development -e <span class="hljs-attribute">BABEL_ENV</span>=browser :<span class="hljs-builtin-name">run</span> foo bar baz</code></pre><!-- markdownlint-enable MD040 MD031 -->
-				<h3 id="kpo-run-default-command"><code>kpo :run</code> - default command</h3>
+  $ kpo -e <span class="hljs-attribute">NODE_ENV</span>=development -e <span class="hljs-attribute">BABEL_ENV</span>=browser :<span class="hljs-builtin-name">run</span> foo bar baz</code></pre><h3 id="kpo-run-default-command"><code>kpo :run</code> - default command</h3>
 				<p><code>kpo :run</code> doesn&#39;t take additional options, other than the general <a href="#kpo-cli-options">CLI options.</a></p>
 				<p>Note that <strong>the <code>:run</code> command can be omitted,</strong> that is, if no command is passed, <em>kpo</em> will assume you&#39;re passing it tasks to run. Hence, <code>kpo :run foo bar</code> and <code>kpo foo bar</code> are equivalent.</p>
 				<h3 id="kpo-cmd-aliased-kpo-"><code>kpo :cmd</code> - aliased <code>kpo :</code></h3>
-				<!-- markdownlint-disable MD040 MD031 -->
 				<pre><code>Usage:
   $ kpo <span class="hljs-function">:cmd</span> [options] [<span class="hljs-keyword">command</span>] [arguments]
 
@@ -123,9 +120,7 @@ Options:
 
 Examples:
   $ kpo : foo <span class="hljs-params">--bar</span> <span class="hljs-params">--baz</span>
-  $ kpo <span class="hljs-function">:cmd</span> foo <span class="hljs-params">--bar</span> <span class="hljs-params">--baz</span></code></pre><!-- markdownlint-enable MD040 MD031 -->
-				<h3 id="kpo-list"><code>kpo :list</code></h3>
-				<!-- markdownlint-disable MD040 MD031 -->
+  $ kpo <span class="hljs-function">:cmd</span> foo <span class="hljs-params">--bar</span> <span class="hljs-params">--baz</span></code></pre><h3 id="kpo-list"><code>kpo :list</code></h3>
 				<pre><code>Usage:
   $ kpo :<span class="hljs-keyword">list</span> [<span class="hljs-keyword">options</span>]
 
@@ -134,9 +129,7 @@ Lists tasks
 Option<span class="hljs-variable">s:</span>
   --<span class="hljs-keyword">all</span>            List <span class="hljs-keyword">all</span>, including hidden tasks
   --scopes         List scopes
-  -h, --<span class="hljs-keyword">help</span>       Show <span class="hljs-keyword">help</span></code></pre><!-- markdownlint-enable MD040 MD031 -->
-				<h3 id="kpo-raise"><code>kpo :raise</code></h3>
-				<!-- markdownlint-disable MD040 MD031 -->
+  -h, --<span class="hljs-keyword">help</span>       Show <span class="hljs-keyword">help</span></code></pre><h3 id="kpo-raise"><code>kpo :raise</code></h3>
 				<pre><code>Usage:
   $ kpo :raise [<span class="hljs-keyword">options</span>]
 
@@ -147,9 +140,7 @@ Option<span class="hljs-variable">s:</span>
   --<span class="hljs-keyword">confirm</span>        Prompt <span class="hljs-keyword">for</span> <span class="hljs-keyword">changes</span> confirmation before performing <span class="hljs-keyword">a</span> <span class="hljs-keyword">write</span> operation
   --dry            Dry run
   --fail           Fails <span class="hljs-keyword">if</span> there are any <span class="hljs-keyword">changes</span> <span class="hljs-keyword">to</span> <span class="hljs-keyword">be</span> made <span class="hljs-keyword">on</span> dry <span class="hljs-keyword">mode</span>, <span class="hljs-built_in">or</span> <span class="hljs-keyword">if</span> the user cancels the action when confirmation <span class="hljs-keyword">is</span> required
-  -h, --<span class="hljs-keyword">help</span>       Show <span class="hljs-keyword">help</span></code></pre><!-- markdownlint-enable MD040 MD031 -->
-				<h3 id="kpo-series"><code>kpo :series</code></h3>
-				<!-- markdownlint-disable MD040 MD031 -->
+  -h, --<span class="hljs-keyword">help</span>       Show <span class="hljs-keyword">help</span></code></pre><h3 id="kpo-series"><code>kpo :series</code></h3>
 				<pre><code><span class="hljs-symbol">Usage:</span>
   $ kpo <span class="hljs-symbol">:series</span> [options] [commands] -- [streamArgs]
 
@@ -160,9 +151,7 @@ Runs commands <span class="hljs-keyword">in</span> series
   -h, --help       Show help
 
 <span class="hljs-symbol">Examples:</span>
-  $ kpo <span class="hljs-symbol">:series</span> <span class="hljs-string">"foo --bar"</span> <span class="hljs-string">"baz --foobar"</span></code></pre><!-- markdownlint-enable MD040 MD031 -->
-				<h3 id="kpo-parallel"><code>kpo :parallel</code></h3>
-				<!-- markdownlint-disable MD040 MD031 -->
+  $ kpo <span class="hljs-symbol">:series</span> <span class="hljs-string">"foo --bar"</span> <span class="hljs-string">"baz --foobar"</span></code></pre><h3 id="kpo-parallel"><code>kpo :parallel</code></h3>
 				<pre><code>Usage:
   $ kpo :parallel [options] [commands] <span class="hljs-comment">-- [streamArgs]</span>
 
@@ -175,9 +164,7 @@ Options:
   -h, <span class="hljs-comment">--help                Show help</span>
 
 Examples:
-  $ kpo :parallel -n foo,baz -c blue,magenta <span class="hljs-string">"foo --bar"</span> <span class="hljs-string">"baz --foobar"</span></code></pre><!-- markdownlint-enable MD040 MD031 -->
-				<h3 id="kpo-stream"><code>kpo :stream</code></h3>
-				<!-- markdownlint-disable MD040 MD031 -->
+  $ kpo :parallel -n foo,baz -c blue,magenta <span class="hljs-string">"foo --bar"</span> <span class="hljs-string">"baz --foobar"</span></code></pre><h3 id="kpo-stream"><code>kpo :stream</code></h3>
 				<pre><code><span class="hljs-symbol">Usage</span>:
   $ kpo :<span class="hljs-keyword">stream </span>[options] [commands]
 
@@ -191,7 +178,7 @@ Options:</span>
   -h, --help       Show help
 <span class="hljs-symbol">
 Examples:</span>
-  $ kpo :<span class="hljs-keyword">stream </span>:cmd foo --<span class="hljs-keyword">bar </span>--<span class="hljs-keyword">baz</span></code></pre><!-- markdownlint-enable MD040 MD031 -->
+  $ kpo :<span class="hljs-keyword">stream </span>:cmd foo --<span class="hljs-keyword">bar </span>--<span class="hljs-keyword">baz</span></code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

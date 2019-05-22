@@ -1,3 +1,15 @@
+## [0.9.1](https://github.com/rafamel/kpo/compare/v0.9.0...v0.9.1) (2019-05-22)
+
+
+### Bug Fixes
+
+* **core:** ensures core initialization on retrieval ([333cb26](https://github.com/rafamel/kpo/commit/333cb26))
+* **deps:** updates dependencies ([e5abae6](https://github.com/rafamel/kpo/commit/e5abae6))
+* **public/fs:** correctly identifies skipped copies for !options.overwrite and destination is an exi ([7da1874](https://github.com/rafamel/kpo/commit/7da1874))
+* **public/fs:** guarantees utils src/dest resolver callbacks run serially ([8111110](https://github.com/rafamel/kpo/commit/8111110))
+
+
+
 # [0.9.0](https://github.com/rafamel/kpo/compare/v0.8.0...v0.9.0) (2019-05-20)
 
 
