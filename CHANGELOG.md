@@ -1,3 +1,18 @@
+# [0.10.0](https://github.com/rafamel/kpo/compare/v0.9.1...v0.10.0) (2019-06-11)
+
+
+### Bug Fixes
+
+* **deps:** updates dependencies ([a2043f5](https://github.com/rafamel/kpo/commit/a2043f5))
+* **public:** fixes json typings ([7e6e89f](https://github.com/rafamel/kpo/commit/7e6e89f))
+
+
+### Features
+
+* **public:** adds stages ([6d5c6c9](https://github.com/rafamel/kpo/commit/6d5c6c9))
+
+
+
 ## [0.9.1](https://github.com/rafamel/kpo/compare/v0.9.0...v0.9.1) (2019-05-22)
 
 
