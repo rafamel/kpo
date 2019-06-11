@@ -10,7 +10,7 @@ import {
 } from './types';
 
 export default expose(json) as TExposedOverload<
-  typeof rw,
+  typeof json,
   | [TSource, TDestination, TJsonFn, IFsUpdateOptions]
   | [TSource, TDestination, TJsonFn]
   | [TSource, TJsonFn, IFsUpdateOptions]
