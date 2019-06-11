@@ -1,6 +1,6 @@
 import { IChild } from '~/core/types';
 import { parallel, series } from '~/public';
-import join from 'command-join';
+import { commandJoin as join } from 'command-join';
 import { NODE_PATH, KPO_PATH } from '~/constants';
 import { IMultiExecOptions } from '~/types';
 import chalk from 'chalk';

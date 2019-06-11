@@ -112,9 +112,9 @@
   },
   "dependencies": {
     "arg": "^4.1.0",
-    "as-table": "^1.0.38",
+    "as-table": "^1.0.47",
     "cli-belt": "^0.3.1",
-    "command-join": "^2.0.0",
+    "command-join": "^3.0.0",
     "common-tags": "^1.8.0",
     "concurrently": "^4.1.0",
     "exits": "^2.0.0",
@@ -122,13 +122,13 @@
     "fs-extra": "^8.0.1",
     "glob": "^7.1.4",
     "js-yaml": "^3.13.1",
-    "loglevel": "^1.6.1",
+    "loglevel": "^1.6.2",
     "manage-path": "^2.0.0",
     "path-key": "^3.1.0",
     "promist": "^0.7.0",
     "prompts": "^2.1.0",
     "string-argv": "^0.3.0",
-    "terminate-children": "^0.1.0"
+    "terminate-children": "^0.1.1"
   },
   "husky": {
     "hooks": {

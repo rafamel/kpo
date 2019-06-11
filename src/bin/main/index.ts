@@ -3,7 +3,7 @@ import { loadPackage, flags, safePairs, splitBy } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
 import arg from 'arg';
 import chalk from 'chalk';
-import join from 'command-join';
+import { commandJoin as join } from 'command-join';
 import contain from '~/core';
 import { TLogger, IOfType } from '~/types';
 import { run } from '~/commands';

@@ -1,7 +1,7 @@
 import logger from '~/utils/logger';
 import expose from '~/utils/expose';
 import exec from '~/utils/exec';
-import join from 'command-join';
+import { commandJoin as join } from 'command-join';
 import { CONCURRENTLY_PATH } from '~/constants';
 import { KpoError } from '~/utils/errors';
 import { IOfType, IMultiExecOptions } from '~/types';

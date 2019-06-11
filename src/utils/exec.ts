@@ -1,7 +1,7 @@
 import { spawn, fork as _fork, SpawnOptions, ForkOptions } from 'child_process';
 import { DEFAULT_STDIO } from '~/constants';
 import logger from '~/utils/logger';
-import join from 'command-join';
+import { commandJoin as join } from 'command-join';
 import { IExecOptions } from '~/types';
 import { absolute } from './file';
 import EnvManager from '~/utils/env-manager';
