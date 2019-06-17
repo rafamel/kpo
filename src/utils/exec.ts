@@ -37,7 +37,7 @@ export default async function exec(
 
   logger.debug('Executing: ' + join([cmd].concat(args)));
 
-  const ps = fork ? _fork(cmd, args, opts) : spawn(cmd, args, opts);
+  const ps = fork ? _fork(cmd, args, opts) : spawn(cmd, [join(args)], opts);
   const promise = new Promise((resolve: (arg: void) => void, reject) => {
     ps.on('error', (err: any) => reject(err));
     ps.on('close', (code: number) => {
