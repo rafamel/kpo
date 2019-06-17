@@ -1,3 +1,27 @@
+# [0.11.0](https://github.com/rafamel/kpo/compare/v0.10.0...v0.11.0) (2019-06-17)
+
+
+### Bug Fixes
+
+* **utils/exec:** fixes arguments not being properly parsed as spawn is always used w/ shell=true ([d864efb](https://github.com/rafamel/kpo/commit/d864efb))
+
+
+### Features
+
+* **core/tasks:** binds function tasks to their parent object ([29c43dd](https://github.com/rafamel/kpo/commit/29c43dd))
+
+
+### Reverts
+
+* **public/stages:** removes stages ([8a17831](https://github.com/rafamel/kpo/commit/8a17831))
+
+
+### BREAKING CHANGES
+
+* **public/stages:** Removes public stages function
+
+
+
 # [0.10.0](https://github.com/rafamel/kpo/compare/v0.9.1...v0.10.0) (2019-06-11)
 
 
