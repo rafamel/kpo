@@ -4,28 +4,38 @@ import purePath from './pure-path';
 import { KpoError } from '~/utils/errors';
 
 export default function getFromKpo(path: string, kpo: IScripts): ITask {
-  const task = trunk(purePath(path).split('.'), kpo, '');
+  const task = trunk(purePath(path).split('.'), kpo, null, '');
   return { ...task, path: purePath(task.path) };
 }
 
-export function trunk(arr: string[], obj: any, path: string): ITask {
+export function trunk(
+  arr: string[],
+  current: any,
+  parent: any,
+  path: string
+): ITask {
   if (!arr.length) {
     if (
-      typeof obj === 'object' &&
-      !Array.isArray(obj) &&
-      obj !== null &&
-      !(obj instanceof Error)
+      typeof current === 'object' &&
+      !Array.isArray(current) &&
+      current !== null &&
+      !(current instanceof Error)
     ) {
-      const task = trunk(['default'], obj, path);
-      if (obj.hasOwnProperty('_description')) {
+      const task = trunk(['default'], current, parent, path);
+      if (current.hasOwnProperty('_description')) {
         if (task.hasOwnProperty('description')) {
           throw Error(`There are several descriptions for ${purePath(path)}`);
         }
-        return { ...task, description: obj._description };
+        return { ...task, description: current._description };
       }
       return task;
     }
-    return { path, hidden: false, script: obj };
+
+    return {
+      path,
+      hidden: false,
+      script: typeof current === 'function' ? current.bind(parent) : current
+    };
   }
 
   const key = arr.shift() as string;
@@ -35,12 +45,16 @@ export function trunk(arr: string[], obj: any, path: string): ITask {
         purePath(path ? `${path}.${key}` : key)
     );
   }
-  if (typeof obj !== 'object' || obj === null || obj instanceof Error) {
+  if (
+    typeof current !== 'object' ||
+    current === null ||
+    current instanceof Error
+  ) {
     throw Error(`${purePath(path)} is not an object`);
   }
 
   const keys = key[0] === '$' ? [key] : [key, `$${key}`];
-  const props = keys.filter((key) => obj.hasOwnProperty(key));
+  const props = keys.filter((key) => current.hasOwnProperty(key));
   if (props.length > 1) {
     throw Error(
       `There are several tasks matching ` +
@@ -55,7 +69,8 @@ export function trunk(arr: string[], obj: any, path: string): ITask {
   const actualKey = props.shift() as string;
   const task = trunk(
     arr,
-    obj[actualKey],
+    current[actualKey],
+    current,
     path ? `${path}.${actualKey}` : actualKey
   );
   return actualKey[0] === '$' ? { ...task, hidden: true } : task;
