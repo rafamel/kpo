@@ -109,12 +109,11 @@ export default async function main(argv: string[]): Promise<void> {
   }
 
   // Log full command to be run w/ resolved scopes
-  const plain = join(cmd._);
   logger.info(
     chalk.bold('kpo') +
       (scopes.length ? chalk.bold.yellow(' @' + scopes.join(' @')) : '') +
       chalk.bold.blue(' ' + first + ' ') +
-      (plain.slice(-3) === ' --' ? plain.slice(0, -3) : plain)
+      (cmd._.slice(-1)[0] === '--' ? join(cmd._.slice(0, -1)) : join(cmd._))
   );
 
   await contain(options, async function(core): Promise<void> {
