@@ -1,7 +1,6 @@
 {
   "name": "kpo",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.11.0",
   "author": "Rafa Mel",
   "description": "A task runner that goes where npm scripts won't, for the true capo",
   "keywords": [
@@ -16,7 +15,7 @@
     "lerna"
   ],
   "bin": {
-    "kpo": "dist-node/bin/kpo.js"
+    "kpo": "dist/bin/kpo.js"
   },
   "engines": {
     "node": ">=8"
