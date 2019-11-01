@@ -56,7 +56,7 @@ export default async function raise(
     ? Object.keys(scripts)
     : Object.keys(scripts).filter((key) => {
         const value = scripts[key];
-        let argv = toArgv(value);
+        const argv = toArgv(value);
         if (argv.shift() !== 'kpo') return false;
         if (argv[0] === ':run') argv.shift();
         return (

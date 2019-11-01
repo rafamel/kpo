@@ -1,6 +1,6 @@
 import prompts from 'prompts';
 import { TScript } from '~/types';
-import { status } from 'promist';
+import { Promist } from 'promist';
 import expose, { TExposedOverload } from '~/utils/expose';
 
 /**
@@ -47,7 +47,7 @@ function confirm(...args: any[]): () => Promise<TScript> {
     const options: IConfirmOptions =
       args[1] || (args[0] && typeof args[0] !== 'string' ? args[0] : {});
 
-    const promise = status(
+    const promise = Promist.from(
       prompts({
         type: 'confirm',
         name: 'value',

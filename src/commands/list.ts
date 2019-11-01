@@ -23,7 +23,7 @@ export default async function list(
   core: ICore,
   options: IListOptions = {}
 ): Promise<void> {
-  let tasks = Object.assign({}, core.tasks);
+  const tasks = Object.assign({}, core.tasks);
   if (!options.all) {
     if (tasks.kpo) tasks.kpo = tasks.kpo.filter((task) => !task.hidden);
     if (tasks.pkg) tasks.pkg = tasks.pkg.filter((task) => !task.hidden);
@@ -39,7 +39,12 @@ export function fromTasks(tasks: ITasks): string {
   let str = '';
 
   [['kpo', 'kpo'], ['pkg', 'package']].forEach(([key, name]) => {
-    if (!tasks.hasOwnProperty(key) || !(tasks as any)[key].length) return;
+    if (
+      !Object.hasOwnProperty.call(tasks, key) ||
+      !(tasks as any)[key].length
+    ) {
+      return;
+    }
 
     const rows = (tasks as any)[key].map((task: ITask) => [
       chalk.bold(task.path),

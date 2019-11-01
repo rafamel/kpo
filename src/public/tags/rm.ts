@@ -19,7 +19,7 @@ function rm(
  */
 function rm(...args: any[]): () => Promise<void> {
   return async () => {
-    let file = asTag(args.shift(), ...args);
+    const file = asTag(args.shift(), ...args);
     return remove.fn(file, { confirm: false, fail: false });
   };
 }

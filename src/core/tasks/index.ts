@@ -35,7 +35,7 @@ export function getAllTasks(kpo?: IScripts, pkg?: IOfType<any>): ITasks {
     tasks.kpo = paths.map((path) => getFromKpo(path, kpo));
   }
   if (pkg) {
-    tasks.pkg = pkg.hasOwnProperty('scripts')
+    tasks.pkg = Object.hasOwnProperty.call(pkg, 'scripts')
       ? Object.keys(pkg.scripts).map((path) => getFromPackage(path, pkg))
       : [];
     // filter the ones existing in tasks kpo

@@ -62,7 +62,7 @@ export async function fromGlob(
         .concat(FILE_EXT.map((ext) => FILE_NAME + ext))
         .map((file) => path.join(dir, file));
 
-      for (let file of toFind) {
+      for (const file of toFind) {
         if (await exists(file)) return true;
       }
 

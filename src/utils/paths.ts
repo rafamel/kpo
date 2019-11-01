@@ -8,7 +8,7 @@ export default async function getPaths(
 
   const a: string[] = [];
   let b: string[] = [];
-  for (let bins of all) {
+  for (const bins of all) {
     if (bins.length) {
       a.push(bins.shift() as string);
       b = b.concat(bins);

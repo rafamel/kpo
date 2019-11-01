@@ -22,8 +22,8 @@ export function trunk(
       !(current instanceof Error)
     ) {
       const task = trunk(['default'], current, parent, path);
-      if (current.hasOwnProperty('_description')) {
-        if (task.hasOwnProperty('description')) {
+      if (Object.hasOwnProperty.call(current, '_description')) {
+        if (Object.hasOwnProperty.call(task, 'description')) {
           throw Error(`There are several descriptions for ${purePath(path)}`);
         }
         return { ...task, description: current._description };
@@ -54,7 +54,7 @@ export function trunk(
   }
 
   const keys = key[0] === '$' ? [key] : [key, `$${key}`];
-  const props = keys.filter((key) => current.hasOwnProperty(key));
+  const props = keys.filter((key) => Object.hasOwnProperty.call(current, key));
   if (props.length > 1) {
     throw Error(
       `There are several tasks matching ` +

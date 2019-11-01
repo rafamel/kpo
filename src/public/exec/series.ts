@@ -37,7 +37,7 @@ export function create(): ISeries {
       if (!Array.isArray(commands)) commands = [commands];
 
       let err: Error | null = null;
-      for (let command of commands) {
+      for (const command of commands) {
         try {
           if (!command) throw Error(`No command passed for series`);
           await exec(command, args, false, options);

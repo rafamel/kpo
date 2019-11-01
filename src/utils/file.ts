@@ -36,7 +36,7 @@ export async function find(
   if (!stat.isDirectory()) throw Error(`${cwd} is not a directory`);
 
   const filenames: string[] = Array.isArray(filename) ? filename : [filename];
-  for (let name of filenames) {
+  for (const name of filenames) {
     const file = path.join(cwd, name);
     // prettier-ignore
     if (await exists(file)) {

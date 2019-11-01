@@ -11,7 +11,10 @@ export function log(
   level: 'trace' | 'debug' | 'info' | 'warn' | 'error'
 ): (...args: any[]) => void {
   return (...args) => {
-    if (!options.hasOwnProperty('logger')) return logger[level](...args);
+    if (!Object.hasOwnProperty.call(options, 'logger')) {
+      return logger[level](...args);
+    }
+
     if (options.logger) logger[level](...args);
   };
 }

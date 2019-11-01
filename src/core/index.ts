@@ -1,7 +1,7 @@
 import path from 'path';
 import { getSelfPaths, getRootPaths } from './paths';
 import load from './load';
-import { lazy } from 'promist';
+import { LazyPromist } from 'promist';
 import { ICliOptions, TCoreOptions } from '~/types';
 import merge from './merge-options';
 import { getChildren, getScope } from './scope';
@@ -82,7 +82,7 @@ export async function getCore(
     tasks,
     bin,
     root,
-    children: lazy.fn(() => {
+    children: LazyPromist.from(() => {
       return getChildren(
         {
           cwd: scope.cwd,

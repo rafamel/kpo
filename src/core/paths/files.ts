@@ -54,7 +54,7 @@ export async function getDefault(
   directory: string,
   strict: boolean
 ): Promise<IGetFiles> {
-  let dir = path.join(path.parse(directory).dir, path.parse(directory).base);
+  const dir = path.join(path.parse(directory).dir, path.parse(directory).base);
 
   let kpo: string | null = await find(
     FILE_EXT.map((ext) => FILE_NAME + ext),

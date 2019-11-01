@@ -10,8 +10,6 @@
 
 > A task runner that goes where npm scripts won't, for the true [capo.](https://en.wiktionary.org/wiki/capo#Etymology_2)
 
-If you find it useful, consider [starring the project](https://github.com/rafamel/kpo) 💪 and/or following [its author](https://github.com/rafamel) ❤️ -there's more on the way!
-
 ***kpo* is still to be considered experimental; use with caution.**
 
 ## Install

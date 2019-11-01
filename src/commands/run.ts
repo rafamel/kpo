@@ -29,7 +29,7 @@ export default async function run(
     );
   }
 
-  for (let path of tasks) {
+  for (const path of tasks) {
     const task = core.task(path);
     logger.info('Running ' + chalk.bold.green(task.path));
 
@@ -65,7 +65,7 @@ export async function runner(
     }
     await runner(res, core, args);
   } else if (Array.isArray(script)) {
-    for (let sub of script) {
+    for (const sub of script) {
       await runner(sub, core, args);
     }
   } else {

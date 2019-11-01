@@ -120,23 +120,31 @@ export default async function main(argv: string[]): Promise<void> {
     core = await core.scope(scopes);
 
     switch (first) {
-      case ':run':
+      case ':run': {
         const [tasks, args] = splitBy(cmd._);
         return run(core, tasks, args);
-      case ':list':
+      }
+      case ':list': {
         return list(core, cmd._);
-      case ':raise':
+      }
+      case ':raise': {
         return raise(core, cmd._);
-      case ':cmd':
+      }
+      case ':cmd': {
         return _cmd(cmd._);
-      case ':series':
+      }
+      case ':series': {
         return series(cmd._);
-      case ':parallel':
+      }
+      case ':parallel': {
         return parallel(cmd._);
-      case ':stream':
+      }
+      case ':stream': {
         return stream(core, cmd._);
-      default:
+      }
+      default: {
         throw Error('Unknown command ' + first);
+      }
     }
   });
 }
