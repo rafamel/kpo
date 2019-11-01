@@ -63,7 +63,6 @@
   },
   "devDependencies": {
     "@pika/pack": "^0.4.0",
-    "@pika/plugin-standard-pkg": "^0.7.1",
     "@riseup/library": "^0.4.0",
     "@riseup/tooling": "^0.4.0",
     "@types/common-tags": "^1.8.0",
@@ -101,17 +100,7 @@
     "terminate-children": "^0.1.2"
   },
   "@pika/pack": {
-    "pipeline": [
-      [
-        "@pika/plugin-standard-pkg",
-        {
-          "exclude": [
-            "__mocks__/**/*",
-            "__tests__/**/*"
-          ]
-        }
-      ]
-    ]
+    "pipeline": []
   },
   "husky": {
     "hooks": {
