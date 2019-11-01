@@ -1,3 +1,17 @@
+## [0.11.1](https://github.com/rafamel/kpo/compare/v0.11.0...v0.11.1) (2019-11-01)
+
+
+### Bug Fixes
+
+* updates setup and dependencies ([e6492a4](https://github.com/rafamel/kpo/commit/e6492a4d53e4a461218d6a8513941f2bc1e34be6))
+
+
+### Reverts
+
+* **public/tags:** runs kpo without spawning a new process ([8fe287f](https://github.com/rafamel/kpo/commit/8fe287ff534ada9af2c6c02d4e59f35eb52c660c))
+
+
+
 # [0.11.0](https://github.com/rafamel/kpo/compare/v0.10.0...v0.11.0) (2019-06-17)
 
 
