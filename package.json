@@ -85,7 +85,7 @@
     "cli-belt": "^0.3.1",
     "command-join": "^3.0.0",
     "common-tags": "^1.8.0",
-    "concurrently": "^4.1.2",
+    "concurrently": "^5.0.0",
     "exits": "^2.0.1",
     "find-up": "^4.1.0",
     "fs-extra": "^8.1.0",
