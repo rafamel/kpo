@@ -10,15 +10,9 @@
 
 > A task runner that goes where npm scripts won't, for the true [capo.](https://en.wiktionary.org/wiki/capo#Etymology_2)
 
-***kpo* is still to be considered experimental; use with caution.**
-
 ## Install
 
-To install *kpo* globally, run: [`npm install -g kpo`](https://www.npmjs.com/package/kpo)
-
-## Documentation
-
-[Full docs for exported utils are available here](https://rafamel.github.io/kpo/globals.html)
+Run [`npm install -g kpo`](https://www.npmjs.com/package/kpo) for a global install.
 
 ## Commands
 

@@ -1,2 +1,3 @@
-export * from './public';
-export * from './types';
+export default function main(): null {
+  return null;
+}

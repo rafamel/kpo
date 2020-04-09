@@ -14,11 +14,11 @@
     "monorepo",
     "lerna"
   ],
+  "engines": {
+    "node": ">=12"
+  },
   "bin": {
     "kpo": "dist/bin/kpo.js"
-  },
-  "engines": {
-    "node": ">=8"
   },
   "main": "pkg/dist/index.js",
   "types": "pkg/dist/index.d.ts",
@@ -63,45 +63,17 @@
   },
   "devDependencies": {
     "@pika/pack": "^0.4.0",
-    "@riseup/library": "^0.4.0",
-    "@riseup/tooling": "^0.4.0",
-    "@types/common-tags": "^1.8.0",
-    "@types/find-up": "^4.0.0",
-    "@types/fs-extra": "^8.0.1",
-    "@types/jest": "^24.0.21",
-    "@types/js-yaml": "^3.12.1",
-    "@types/loglevel": "^1.6.3",
-    "@types/prompts": "^2.0.2",
-    "@zerollup/ts-transform-paths": "^1.7.3",
+    "@riseup/library": "^0.5.0",
+    "@riseup/tooling": "^0.5.0",
+    "@types/jest": "^25.2.1",
+    "@zerollup/ts-transform-paths": "^1.7.17",
     "coveralls": "^3.0.7",
-    "husky": "^3.0.9",
-    "kpo": "^0.11.0",
+    "husky": "^4.2.3",
+    "kpo": "^0.11.1",
     "onchange": "^6.0.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.8.3"
   },
-  "dependencies": {
-    "arg": "^4.1.1",
-    "as-table": "^1.0.55",
-    "cli-belt": "^0.3.1",
-    "command-join": "^3.0.0",
-    "common-tags": "^1.8.0",
-    "concurrently": "^4.1.2",
-    "exits": "^2.0.1",
-    "find-up": "^4.1.0",
-    "fs-extra": "^8.1.0",
-    "glob": "^7.1.5",
-    "js-yaml": "^3.13.1",
-    "loglevel": "^1.6.4",
-    "manage-path": "^2.0.0",
-    "path-key": "^3.1.0",
-    "promist": "^2.0.0",
-    "prompts": "^2.2.1",
-    "string-argv": "^0.3.1",
-    "terminate-children": "^0.1.2"
-  },
-  "@pika/pack": {
-    "pipeline": []
-  },
+  "dependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "kpo verify"
