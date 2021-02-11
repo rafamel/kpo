@@ -1,6 +1,6 @@
 {
   "name": "kpo",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "author": "Rafa Mel",
   "description": "A task runner that goes where npm scripts won't, for the true capo",
   "keywords": [
@@ -65,15 +65,14 @@
     "@pika/pack": "^0.4.0",
     "@riseup/library": "^0.5.0",
     "@riseup/tooling": "^0.5.0",
-    "@types/jest": "^25.2.1",
-    "@zerollup/ts-transform-paths": "^1.7.17",
-    "coveralls": "^3.0.7",
+    "@types/jest": "^26.0.20",
+    "@zerollup/ts-transform-paths": "^1.7.18",
+    "coveralls": "^3.1.0",
     "husky": "^4.2.3",
     "kpo": "^0.11.1",
     "onchange": "^6.0.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.7"
   },
-  "dependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "kpo verify"
