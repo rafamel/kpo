@@ -77,5 +77,8 @@
     "hooks": {
       "pre-commit": "kpo verify"
     }
+  },
+  "dependencies": {
+    "type-core": "^0.8.0"
   }
 }
