@@ -80,8 +80,10 @@
   },
   "dependencies": {
     "chalk": "^2.4.2",
+    "execa": "^3.4.0",
     "objectpath": "^2.0.0",
     "pipettes": "^0.1.3",
+    "prefix-stream": "^1.0.1",
     "type-core": "^0.8.0"
   }
 }
