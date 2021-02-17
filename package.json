@@ -80,6 +80,7 @@
   },
   "dependencies": {
     "chalk": "^2.4.2",
+    "errorish": "^0.4.0",
     "execa": "^3.4.0",
     "objectpath": "^2.0.0",
     "pipettes": "^0.1.3",
