@@ -1,6 +1,6 @@
 import { Task, Context } from '../../definitions';
-import { run } from '../consume/run';
-import { log } from './log';
+import { run } from '../../utils/run';
+import { log } from '../stdio/log';
 import { NullaryFn, UnaryFn, Empty } from 'type-core';
 import { into, combine } from 'pipettes';
 import chokidar from 'chokidar';

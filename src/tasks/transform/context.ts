@@ -1,5 +1,5 @@
 import { Task, Context } from '../../definitions';
-import { run } from '../consume/run';
+import { run } from '../../utils/run';
 import { UnaryFn, Empty } from 'type-core';
 
 export function context(

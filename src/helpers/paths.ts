@@ -1,5 +1,5 @@
 import { Context } from '../definitions';
-import { log } from '../tasks/create/log';
+import { log } from '../tasks/stdio/log';
 import { UnaryFn } from 'type-core';
 import { into } from 'pipettes';
 import fs from 'fs-extra';

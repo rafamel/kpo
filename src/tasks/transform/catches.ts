@@ -1,5 +1,5 @@
 import { Task, Context, LogLevel } from '../../definitions';
-import { log } from '../create/log';
+import { log } from '../stdio/log';
 import { into } from 'pipettes';
 import { ensure } from 'errorish';
 

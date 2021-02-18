@@ -1,5 +1,5 @@
 import { Task, Context } from '../../definitions';
-import { log } from './log';
+import { log } from '../stdio/log';
 import { into } from 'pipettes';
 
 export function sleep(ms: number): Task.Async {

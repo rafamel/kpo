@@ -1,6 +1,6 @@
 import { Task, Context } from '../../definitions';
-import { run } from '../consume/run';
-import { log } from '../create/log';
+import { run } from '../../utils/run';
+import { log } from '../stdio/log';
 import { Empty, NullaryFn } from 'type-core';
 import { into } from 'pipettes';
 

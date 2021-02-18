@@ -1,7 +1,7 @@
-import { Task, Context } from '../../definitions';
-import { createContext } from '../../helpers/create-context';
-import { isCancelled } from '../../utils';
-import { log } from '../create/log';
+import { Task, Context } from '../definitions';
+import { createContext } from '../helpers/create-context';
+import { log } from '../tasks/stdio/log';
+import { isCancelled } from './is-cancelled';
 import { into } from 'pipettes';
 
 const noop = (): void => undefined;

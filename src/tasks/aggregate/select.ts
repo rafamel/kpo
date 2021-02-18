@@ -1,8 +1,8 @@
 import { Task, Context } from '../../definitions';
-import { isCancelled } from '../../utils';
-import { print } from '../create/print';
-import { log } from '../create/log';
-import { run } from '../consume';
+import { isCancelled } from '../../utils/is-cancelled';
+import { run } from '../../utils/run';
+import { print } from '../stdio/print';
+import { log } from '../stdio/log';
 import { Members, Empty } from 'type-core';
 import { createInterface } from 'readline';
 import { into } from 'pipettes';

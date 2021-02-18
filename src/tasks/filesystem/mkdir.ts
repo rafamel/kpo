@@ -1,7 +1,7 @@
 import { Task, Context } from '../../definitions';
 import { getPaths } from '../../helpers/paths';
-import { isCancelled } from '../../utils';
-import { log } from './log';
+import { isCancelled } from '../../utils/is-cancelled';
+import { log } from '../stdio/log';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
 

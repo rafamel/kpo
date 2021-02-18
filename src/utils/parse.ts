@@ -1,5 +1,5 @@
-import { Task } from '../../definitions';
-import { parseRecord } from '../../helpers/parse-record';
+import { Task } from '../definitions';
+import { parseRecord } from '../helpers/parse-record';
 import { Members } from 'type-core';
 
 export function parse(

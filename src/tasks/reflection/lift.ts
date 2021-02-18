@@ -1,11 +1,11 @@
 import { Task, Context } from '../../definitions';
 import { getAbsolutePath } from '../../helpers/paths';
-import { isCancelled } from '../../utils';
-import { select } from '../transform/select';
-import { write } from '../create/write';
-import { print } from '../create/print';
-import { parse } from '../consume/parse';
-import { run } from '../consume/run';
+import { isCancelled } from '../../utils/is-cancelled';
+import { parse } from '../../utils/parse';
+import { run } from '../../utils/run';
+import { select } from '../aggregate/select';
+import { write } from '../filesystem/write';
+import { print } from '../stdio/print';
 import { Members } from 'type-core';
 import { into } from 'pipettes';
 import chalk from 'chalk';

@@ -1,6 +1,6 @@
 import { Task, Context } from '../../definitions';
 import { parseRecord } from '../../helpers/parse-record';
-import { print } from '../create/print';
+import { print } from '../stdio/print';
 import { into } from 'pipettes';
 import chalk from 'chalk';
 

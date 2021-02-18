@@ -1,6 +1,6 @@
 import { Task, Context } from '../../definitions';
 import { getPrefix } from '../../helpers/prefix';
-import { log } from './log';
+import { log } from '../stdio/log';
 import { Empty } from 'type-core';
 import { WriteStream } from 'tty';
 import { into } from 'pipettes';

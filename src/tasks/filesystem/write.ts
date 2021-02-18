@@ -1,6 +1,6 @@
 import { Task, Context } from '../../definitions';
 import { useDestination } from '../../helpers/paths';
-import { log } from './log';
+import { log } from '../stdio/log';
 import { Serial } from 'type-core';
 import { into } from 'pipettes';
 import fs from 'fs-extra';

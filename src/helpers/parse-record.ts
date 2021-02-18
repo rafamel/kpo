@@ -1,5 +1,5 @@
 import { Task } from '../definitions';
-import { series } from '../tasks/transform/series';
+import { series } from '../tasks/aggregate/series';
 import { context } from '../tasks/transform/context';
 import ObjectPath from 'objectpath';
 

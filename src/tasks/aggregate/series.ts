@@ -1,7 +1,7 @@
 import { Task, Context } from '../../definitions';
-import { isCancelled } from '../../utils';
-import { run } from '../consume/run';
-import { log } from '../create/log';
+import { isCancelled } from '../../utils/is-cancelled';
+import { run } from '../../utils/run';
+import { log } from '../stdio/log';
 import { Empty } from 'type-core';
 import { into } from 'pipettes';
 
