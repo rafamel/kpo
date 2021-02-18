@@ -6,4 +6,5 @@ export * from './mkdir';
 export * from './move';
 export * from './print';
 export * from './raises';
+export * from './remove';
 export * from './sleep';
