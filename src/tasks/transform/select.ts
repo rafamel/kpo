@@ -15,11 +15,11 @@ export interface SelectOptions {
 
 export function select(
   options: SelectOptions | Empty,
-  tasks: Members<Task>
+  tasks: Members<Task | Empty>
 ): Task.Async {
   const opts = Object.assign(
     {
-      message: 'Continue',
+      message: 'Continue?',
       timeout: -1,
       default: null as string | null
     },
@@ -44,7 +44,9 @@ export function select(
       ? ' [' +
         lowercaseNames
           .map((name): string => {
-            return lowercaseDefault === name ? name.toUpperCase() : name;
+            return lowercaseDefault === name
+              ? name[0].toUpperCase() + name.slice(1)
+              : name;
           })
           .join('/') +
         ']: '
@@ -110,9 +112,12 @@ export function select(
 
     const index = lowercaseNames.indexOf(response);
     const name = names[index];
-    const task = (tasks || {})[name];
 
-    if (!task) throw Error(`task for "${name}" couldn't be retrieved`);
-    return run(task, ctx);
+    if (!Object.hasOwnProperty.call(tasks, name)) {
+      throw Error(`Task for "${name}" couldn't be retrieved`);
+    }
+
+    const task = tasks[name];
+    return task ? run(task, ctx) : undefined;
   };
 }
