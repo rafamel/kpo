@@ -8,3 +8,4 @@ export * from './print';
 export * from './raises';
 export * from './remove';
 export * from './sleep';
+export * from './write';
