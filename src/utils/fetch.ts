@@ -1,23 +1,29 @@
 import { Task } from '../definitions';
 import { find } from '../helpers/find';
-import { TypeGuard } from 'type-core';
+import { TypeGuard, Members } from 'type-core';
 import path from 'path';
 
 export interface FetchOptions {
   file?: string;
-  cwd?: string;
+  dir?: string;
 }
 
-export async function fetch(options?: FetchOptions): Promise<Task.Record> {
-  const opts = Object.assign(
-    { file: 'kpo.tasks.js', cwd: process.cwd() },
-    options
-  );
+export async function fetch(
+  options?: FetchOptions,
+  cb?: (path: string) => void
+): Promise<Members<Task>> {
+  const opts = {
+    file: (options && options.file) || 'kpo.tasks.js',
+    dir:
+      options && options.dir
+        ? path.resolve(process.cwd(), options.dir)
+        : process.cwd()
+  };
 
   const filepath = await find({
     file: opts.file,
-    cwd: opts.cwd,
-    exact: Boolean(options && options.file)
+    cwd: opts.dir,
+    exact: options ? Boolean(options.file || options.dir) : false
   });
 
   if (!filepath) {
@@ -25,6 +31,7 @@ export async function fetch(options?: FetchOptions): Promise<Task.Record> {
     throw Error(`File not found in path: ${filename}`);
   }
 
+  if (cb) cb(filepath);
   const file = await import(filepath);
   if (
     !Object.hasOwnProperty.call(file, 'default') ||

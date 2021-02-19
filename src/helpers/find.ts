@@ -23,7 +23,7 @@ export async function find(options: FindOptions): Promise<string | null> {
   if (!exists) return null;
 
   const isDirectory = await fs
-    .stat(options.cwd)
+    .stat(filepath)
     .then((stat) => stat.isDirectory());
   if (isDirectory) return null;
 
