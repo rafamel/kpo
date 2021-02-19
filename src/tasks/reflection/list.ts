@@ -1,12 +1,12 @@
 import { Task, Context } from '../../definitions';
-import { parseRecord } from '../../helpers/parse-record';
+import { parseToArray } from '../../helpers/parse';
 import { print } from '../stdio/print';
 import { into } from 'pipettes';
 import chalk from 'chalk';
 
 export function list(tasks: Task.Record): Task.Sync {
   return (ctx: Context): void => {
-    const str = parseRecord(tasks)
+    const str = parseToArray(tasks)
       .map((item) => {
         return ' '.repeat((item.route.length - 1) * 2) + item.name;
       })

@@ -1,6 +1,6 @@
 import { Context } from '../definitions';
+import { stringifyRoute } from './stringify-route';
 import { into } from 'pipettes';
-import ObjectPath from 'objectpath';
 import chalk from 'chalk';
 
 export function getPrefix(
@@ -9,13 +9,7 @@ export function getPrefix(
   context: Context
 ): string {
   return into(
-    context.route.length
-      ? ObjectPath.stringify(
-          context.route.map((x) => String(x)),
-          "'",
-          false
-        )
-      : '',
+    context.route.length ? stringifyRoute(context.route) : '',
     (prefix) => {
       if (!prefix || (context.prefix !== target && context.prefix !== 'all')) {
         return extra ? extra + ' ' : null;

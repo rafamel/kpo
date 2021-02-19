@@ -1,7 +1,7 @@
 import { Task, Context } from '../../definitions';
+import { parseToRecord } from '../../helpers/parse';
 import { getAbsolutePath } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
-import { parse } from '../../utils/parse';
 import { run } from '../../utils/run';
 import { select } from '../aggregate/select';
 import { write } from '../filesystem/write';
@@ -29,9 +29,19 @@ export function lift(tasks: Task.Record, options?: LiftOptions): Task.Async {
     const pkg = JSON.parse(content.toString());
 
     const pkgScripts: Members<string> = pkg.scripts || {};
-    const taskScripts = Object.keys(parse(tasks)).reduce(
-      (acc: Members<string>, name) => ({ ...acc, [name]: `kpo ${name} --` }),
-      {}
+    const taskScripts = into(
+      tasks,
+      parseToRecord.bind(null, { include: null, exclude: null }),
+      (record) => Object.keys(record),
+      (keys) => {
+        return keys.reduce(
+          (acc: Members<string>, name) => ({
+            ...acc,
+            [name]: `kpo ${name} --`
+          }),
+          {}
+        );
+      }
     );
 
     pkg.scripts = opts.purge ? taskScripts : { ...pkg.scripts, ...taskScripts };
