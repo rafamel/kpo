@@ -1,7 +1,7 @@
 import { Task, Context, LogLevel } from '../../definitions';
+import { formatMessage } from '../../helpers/format-message';
 import { log } from '../stdio/log';
 import { into } from 'pipettes';
-import { ensure } from 'errorish';
 
 export interface CatchesOptions {
   level?: LogLevel;
@@ -18,7 +18,7 @@ export function catches(
       await task(ctx);
     } catch (err) {
       if (opts.level !== 'silent') {
-        into(ctx, log(opts.level, ensure(err).message));
+        into(ctx, log(opts.level, formatMessage(err)));
       }
       if (alternate) {
         await alternate(ctx);

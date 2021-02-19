@@ -70,10 +70,10 @@
     "@types/jest": "^26.0.20",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "coveralls": "^3.1.0",
-    "husky": "^4.2.3",
+    "husky": "^4.3.8",
     "kpo": "^0.11.1",
-    "onchange": "^6.0.0",
-    "typescript": "^3.9.7"
+    "onchange": "^6.1.1",
+    "typescript": "^3.9.9"
   },
   "husky": {
     "hooks": {
@@ -82,13 +82,13 @@
   },
   "dependencies": {
     "as-table": "^1.0.55",
-    "chalk": "^2.4.2",
-    "chokidar": "^2.1.8",
+    "chalk": "^4.1.0",
+    "chokidar": "^3.5.1",
     "debounce": "^1.2.0",
-    "errorish": "^0.4.0",
-    "execa": "^3.4.0",
+    "errorish": "^1.0.0",
+    "execa": "^5.0.0",
     "find-up": "^5.0.0",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.1.0",
     "glob": "^7.1.6",
     "objectpath": "^2.0.0",
     "pipettes": "^0.1.3",
