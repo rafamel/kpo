@@ -1,10 +1,16 @@
 import { Task, Context } from '../../definitions';
+import { flatten } from '../../helpers/flatten';
 import { run } from '../../utils/run';
 import { log } from '../stdio/log';
-import { Empty, NullaryFn } from 'type-core';
+import { Empty, NullaryFn, Members } from 'type-core';
 import { into } from 'pipettes';
 
-export function parallel(...tasks: Array<Task | Empty>): Task.Async {
+export function parallel(
+  task?: Task | Empty | Array<Task | Empty> | Members<Task | Empty>,
+  ...tasks: Array<Task | Empty>
+): Task.Async {
+  const items = flatten(task, ...tasks);
+
   return async (ctx: Context): Promise<void> => {
     into(ctx, log('debug', 'Run tasks in parallel'));
 
@@ -20,16 +26,13 @@ export function parallel(...tasks: Array<Task | Empty>): Task.Async {
 
     try {
       await Promise.all(
-        tasks.map((task, i) => {
-          return task
-            ? run(task, {
-                ...ctx,
-                route: ctx.route.concat(i),
-                cancellation: new Promise((resolve) => {
-                  cbs.push(resolve);
-                })
-              })
-            : Promise.resolve();
+        items.map((task) => {
+          return run(task, {
+            ...ctx,
+            cancellation: new Promise((resolve) => {
+              cbs.push(resolve);
+            })
+          });
         })
       );
     } catch (err) {
