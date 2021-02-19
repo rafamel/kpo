@@ -83,7 +83,7 @@
     "chalk": "^2.4.2",
     "errorish": "^0.4.0",
     "execa": "^3.4.0",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.0",
     "glob": "^7.1.6",
     "objectpath": "^2.0.0",
     "pipettes": "^0.1.3",
