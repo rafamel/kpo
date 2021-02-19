@@ -1,8 +1,7 @@
 import { Task, Context } from '../definitions';
 import { createContext } from '../helpers/create-context';
-import { log } from '../tasks/stdio/log';
 import { isCancelled } from './is-cancelled';
-import { into } from 'pipettes';
+import { TypeGuard } from 'type-core';
 
 const noop = (): void => undefined;
 
@@ -13,12 +12,10 @@ export async function run(
   const ctx = createContext(context);
   const safe = { ...ctx, cancellation: ctx.cancellation.catch(noop) };
 
-  try {
-    if (await isCancelled(safe)) return await ctx.cancellation;
-    await task(safe);
-    if (await isCancelled(safe)) return await ctx.cancellation;
-  } catch (err) {
-    into(safe, log('error', err));
-    throw err;
-  }
+  if (await isCancelled(safe)) return await ctx.cancellation;
+
+  if (TypeGuard.isFunction(task)) await task(safe);
+  else throw Error(`Task is not a function: ${task}`);
+
+  if (await isCancelled(safe)) return await ctx.cancellation;
 }
