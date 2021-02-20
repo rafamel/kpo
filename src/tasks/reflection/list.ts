@@ -15,9 +15,7 @@ export function list(tasks: Task.Record): Task.Sync {
 
     const rows = items.map((item) => {
       return [
-        'kpo ',
-        chalk.bold(item.name),
-        ' '.repeat(6),
+        'kpo ' + chalk.bold(item.name) + ' '.repeat(4),
         ...Array(item.route.length).fill(''),
         item.route[item.route.length - 1],
         ...Array(maxRouteLength - item.route.length).fill('')
@@ -28,7 +26,7 @@ export function list(tasks: Task.Record): Task.Sync {
       ctx,
       print(
         table
-          .configure({ delimiter: '' })(rows)
+          .configure({ delimiter: '  ' })(rows)
           .trim()
       )
     );
