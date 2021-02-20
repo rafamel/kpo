@@ -47,7 +47,10 @@ export function parseToArray(record: Task.Record): Item[] {
       const name = stringifyRoute(route);
 
       if (names.includes(name)) {
-        throw Error(`Name collusion on parse: ${name}`);
+        throw Error(`Task name collusion on parse: ${name}`);
+      }
+      if (name.includes(' ')) {
+        throw Error(`Task name must not contain spaces: ${name}`);
       }
 
       names.push(name);

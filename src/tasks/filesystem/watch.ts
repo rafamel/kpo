@@ -74,7 +74,7 @@ export function watch(
           .then(() => {
             return run(task, {
               ...ctx,
-              route: opts.parallel ? ctx.route.concat(i++) : ctx.route,
+              route: opts.parallel ? ctx.route.concat(String(i++)) : ctx.route,
               cancellation: new Promise((resolve) => {
                 cbs.push(resolve);
               })

@@ -17,7 +17,7 @@ export interface Context {
   readonly args: string[];
   readonly stdio: Stdio;
   readonly level: LogLevel;
-  readonly route: Array<string | number>;
+  readonly route: string[];
   readonly prefix: PrefixPolicy;
   readonly cancellation: Promise<void>;
 }
