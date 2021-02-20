@@ -6,7 +6,7 @@ const cancellation = new Promise<void>(() => undefined);
 export function createContext(context?: Partial<Context>): Context {
   return into(
     context || {},
-    (context: Partial<Context>): Context => ({
+    (context) => ({
       cwd: context.cwd || process.cwd(),
       env: context.env || { ...process.env },
       args: context.args || [],

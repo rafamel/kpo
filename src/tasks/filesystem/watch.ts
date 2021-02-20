@@ -7,15 +7,27 @@ import chokidar from 'chokidar';
 import debounce from 'debounce';
 
 export interface WatchOptions {
+  /** Parse globs in paths */
   glob?: boolean;
+  /** Runs the task on start instead of waiting for changes */
   initial?: boolean;
+  /** Doesn't cancel tasks in execution when a new task runs */
   parallel?: boolean;
+  /** Avoids rapid task restarts by debouncing by a set number of ms */
   debounce?: number;
+  /** Limits how many subdirectories will be traversed */
   depth?: number;
+  /** If set, it will use polling every given ms interval */
   poll?: number;
+  /** Whether to follow symlinks */
   symlinks?: boolean;
 }
 
+/**
+ * Watches `paths` for changes and runs a given
+ * `task` for every change event.
+ * @returns Task
+ */
 export function watch(
   paths: string | string[],
   options: WatchOptions | Empty,

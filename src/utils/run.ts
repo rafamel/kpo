@@ -5,6 +5,9 @@ import { TypeGuard } from 'type-core';
 
 const noop = (): void => undefined;
 
+/**
+ * Safely runs a task with an optional given context.
+ */
 export async function run(
   task: Task,
   context?: Partial<Context>

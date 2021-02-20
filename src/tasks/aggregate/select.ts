@@ -8,11 +8,32 @@ import { createInterface } from 'readline';
 import { into } from 'pipettes';
 
 export interface SelectOptions {
+  /**
+   * A message to prompt for option selection.
+   * Default: `'Continue'`
+   */
   message?: string;
+  /**
+   * A timeout for the select.
+   * Will cause the `default`, if available,
+   * to be selected when expired.
+   */
   timeout?: number;
+  /**
+   * A default selection.
+   * Will be triggered on `timeout`
+   * expiration and on empty responses.
+   */
   default?: string | null;
 }
 
+/**
+ * Uses a context's stdout to prompt for input.
+ * Takes in a record of `tasks`, which keys
+ * will represent the required user input
+ * to select one of them for execution.
+ * @returns Task
+ */
 export function select(
   options: SelectOptions | Empty,
   tasks: Members<Task | Empty>

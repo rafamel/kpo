@@ -12,10 +12,25 @@ import chalk from 'chalk';
 import fs from 'fs-extra';
 
 export interface LiftOptions {
+  /**
+   * Remove all non lifted scripts
+   */
   purge?: boolean;
+  /**
+   * Lift mode of operation:
+   * * `'default'`: produces an immediate write.
+   * * `'confirm'`: prints the changes and waits for confirmation before a write.
+   * * `'dry'`: prints the expected changes.
+   * * `'audit'`: prints the expected changes and fails if there are pending changes.
+   */
   mode?: 'default' | 'confirm' | 'dry' | 'audit';
 }
 
+/**
+ * Lifts all tasks on a `tasks` record to a package.json file,
+ * which is expected to be available at the context's working directory.
+ * @returns Task
+ */
 export function lift(tasks: Task.Record, options?: LiftOptions): Task.Async {
   return async (ctx: Context): Promise<void> => {
     const opts = Object.assign({ purge: false, mode: 'default' }, options);

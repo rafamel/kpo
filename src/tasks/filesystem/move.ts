@@ -6,12 +6,21 @@ import { into } from 'pipettes';
 import fs from 'fs-extra';
 
 export interface MoveOptions {
+  /** Parse globs in paths */
   glob?: boolean;
+  /** Whether to treat the destination as an exact path for a single source */
   single?: boolean;
+  /** Disallows non existent paths and an empty set of paths */
   strict?: boolean;
+  /** Whether to error, ignore, or overwrite existing files */
   exists?: 'error' | 'ignore' | 'overwrite';
 }
 
+/**
+ * Moves files or directories from `paths` to `destination`.
+ * Treats `destination` as a folder unless `options.single` is `true`.
+ * @returns Task
+ */
 export function move(
   paths: string | string[],
   destination: string,

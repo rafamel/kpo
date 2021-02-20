@@ -5,6 +5,11 @@ import { into } from 'pipettes';
 import table from 'as-table';
 import chalk from 'chalk';
 
+/**
+ * Prints all available tasks in a `tasks` record
+ * on a context's stdout.
+ * @returns Task
+ */
 export function list(tasks: Task.Record): Task.Sync {
   return (ctx: Context): void => {
     const items = parseToArray(tasks);

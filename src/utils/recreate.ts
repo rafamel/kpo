@@ -1,6 +1,9 @@
 import { Task } from '../definitions';
 import { Empty } from 'type-core';
 
+/**
+ * Maps all tasks in a `Task.Record`.
+ */
 export function recreate(
   map: (task: Task, route: string[]) => Task | Empty,
   tasks: Task.Record

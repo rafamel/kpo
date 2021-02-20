@@ -7,10 +7,21 @@ import { into } from 'pipettes';
 import fs from 'fs-extra';
 
 export interface EditOptions {
+  /** Parse globs in paths */
   glob?: boolean;
+  /** Disallows non existent paths and an empty set of paths */
   strict?: boolean;
 }
 
+/**
+ * Reads files as specified in `paths`, calling the `cb`
+ * callback with a Buffer for each file read.
+ * The callback's responses will be written into the
+ * original file path.
+ * If the callback returns an object, it will be
+ * stringified as JSON.
+ * @returns Task
+ */
 export function edit(
   paths: string | string[],
   cb: (

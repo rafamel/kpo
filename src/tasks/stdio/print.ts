@@ -2,6 +2,10 @@ import { Task, Context } from '../../definitions';
 import { addPrefix } from '../../helpers/prefix';
 import util from 'util';
 
+/**
+ * Writes a message or other data into a context's stdout.
+ * @returns Task
+ */
 export function print(...data: any[]): Task.Sync {
   return (ctx: Context): void => {
     const str = addPrefix(

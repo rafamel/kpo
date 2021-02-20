@@ -4,9 +4,20 @@ import { log } from '../stdio/log';
 import { into } from 'pipettes';
 
 export interface CatchesOptions {
+  /** Logs the error message with a given level. Default: `'info'` */
   level?: LogLevel;
 }
 
+/**
+ * Catches errors in a `task`, preventing it
+ * from stopping execution of other tasks
+ * when run in series or parallel.
+ * When a `task` raises an exception,
+ * it will log the error message with
+ * a given `options.level`, and optionally
+ * run an `alternate` task.
+ * @returns Task
+ */
 export function catches(
   task: Task,
   alternate?: Task | null,

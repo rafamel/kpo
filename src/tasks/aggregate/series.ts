@@ -6,6 +6,15 @@ import { log } from '../stdio/log';
 import { Empty, Members } from 'type-core';
 import { into } from 'pipettes';
 
+/**
+ * Returns a `Task` that will run in series
+ * a set of given tasks.
+ * For tasks passed as arguments, the route
+ * will be left unmodified, while task
+ * lists and records will inherit their
+ * index or key name for their route.
+ * @returns Task
+ */
 export function series(
   task?: Task | Empty | Array<Task | Empty> | Members<Task | Empty>,
   ...tasks: Array<Task | Empty>

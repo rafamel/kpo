@@ -21,6 +21,13 @@ const color = {
   error: chalk.bold.bgRed.white
 };
 
+/**
+ * Writes a message or other data into a
+ * context's stdout if a given `context.level`
+ * allows for the particular logging level
+ * of the call.
+ * @returns Task
+ */
 export function log(
   level: Exclude<LogLevel, 'silent'>,
   item: any,

@@ -1,17 +1,23 @@
 import { Task } from '../definitions';
 import { find } from '../helpers/find';
-import { TypeGuard, Members } from 'type-core';
+import { TypeGuard } from 'type-core';
 import path from 'path';
 
 export interface FetchOptions {
+  /** File name or path relative to `dir` */
   file?: string;
+  /** File directory */
   dir?: string;
 }
 
+/**
+ * Fetches a tasks file with a `Task.Record` as a
+ * default export.
+ */
 export async function fetch(
   options?: FetchOptions,
   cb?: (path: string) => void
-): Promise<Members<Task>> {
+): Promise<Task.Record> {
   const opts = {
     file: (options && options.file) || 'kpo.tasks.js',
     dir:

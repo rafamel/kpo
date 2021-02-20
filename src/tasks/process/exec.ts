@@ -7,6 +7,10 @@ import { into } from 'pipettes';
 import transform from 'prefix-stream';
 import execa from 'execa';
 
+/**
+ * Spawns a process.
+ * @returns Task
+ */
 export function exec(
   file: string,
   args?: string[] | Empty,

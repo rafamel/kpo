@@ -2,6 +2,14 @@ import { Task, Context } from '../../definitions';
 import { run } from '../../utils/run';
 import { UnaryFn, Empty } from 'type-core';
 
+/**
+ * Modifies a task's context with a given `context`.
+ * Takes a `context` as a first argument, which
+ * can be a partial `Context` object, or
+ * a callback receiving a `Context` and
+ * returning a partial `Context` object.
+ * @returns Task
+ */
 export function context(
   context:
     | Empty

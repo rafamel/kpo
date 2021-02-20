@@ -6,11 +6,18 @@ import { into } from 'pipettes';
 import fs from 'fs-extra';
 
 export interface RemoveOptions {
+  /** Parse globs in paths */
   glob?: boolean;
+  /** Disallows non existent paths and an empty set of paths */
   strict?: boolean;
+  /** Remove files recursively */
   recursive?: boolean;
 }
 
+/**
+ * Removes files or directories as specified in `paths`.
+ * @returns Task
+ */
 export function remove(
   paths: string | string[],
   options?: RemoveOptions

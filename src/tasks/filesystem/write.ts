@@ -6,9 +6,14 @@ import { into } from 'pipettes';
 import fs from 'fs-extra';
 
 export interface WriteOptions {
+  /** Whether to error, ignore, or overwrite existing files */
   exists?: 'error' | 'ignore' | 'overwrite';
 }
 
+/**
+ * Writes a file with a `content` at `path`.
+ * @returns Task
+ */
 export function write(
   path: string,
   content: Buffer | Serial.Type,

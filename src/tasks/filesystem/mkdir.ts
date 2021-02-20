@@ -6,9 +6,14 @@ import { into } from 'pipettes';
 import fs from 'fs-extra';
 
 export interface MkdirOptions {
+  /** Create if necessary, including intermediate directories */
   ensure?: boolean;
 }
 
+/**
+ * Creates a directory.
+ * @returns Task
+ */
 export function mkdir(
   paths: string | string[],
   options?: MkdirOptions
