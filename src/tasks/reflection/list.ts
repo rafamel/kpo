@@ -10,7 +10,10 @@ import chalk from 'chalk';
  * on a context's stdout.
  * @returns Task
  */
-export function list(tasks: Task.Record): Task.Sync {
+export function list(
+  tasks: Task.Record,
+  map?: (name: string, route: string[]) => string[]
+): Task.Sync {
   return (ctx: Context): void => {
     const items = parseToArray(tasks);
     const maxRouteLength = items.reduce(
@@ -18,20 +21,22 @@ export function list(tasks: Task.Record): Task.Sync {
       0
     );
 
-    const rows = items.map((item) => {
-      return [
-        'kpo ' + chalk.bold(item.name) + ' '.repeat(4),
-        ...Array(item.route.length).fill(''),
-        item.route[item.route.length - 1],
-        ...Array(maxRouteLength - item.route.length).fill('')
-      ];
-    });
+    const rows = map
+      ? items.map((item) => map(item.name, item.route))
+      : items.map((item) => {
+          return [
+            'kpo ' + chalk.bold(item.name) + ' '.repeat(4),
+            ...Array(item.route.length).fill(''),
+            item.route[item.route.length - 1],
+            ...Array(maxRouteLength - item.route.length).fill('')
+          ];
+        });
 
     into(
       ctx,
       print(
         table
-          .configure({ delimiter: '  ' })(rows)
+          .configure({ delimiter: ' '.repeat(2) })(rows)
           .trim()
       )
     );
