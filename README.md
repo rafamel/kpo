@@ -22,55 +22,40 @@ These are common options for all *kpo* subcommands. They must always be passed b
 
 ```
 Usage:
-  $ kpo [options] [@scope] [tasks] -- [streamArgs]
-  $ kpo [options] [@scope] [:command] [arguments]
+  $ kpo [options] [command]
 
 Options:
   -f, --file <path>       Configuration file
   -d, --dir <path>        Project directory
-  -e, --env <value>       Environment variables for spawned processes
-  -s, --silent            Silent fail -exits with code 0 on error
-  --log <level>           Logging level
+  -e, --env <value>       Environment variables
+  --prefix                Print task routes
+  --level <value>         Logging level
   -h, --help              Show help
   -v, --version           Show version number
 
 Commands:
-  :run           Default command -it can be omitted
-  :cmd, :        Run a command within a project context
+  :run           Default command -can be omitted
   :list          List available tasks
-  :raise         Raise tasks to package
-  :series        Run commands in series within a project context
-  :parallel      Run commands in parallel within a project context
-  :stream        Stream tasks or commands on children scopes
+  :lift          Lift tasks to package
 
 Examples:
   $ kpo foo bar baz
   $ kpo -e NODE_ENV=development -e BABEL_ENV=browser :run foo bar baz
 ```
 
-### `kpo :run` - default command
+### `kpo :run`
 
-`kpo :run` doesn't take additional options, other than the general [CLI options.](#kpo-cli-options)
+Runs tasks.
 
-Note that **the `:run` command can be omitted,** that is, if no command is passed, *kpo* will assume you're passing it tasks to run. Hence, `kpo :run foo bar` and `kpo foo bar` are equivalent.
+`kpo :run` doesn't take additional options, other than the general [CLI options.](#cli-options)
 
-### `kpo :cmd` - aliased `kpo :`
-
-```
-Usage:
-  $ kpo :cmd [options] [command] [arguments]
-
-Runs a command
-
-Options:
-  -h, --help       Show help
-
-Examples:
-  $ kpo : foo --bar --baz
-  $ kpo :cmd foo --bar --baz
-```
+Note that the `:run` command can be omitted. When no command is passed, *kpo* will assume you're passing it tasks to run. Hence, `kpo :run foo bar` and `kpo foo bar` are equivalent.
 
 ### `kpo :list`
+
+List available tasks.
+
+`kpo :list` doesn't take additional options, other than the general [CLI options.](#cli-options)
 
 ```
 Usage:
@@ -84,71 +69,16 @@ Options:
   -h, --help       Show help
 ```
 
-### `kpo :raise`
+### `kpo :lift`
+
+Lift kpo tasks to a `package.json`.
 
 ```
 Usage:
-  $ kpo :raise [options]
-
-Raises kpo tasks to package.json
+  $ kpo :lift [options]
 
 Options:
   --purge          Purge all non-kpo scripts
-  --confirm        Prompt for changes confirmation before performing a write operation
-  --dry            Dry run
-  --fail           Fails if there are any changes to be made on dry mode, or if the user cancels the action when confirmation is required
+  --mode           Lift mode of operation
   -h, --help       Show help
-```
-
-### `kpo :series`
-
-```
-Usage:
-  $ kpo :series [options] [commands] -- [streamArgs]
-
-Runs commands in series
-
-Options:
-  --force          Continue serial execution even if a process fails
-  -h, --help       Show help
-
-Examples:
-  $ kpo :series "foo --bar" "baz --foobar"
-```
-
-### `kpo :parallel`
-
-```
-Usage:
-  $ kpo :parallel [options] [commands] -- [streamArgs]
-
-Runs commands in parallel
-
-Options:
-  -n, --names <values>      Comma separated names
-  -c, --colors <values>     Comma separated colors
-  --force                   Don't kill all other processes if any fails
-  -h, --help                Show help
-
-Examples:
-  $ kpo :parallel -n foo,baz -c blue,magenta "foo --bar" "baz --foobar"
-```
-
-### `kpo :stream`
-
-```
-Usage:
-  $ kpo :stream [options] [commands]
-
-Streams kpo commands for children projects
-
-Options:
-  --include <values>     Include children by name, comma separated
-  --exclude <values>     Exclude children by name, comma separated
-  --parallel             Execute streaming in parallel
-  --force                Continue execution even if some process fails
-  -h, --help       Show help
-
-Examples:
-  $ kpo :stream :cmd foo --bar --baz
 ```
