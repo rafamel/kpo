@@ -10,9 +10,8 @@ import { attach, options, resolver, add } from 'exits';
 main(process.argv.slice(2))
   .then((task) => {
     const cbs: NullaryFn[] = [];
-    const promise = run(task, {
-      cancellation: new Promise<void>((resolve) => cbs.push(resolve))
-    });
+    const cancellation = new Promise<void>((resolve) => cbs.push(resolve));
+    const promise = run(task, { cancellation });
 
     attach();
     options({
@@ -23,7 +22,7 @@ main(process.argv.slice(2))
     });
     add(async () => {
       cbs.map((cb) => cb());
-      await promise.catch(() => undefined);
+      await Promise.all([cancellation, promise]).catch(() => undefined);
     });
 
     return promise;
