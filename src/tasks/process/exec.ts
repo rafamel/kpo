@@ -19,9 +19,11 @@ export function exec(
 ): Task.Async {
   const opts = Object.assign({ extendEnv: true }, options || undefined);
   return async (ctx: Context): Promise<void> => {
+    const fullArgs = (args || []).concat(ctx.args || []);
+
     into(
       ctx,
-      log('debug', `Exec: ${file}`, args && args.length ? args : undefined)
+      log('debug', `Exec: ${file}`, fullArgs.length ? fullArgs : undefined)
     );
 
     const isStdioTty =
@@ -31,7 +33,7 @@ export function exec(
     const pipeOutput = !opts.stdio && prefix;
     const forceColor = pipeOutput && isStdioTty;
 
-    const ps = execa(file, (args || []).concat(ctx.args), {
+    const ps = execa(file, fullArgs, {
       ...options,
       extendEnv: false,
       cwd: opts.cwd || ctx.cwd,
