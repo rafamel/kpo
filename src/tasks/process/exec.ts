@@ -7,6 +7,13 @@ import { into } from 'pipettes';
 import transform from 'prefix-stream';
 import execa from 'execa';
 
+export interface ExecOptions extends execa.Options {
+  /**
+   * Produces a brief error message with only the exit code.
+   */
+  briefError: boolean;
+}
+
 /**
  * Spawns a process.
  * @returns Task
@@ -14,7 +21,7 @@ import execa from 'execa';
 export function exec(
   file: string,
   args?: string[] | Empty,
-  options?: execa.Options | Empty,
+  options?: ExecOptions | Empty,
   cb?: (ps: execa.ExecaChildProcess) => void
 ): Task.Async {
   const opts = Object.assign({ extendEnv: true }, options || undefined);
@@ -66,9 +73,20 @@ export function exec(
       ps.cancel();
     });
 
+    let exitCode: number | null = null;
+    ps.on('exit', (code) => (exitCode = code));
+
     return ps.then(
       () => undefined,
-      (err) => (cancelled ? undefined : Promise.reject(err))
+      (err) => {
+        if (cancelled) return undefined;
+
+        if (opts.briefError) {
+          err.message =
+            `Command failed` + (exitCode ? ` with exit code ${exitCode}` : '');
+        }
+        return Promise.reject(err);
+      }
     );
   };
 }
