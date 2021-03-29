@@ -1,3 +1,65 @@
+# [0.13.0](https://github.com/rafamel/kpo/compare/v0.11.1...v0.13.0) (2021-03-29)
+
+
+### Bug Fixes
+
+* **deps:** updates dependencies ([3d16988](https://github.com/rafamel/kpo/commit/3d16988be37562fffb12aba1e5365bfbd8993637))
+* **deps:** updates dependencies ([a29a433](https://github.com/rafamel/kpo/commit/a29a43377d3ee41534d8a5326feb939e31ef97b3))
+* **tasks:** fixes exec ([f3df732](https://github.com/rafamel/kpo/commit/f3df732a24ca528e78c9b589bd602553e01cd752))
+* **utils:** fixes fetch ([33391e3](https://github.com/rafamel/kpo/commit/33391e314707cc09b400f84060493a4190a308bd))
+
+
+### chore
+
+* reboots package development ([7dc8bae](https://github.com/rafamel/kpo/commit/7dc8baebb475652c71267790867cb130c4c5ef1d))
+
+
+### Features
+
+* **bin:** adds cli ([0acf8bb](https://github.com/rafamel/kpo/commit/0acf8bbe388f63a2ae7d52c5dc6b323fcdb26010))
+* **bin:** allow for custom bin name, export as function ([870ed67](https://github.com/rafamel/kpo/commit/870ed67a4fe851664cd533df55180d404695093c))
+* **definitions:** adds initial definitions ([89f1d1f](https://github.com/rafamel/kpo/commit/89f1d1f638888c5bbe1d4ae15ae123741a643e26))
+* **tasks:** add briefError option to exec task ([166e37d](https://github.com/rafamel/kpo/commit/166e37d05d0f84ab99068a781509bcf3f7c7c024))
+* **tasks:** adds catches transform ([c7bb182](https://github.com/rafamel/kpo/commit/c7bb1829412ae5fca672b10dc8fa03fbc4e26032))
+* **tasks:** adds clear task ([94ed15c](https://github.com/rafamel/kpo/commit/94ed15ccf66ac25e7bc074f3f17bd7fbe8b260c6))
+* **tasks:** adds consume function parse ([a104a06](https://github.com/rafamel/kpo/commit/a104a067f54bcbb8226f136cf0db63ab4f97c45a))
+* **tasks:** adds context transform ([4494630](https://github.com/rafamel/kpo/commit/4494630f5267ef07b0377d405015d866da85c5ee))
+* **tasks:** adds copy task ([1a6da16](https://github.com/rafamel/kpo/commit/1a6da161fbfc91185f9d646d0106aaf67ca1c27d))
+* **tasks:** adds edit task ([8f09b48](https://github.com/rafamel/kpo/commit/8f09b4898d265f59abb9f24219d7fdf3414d297a))
+* **tasks:** adds finalizes transform task ([581461c](https://github.com/rafamel/kpo/commit/581461ce85fc3ec4ecfd87e67cbe3862a3ac925f))
+* **tasks:** list takes a map function ([71cea40](https://github.com/rafamel/kpo/commit/71cea40d124d2ae2c8f279d4d5fe02a3f5fd3f86))
+* routes are stringified by introducing a ':' character separation ([a381d34](https://github.com/rafamel/kpo/commit/a381d34637b15f231c8ef774eb3c4b408ef7076f))
+* **tasks:** adds exec task ([3e88259](https://github.com/rafamel/kpo/commit/3e882596087f04e50a7486d9fa5c222b09ac5ea6))
+* **tasks:** adds lift command ([b1cef1f](https://github.com/rafamel/kpo/commit/b1cef1f59c196f3022c5d7ee3bb940bfb7d1970e))
+* **tasks:** adds log task ([2883ee0](https://github.com/rafamel/kpo/commit/2883ee080feed207fc7a2444cf1803d2f90bb026))
+* **tasks:** adds mkdir task ([b560772](https://github.com/rafamel/kpo/commit/b5607720ed354d3c84d51988c268773f0249e3d9))
+* **tasks:** adds move task ([192ed1c](https://github.com/rafamel/kpo/commit/192ed1c63725cac3b9aab7afbc043f25505d2cd0))
+* **tasks:** adds remove task ([fb53a87](https://github.com/rafamel/kpo/commit/fb53a878a8e804062c602332075fb087d226772d))
+* **tasks:** list prints the command for tasks and their indented structure ([6bcb47e](https://github.com/rafamel/kpo/commit/6bcb47e28b1d135129dcf672e50a109a22824107))
+* **tasks:** print can take no arguments ([df08e29](https://github.com/rafamel/kpo/commit/df08e299372ea45104186178aea29a879cc1eca8))
+* **tasks:** raises can take a string as an argument ([f0dbd5a](https://github.com/rafamel/kpo/commit/f0dbd5aad88a443e714352d81788f282ac48b699))
+* removes parse util in favor of added combine task and recreate util ([dbca481](https://github.com/rafamel/kpo/commit/dbca481a4098a0fc1d1ae84b8f14d0465d65745d))
+* **tasks:** adds list command ([7b4d29d](https://github.com/rafamel/kpo/commit/7b4d29d16f3e3e75ab76b46d6788571f80dac315))
+* **tasks:** adds parallel transform ([689c555](https://github.com/rafamel/kpo/commit/689c555945a7130e9f351b5ac7b2b60a2b26c7ad))
+* **tasks:** adds print task ([7949e39](https://github.com/rafamel/kpo/commit/7949e391e530b343a69138d043ac56d18aa99719))
+* **tasks:** adds raises task ([f3f0c5d](https://github.com/rafamel/kpo/commit/f3f0c5d4b34921a35a502010b6acc91c56a04b94))
+* **tasks:** adds select transform ([b788530](https://github.com/rafamel/kpo/commit/b78853072089178f0cd80caf7b5106bce61b6935))
+* **tasks:** adds series transform ([e9b12d0](https://github.com/rafamel/kpo/commit/e9b12d0209c0f1a99abbab90e7e2e871b4f92b3c))
+* **tasks:** adds sleep task ([1964dc8](https://github.com/rafamel/kpo/commit/1964dc8c11c34ad0b555fa5db401271b448c19c4))
+* **tasks:** adds task runner function run ([c6afed2](https://github.com/rafamel/kpo/commit/c6afed233c97cca4f3ffdf3af6c0f374b1470364))
+* **tasks:** adds watch task ([28e4aa4](https://github.com/rafamel/kpo/commit/28e4aa4874e9377b8dfcb4b365acc573607238f5))
+* **tasks:** adds write task ([86a44ed](https://github.com/rafamel/kpo/commit/86a44edfedb65afe014daafa18a5482431af02c9))
+* **tasks:** series and parallel can take a task array or record as a first argument ([8ab3802](https://github.com/rafamel/kpo/commit/8ab3802e1b265adacf9672cb9897ca575500f287))
+* **utils:** adds fetch util ([ec932be](https://github.com/rafamel/kpo/commit/ec932bec59920c101be58c63ee82e799a6d7eef8))
+* **utils:** adds isCancelled ([8535df8](https://github.com/rafamel/kpo/commit/8535df8a20c4a1b8c084b1d9cb903c3b246ab5a3))
+
+
+### BREAKING CHANGES
+
+* This package api has been entirely redesigned. Please check the latest docs.
+
+
+
 ## [0.11.1](https://github.com/rafamel/kpo/compare/v0.11.0...v0.11.1) (2019-11-01)
 
 
