@@ -5,18 +5,23 @@ import { flags, safePairs } from 'cli-belt';
 import chalk from 'chalk';
 import arg from 'arg';
 
+interface Options {
+  bin: string;
+}
+
 export default async function bin(
   record: Task.Record,
-  argv: string[]
+  argv: string[],
+  opts: Options
 ): Promise<Task> {
   const help = indent`
-    ${chalk.bold('Lifts kpo tasks to a package.json')}
+    ${chalk.bold(`Lifts ${opts.bin} tasks to a package.json`)}
 
     Usage:
-      $ kpo :lift [options]
+      $ ${opts.bin} :lift [options]
 
     Options:
-      --purge          Purge all non-kpo scripts
+      --purge          Purge all non-${opts.bin} scripts
       --mode           Lift mode of operation
       -h, --help       Show help
   `;
@@ -48,7 +53,7 @@ export default async function bin(
 
   return series(
     log('debug', 'Working directory:', process.cwd()),
-    log('info', chalk.bold('kpo'), chalk.bold.blue(':lift')),
+    log('info', chalk.bold(opts.bin), chalk.bold.blue(':lift')),
     print(),
     lift(record, {
       purge: cmd['--purge'],

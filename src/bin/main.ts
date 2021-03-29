@@ -10,14 +10,22 @@ import chalk from 'chalk';
 import path from 'path';
 import arg from 'arg';
 
-export default async function main(argv: string[]): Promise<Task> {
+interface Options {
+  bin: string;
+  file: string;
+}
+
+export default async function main(
+  argv: string[],
+  opts: Options
+): Promise<Task> {
   const pkg = await loadPackage(__dirname, { title: true });
 
   const help = indent`
     ${pkg.description ? chalk.bold(pkg.description) : ''}
 
     Usage:
-      $ kpo [options] [command]
+      $ ${opts.bin} [options] [command]
 
     Options:
       -f, --file <path>       Configuration file
@@ -34,8 +42,8 @@ export default async function main(argv: string[]): Promise<Task> {
       :lift          Lift tasks to package
 
     Examples:
-      $ kpo foo bar baz
-      $ kpo -e NODE_ENV=development -e BABEL_ENV=browser :run foo bar baz
+      $ ${opts.bin} foo bar baz
+      $ ${opts.bin} -e NODE_ENV=development -e BABEL_ENV=node :run foo bar baz
   `;
 
   const types = {
@@ -87,8 +95,11 @@ export default async function main(argv: string[]): Promise<Task> {
   };
 
   const record = await fetch(
-    { file: options.file, dir: options.dir },
-    (filepath) => process.chdir(options.dir || path.dirname(filepath))
+    options.file || opts.file,
+    { dir: options.dir },
+    (filepath) => {
+      return process.chdir(options.dir || path.dirname(filepath));
+    }
   );
 
   const withContext = context.bind(null, {
@@ -108,7 +119,7 @@ export default async function main(argv: string[]): Promise<Task> {
               log('debug', 'Working directory:', process.cwd()),
               log(
                 'info',
-                chalk.bold('kpo'),
+                chalk.bold(opts.bin),
                 chalk.bold.blue(':run'),
                 names.join(' ')
               ),
@@ -132,7 +143,7 @@ export default async function main(argv: string[]): Promise<Task> {
         : into(
             series(
               log('debug', 'Working directory:', process.cwd()),
-              log('info', chalk.bold('kpo'), chalk.bold.blue(':list')),
+              log('info', chalk.bold(opts.bin), chalk.bold.blue(':list')),
               print(),
               list(record)
             ),
@@ -140,7 +151,7 @@ export default async function main(argv: string[]): Promise<Task> {
           );
     }
     case ':lift': {
-      return into(await lift(record, cmd._), withContext);
+      return into(await lift(record, cmd._, { bin: opts.bin }), withContext);
     }
     default: {
       return series(

@@ -24,6 +24,10 @@ export interface LiftOptions {
    * * `'audit'`: prints the expected changes and fails if there are pending changes.
    */
   mode?: 'default' | 'confirm' | 'dry' | 'audit';
+  /**
+   * Name of kpo's executable
+   */
+  bin?: string;
 }
 
 /**
@@ -33,7 +37,10 @@ export interface LiftOptions {
  */
 export function lift(tasks: Task.Record, options?: LiftOptions): Task.Async {
   return async (ctx: Context): Promise<void> => {
-    const opts = Object.assign({ purge: false, mode: 'default' }, options);
+    const opts = Object.assign(
+      { purge: false, mode: 'default', bin: 'kpo' },
+      options
+    );
 
     const pkgPath = getAbsolutePath('package.json', ctx);
     const pkgExists = await fs.pathExists(pkgPath);
@@ -52,7 +59,7 @@ export function lift(tasks: Task.Record, options?: LiftOptions): Task.Async {
         return keys.reduce(
           (acc: Members<string>, name) => ({
             ...acc,
-            [name]: `kpo ${name} --`
+            [name]: opts.bin ? `${opts.bin} ${name} --` : `${name} --`
           }),
           {}
         );

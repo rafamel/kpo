@@ -1,9 +1,17 @@
 import { Task, Context } from '../../definitions';
 import { parseToArray } from '../../helpers/parse';
 import { print } from '../stdio/print';
+import { Empty } from 'type-core';
 import { into } from 'pipettes';
 import table from 'as-table';
 import chalk from 'chalk';
+
+export interface ListOptions {
+  /**
+   * Name of kpo's executable.
+   */
+  bin?: string;
+}
 
 /**
  * Prints all available tasks in a `tasks` record
@@ -12,9 +20,11 @@ import chalk from 'chalk';
  */
 export function list(
   tasks: Task.Record,
+  options?: ListOptions | Empty,
   map?: (name: string, route: string[]) => string[]
 ): Task.Sync {
   return (ctx: Context): void => {
+    const opts = Object.assign({ bin: 'kpo' }, options);
     const items = parseToArray(tasks);
     const maxRouteLength = items.reduce(
       (acc, item) => (acc > item.route.length ? acc : item.route.length),
@@ -25,7 +35,9 @@ export function list(
       ? items.map((item) => map(item.name, item.route))
       : items.map((item) => {
           return [
-            'kpo ' + chalk.bold(item.name) + ' '.repeat(4),
+            (opts.bin ? `${opts.bin} ` : '') +
+              chalk.bold(item.name) +
+              ' '.repeat(4),
             ...Array(item.route.length).fill(''),
             item.route[item.route.length - 1],
             ...Array(maxRouteLength - item.route.length).fill('')

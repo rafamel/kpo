@@ -1,11 +1,9 @@
 import { Task } from '../definitions';
 import { find } from '../helpers/find';
-import { TypeGuard } from 'type-core';
+import { Empty, TypeGuard } from 'type-core';
 import path from 'path';
 
 export interface FetchOptions {
-  /** File name or path relative to `dir` */
-  file?: string;
   /** File directory */
   dir?: string;
 }
@@ -15,11 +13,11 @@ export interface FetchOptions {
  * default export.
  */
 export async function fetch(
-  options?: FetchOptions,
+  file: string,
+  options?: FetchOptions | Empty,
   cb?: (path: string) => void
 ): Promise<Task.Record> {
   const opts = {
-    file: (options && options.file) || 'kpo.tasks.js',
     dir:
       options && options.dir
         ? path.resolve(process.cwd(), options.dir)
@@ -27,26 +25,26 @@ export async function fetch(
   };
 
   const filepath = await find({
-    file: opts.file,
+    file: file,
     cwd: opts.dir,
-    exact: options ? Boolean(options.file || options.dir) : false
+    exact: Boolean(options && options.dir)
   });
 
   if (!filepath) {
-    const filename = path.basename(opts.file);
+    const filename = path.basename(file);
     throw Error(`File not found in path: ${filename}`);
   }
 
   if (cb) cb(filepath);
-  const file = await import(filepath);
+  const data = await import(filepath);
   if (
-    !Object.hasOwnProperty.call(file, 'default') ||
-    !TypeGuard.isRecord(file.default)
+    !Object.hasOwnProperty.call(data, 'default') ||
+    !TypeGuard.isRecord(data.default)
   ) {
     throw Error(`Default tasks export not found: ${filepath}`);
   }
 
-  const tasks = file.default;
+  const tasks = data.default;
 
   const empty = Object.keys(tasks).filter((name) => !name);
   if (empty.length) {
