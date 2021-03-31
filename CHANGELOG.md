@@ -1,3 +1,17 @@
+# [0.14.0](https://github.com/rafamel/kpo/compare/v0.13.0...v0.14.0) (2021-03-31)
+
+
+### Bug Fixes
+
+* **tasks:** set briefError option for exec task as optional ([07e3b6f](https://github.com/rafamel/kpo/commit/07e3b6fe764487bb7dd7aac6a6a290f1fed5777e))
+
+
+### Features
+
+* **bin:** add :watch subcommand ([6d2c994](https://github.com/rafamel/kpo/commit/6d2c9940607f4f14643abec5e71744a45393f3fd))
+
+
+
 # [0.13.0](https://github.com/rafamel/kpo/compare/v0.11.1...v0.13.0) (2021-03-29)
 
 
