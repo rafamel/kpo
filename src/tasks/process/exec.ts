@@ -11,7 +11,7 @@ export interface ExecOptions extends execa.Options {
   /**
    * Produces a brief error message with only the exit code.
    */
-  briefError: boolean;
+  briefError?: boolean;
 }
 
 /**
