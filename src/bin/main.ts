@@ -1,6 +1,7 @@
 import { LogLevel, Task, PrefixPolicy } from '../definitions';
 import { print, log, list, raises, series, context, combine } from '../tasks';
 import { fetch } from '../utils';
+import watch from './watch';
 import lift from './lift';
 import { Members } from 'type-core';
 import { loadPackage, flags, safePairs, splitBy } from 'cli-belt';
@@ -10,13 +11,17 @@ import chalk from 'chalk';
 import path from 'path';
 import arg from 'arg';
 
+interface Params {
+  argv: string[];
+}
+
 interface Options {
   bin: string;
   file: string;
 }
 
 export default async function main(
-  argv: string[],
+  params: Params,
   opts: Options
 ): Promise<Task> {
   const pkg = await loadPackage(__dirname, { title: true });
@@ -38,6 +43,7 @@ export default async function main(
 
     Commands:
       :run           Default command -can be omitted
+      :watch         Watches paths and run tasks on change events
       :list          List available tasks
       :lift          Lift tasks to package
 
@@ -59,7 +65,11 @@ export default async function main(
   const { options: base, aliases } = flags(help);
   safePairs(types, base, { fail: true, bidirectional: true });
   Object.assign(types, aliases);
-  const cmd = arg(types, { argv, permissive: true, stopAtPositional: true });
+  const cmd = arg(types, {
+    argv: params.argv,
+    permissive: true,
+    stopAtPositional: true
+  });
 
   if (cmd['--help']) return print(help + '\n');
   if (cmd['--version']) return print(pkg.version || 'Unknown');
@@ -134,6 +144,12 @@ export default async function main(
             raises(Error(`A command or task is required`))
           );
     }
+    case ':watch': {
+      return into(
+        await watch({ argv: cmd._, record: record }, { bin: opts.bin }),
+        withContext
+      );
+    }
     case ':list': {
       return cmd._.length
         ? series(
@@ -151,7 +167,10 @@ export default async function main(
           );
     }
     case ':lift': {
-      return into(await lift(record, cmd._, { bin: opts.bin }), withContext);
+      return into(
+        await lift({ argv: cmd._, record: record }, { bin: opts.bin }),
+        withContext
+      );
     }
     default: {
       return series(

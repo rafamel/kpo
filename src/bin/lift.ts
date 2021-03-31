@@ -5,13 +5,17 @@ import { flags, safePairs } from 'cli-belt';
 import chalk from 'chalk';
 import arg from 'arg';
 
+interface Params {
+  argv: string[];
+  record: Task.Record;
+}
+
 interface Options {
   bin: string;
 }
 
 export default async function bin(
-  record: Task.Record,
-  argv: string[],
+  params: Params,
   opts: Options
 ): Promise<Task> {
   const help = indent`
@@ -21,8 +25,8 @@ export default async function bin(
       $ ${opts.bin} :lift [options]
 
     Options:
-      --purge          Purge all non-${opts.bin} scripts
-      --mode           Lift mode of operation
+      --purge                 Purge all non-${opts.bin} scripts
+      --mode <value>          Lift mode of operation (default, confirm, dry, audit)
       -h, --help       Show help
   `;
 
@@ -35,7 +39,11 @@ export default async function bin(
   const { options, aliases } = flags(help);
   safePairs(types, options, { fail: true, bidirectional: true });
   Object.assign(types, aliases);
-  const cmd = arg(types, { argv, permissive: false, stopAtPositional: true });
+  const cmd = arg(types, {
+    argv: params.argv,
+    permissive: false,
+    stopAtPositional: true
+  });
 
   if (cmd['--help']) return print(help + '\n');
   if (cmd._.length) {
@@ -55,7 +63,7 @@ export default async function bin(
     log('debug', 'Working directory:', process.cwd()),
     log('info', chalk.bold(opts.bin), chalk.bold.blue(':lift')),
     print(),
-    lift(record, {
+    lift(params.record, {
       purge: cmd['--purge'],
       mode: cmd['--mode'] as any
     })

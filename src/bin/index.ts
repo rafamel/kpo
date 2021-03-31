@@ -18,7 +18,7 @@ export interface BinOptions {
 export async function bin(options?: BinOptions): Promise<void> {
   try {
     const opts = Object.assign({ bin: 'kpo', file: 'kpo.tasks.js' }, options);
-    const task = await main(process.argv.slice(2), opts);
+    const task = await main({ argv: process.argv.slice(2) }, opts);
 
     const cbs: NullaryFn[] = [];
     const cancellation = new Promise<void>((resolve) => cbs.push(resolve));
