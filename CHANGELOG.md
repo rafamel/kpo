@@ -1,3 +1,18 @@
+# [0.15.0](https://github.com/rafamel/kpo/compare/v0.14.0...v0.15.0) (2021-04-01)
+
+
+### Bug Fixes
+
+* propagate bin name at lift and list subcommand and task ([ad142f6](https://github.com/rafamel/kpo/commit/ad142f6d9918367bf5f2f488168c658f25f664c5))
+
+
+### Features
+
+* **bin:** add description and version options to exported bin function ([97a4ab2](https://github.com/rafamel/kpo/commit/97a4ab2b1656b6b4191737fa322d4c8f4a33f7fb))
+* add exclude to watch task; add exclude and clear to watch subcommand ([9be1ae5](https://github.com/rafamel/kpo/commit/9be1ae54ec086d43eb52a1970fe31d6359ff1eb2))
+
+
+
 # [0.14.0](https://github.com/rafamel/kpo/compare/v0.13.0...v0.14.0) (2021-03-31)
 
 
