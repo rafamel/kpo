@@ -11,6 +11,8 @@ export interface WatchOptions {
   glob?: boolean;
   /** Runs the task on start instead of waiting for changes */
   initial?: boolean;
+  /** Files and paths to exclude */
+  exclude?: string | RegExp;
   /** Doesn't cancel tasks in execution when a new task runs */
   parallel?: boolean;
   /** Avoids rapid task restarts by debouncing by a set number of ms */
@@ -40,6 +42,7 @@ export function watch(
       {
         glob: false,
         initial: false,
+        exclude: undefined,
         parallel: false,
         debounce: -1,
         depth: -1,
@@ -51,6 +54,7 @@ export function watch(
 
     const watcher = chokidar.watch(paths, {
       persistent: true,
+      ignored: opts.exclude,
       ignorePermissionErrors: false,
       ignoreInitial: true,
       cwd: ctx.cwd,
