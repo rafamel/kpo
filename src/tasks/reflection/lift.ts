@@ -49,8 +49,8 @@ export function lift(tasks: Task.Record, options?: LiftOptions): Task.Async {
     }
     const content = await fs.readFile(pkgPath);
     const pkg = JSON.parse(content.toString());
-
     const pkgScripts: Members<string> = pkg.scripts || {};
+
     const taskScripts = into(
       tasks,
       parseToRecord.bind(null, { include: null, exclude: null }),
@@ -59,7 +59,7 @@ export function lift(tasks: Task.Record, options?: LiftOptions): Task.Async {
         return keys.reduce(
           (acc: Members<string>, name) => ({
             ...acc,
-            [name]: opts.bin ? `${opts.bin} ${name} --` : `${name} --`
+            [name]: `${opts.bin} ${name} --`
           }),
           {}
         );

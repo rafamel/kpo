@@ -27,7 +27,7 @@ export default async function main(
   const pkg = await loadPackage(__dirname, { title: true });
 
   const help = indent`
-    ${pkg.description ? chalk.bold(pkg.description) : ''}
+  ${pkg.description ? chalk.bold(pkg.description) : ''}
 
     Usage:
       $ ${opts.bin} [options] [command]
@@ -161,7 +161,7 @@ export default async function main(
               log('debug', 'Working directory:', process.cwd()),
               log('info', chalk.bold(opts.bin), chalk.bold.blue(':list')),
               print(),
-              list(record)
+              list(record, { bin: opts.bin })
             ),
             withContext
           );

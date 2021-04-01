@@ -35,9 +35,7 @@ export function list(
       ? items.map((item) => map(item.name, item.route))
       : items.map((item) => {
           return [
-            (opts.bin ? `${opts.bin} ` : '') +
-              chalk.bold(item.name) +
-              ' '.repeat(4),
+            opts.bin + ' ' + chalk.bold(item.name) + ' '.repeat(4),
             ...Array(item.route.length).fill(''),
             item.route[item.route.length - 1],
             ...Array(maxRouteLength - item.route.length).fill('')

@@ -65,7 +65,8 @@ export default async function bin(
     print(),
     lift(params.record, {
       purge: cmd['--purge'],
-      mode: cmd['--mode'] as any
+      mode: cmd['--mode'] as any,
+      bin: opts.bin
     })
   );
 }
