@@ -4,7 +4,7 @@ import { fetch } from '../utils';
 import watch from './watch';
 import lift from './lift';
 import { Members } from 'type-core';
-import { loadPackage, flags, safePairs, splitBy } from 'cli-belt';
+import { flags, safePairs, splitBy } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
 import { into } from 'pipettes';
 import chalk from 'chalk';
@@ -18,16 +18,18 @@ interface Params {
 interface Options {
   bin: string;
   file: string;
+  description: string;
+  version: string;
 }
 
 export default async function main(
   params: Params,
   opts: Options
 ): Promise<Task> {
-  const pkg = await loadPackage(__dirname, { title: true });
+  process.title = opts.bin;
 
   const help = indent`
-  ${pkg.description ? chalk.bold(pkg.description) : ''}
+    ${chalk.bold(opts.description)}
 
     Usage:
       $ ${opts.bin} [options] [command]
@@ -72,7 +74,7 @@ export default async function main(
   });
 
   if (cmd['--help']) return print(help + '\n');
-  if (cmd['--version']) return print(pkg.version || 'Unknown');
+  if (cmd['--version']) return print(opts.version);
   if (!cmd._.length) {
     return series(
       print(help + '\n'),

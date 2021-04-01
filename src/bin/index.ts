@@ -3,6 +3,7 @@ import { run } from '../utils/run';
 import { log } from '../tasks/stdio/log';
 import main from './main';
 import { NullaryFn } from 'type-core';
+import { loadPackage } from 'cli-belt';
 import { attach, options as _options, resolver, add } from 'exits';
 
 export interface BinOptions {
@@ -10,6 +11,10 @@ export interface BinOptions {
   bin?: string;
   /** Default tasks file name */
   file?: string;
+  /** Executable description */
+  description?: string;
+  /** Executable version */
+  version?: string;
 }
 
 /**
@@ -17,7 +22,16 @@ export interface BinOptions {
  */
 export async function bin(options?: BinOptions): Promise<void> {
   try {
-    const opts = Object.assign({ bin: 'kpo', file: 'kpo.tasks.js' }, options);
+    const pkg = await loadPackage(__dirname, { title: false });
+    const opts = Object.assign(
+      {
+        bin: 'kpo',
+        file: 'kpo.tasks.js',
+        description: pkg.description || '',
+        version: pkg.version || 'Unknown'
+      },
+      options
+    );
     const task = await main({ argv: process.argv.slice(2) }, opts);
 
     const cbs: NullaryFn[] = [];
