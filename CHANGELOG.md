@@ -1,3 +1,12 @@
+# [0.16.0](https://github.com/rafamel/kpo/compare/v0.15.0...v0.16.0) (2021-04-02)
+
+
+### Features
+
+* **tasks:** add bundle task ([241de8a](https://github.com/rafamel/kpo/commit/241de8ab2efda7edb006e88cb445ea5d6a64cc5b))
+
+
+
 # [0.15.0](https://github.com/rafamel/kpo/compare/v0.14.0...v0.15.0) (2021-04-01)
 
 
