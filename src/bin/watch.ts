@@ -1,18 +1,7 @@
 import { Task } from '../definitions';
-import { run } from '../utils';
-import {
-  series,
-  raises,
-  print,
-  log,
-  combine,
-  watch,
-  context,
-  clear
-} from '../tasks';
+import { series, raises, print, log, combine, watch, context } from '../tasks';
 import { stripIndent as indent } from 'common-tags';
 import { flags, safePairs, splitBy } from 'cli-belt';
-import { into } from 'pipettes';
 import chalk from 'chalk';
 import arg from 'arg';
 
@@ -36,11 +25,11 @@ export default async function bin(
       $ ${opts.bin} :watch [options]
 
     Options:
-      -p, --path <value>      Paths to watch
-      -e, --exclude <value>   File or path to exclude
       -g, --glob              Parse globs in paths
+      -p, --prime             Runs the task once when ready to wait for changes
       -c, --clear             Clear stdout before tasks execution
-      -i, --initial           Run tasks on start, before changes
+      -i, --include <value>   Paths to include
+      -e, --exclude <value>   Paths to exclude
       -s, --symlinks          Follow symlinks
       --parallel              Don't cancel running tasks
       --debounce <number>     Avoid rapid task restarts (ms)
@@ -49,16 +38,16 @@ export default async function bin(
       -h, --help              Show help
 
       Examples:
-        $ ${opts.bin} :watch -p ./src -p ./test foo bar baz
-        $ ${opts.bin} -e NODE_ENV=development :watch -p ./src foo bar baz
+        $ ${opts.bin} :watch -i ./src -i ./test foo bar baz
+        $ ${opts.bin} -e NODE_ENV=development :watch -i ./src foo bar baz
   `;
 
   const types = {
-    '--path': [String] as [StringConstructor],
-    '--exclude': String,
     '--glob': Boolean,
+    '--prime': Boolean,
+    '--include': [String] as [StringConstructor],
+    '--exclude': [String] as [StringConstructor],
     '--clear': Boolean,
-    '--initial': Boolean,
     '--parallel': Boolean,
     '--symlinks': Boolean,
     '--debounce': Number,
@@ -80,57 +69,34 @@ export default async function bin(
 
   const [names, args] = splitBy(cmd._, '--');
   return names.length
-    ? async (ctx) => {
-        let first = true;
-        return into(
-          series(
-            log('debug', 'Working directory:', process.cwd()),
-            log(
-              'info',
-              chalk.bold(opts.bin),
-              chalk.bold.blue(':watch'),
-              names.join(' ')
-            ),
-            print(),
-            watch(
-              cmd['--path'] || './',
-              {
-                glob: cmd['--glob'],
-                initial: cmd['--initial'],
-                exclude: cmd['--exclude'] || 'node_modules',
-                parallel: cmd['--parallel'],
-                debounce: cmd['--debounce'],
-                depth: cmd['--depth'],
-                poll: cmd['--poll'],
-                symlinks: cmd['--symlinks']
-              },
-              async (ctx) => {
-                return first
-                  ? into(combine(params.record, names), (task) => {
-                      first = false;
-                      return run(task, ctx);
-                    })
-                  : into(
-                      series(
-                        cmd['--clear'] ? clear() : null,
-                        log(
-                          'info',
-                          chalk.bold(opts.bin),
-                          chalk.bold.blue(':watch'),
-                          names.join(' ')
-                        ),
-                        print(),
-                        combine(params.record, names)
-                      ),
-                      (task) => run(task, ctx)
-                    );
-              }
-            )
+    ? context(
+        { args },
+        series(
+          log('debug', 'Working directory:', process.cwd()),
+          log(
+            'info',
+            chalk.bold(opts.bin),
+            chalk.bold.blue(':watch'),
+            names.join(' ')
           ),
-          context.bind(null, { args }),
-          (task) => run(task, ctx)
-        );
-      }
+          print(),
+          watch(
+            {
+              glob: cmd['--glob'],
+              prime: cmd['--prime'],
+              clear: cmd['--clear'],
+              include: cmd['--include'],
+              exclude: cmd['--exclude'],
+              parallel: cmd['--parallel'],
+              debounce: cmd['--debounce'],
+              depth: cmd['--depth'],
+              poll: cmd['--poll'],
+              symlinks: cmd['--symlinks']
+            },
+            combine(params.record, names)
+          )
+        )
+      )
     : series(
         print(help + '\n'),
         raises(Error(`A command or task is required`))

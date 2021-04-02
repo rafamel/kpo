@@ -1,6 +1,8 @@
 import { Task, Context } from '../../definitions';
 import { run } from '../../utils/run';
 import { log } from '../stdio/log';
+import { clear } from '../stdio/clear';
+import { series } from '../aggregate/series';
 import { NullaryFn, UnaryFn, Empty } from 'type-core';
 import { into, combine } from 'pipettes';
 import chokidar from 'chokidar';
@@ -9,10 +11,14 @@ import debounce from 'debounce';
 export interface WatchOptions {
   /** Parse globs in paths */
   glob?: boolean;
-  /** Runs the task on start instead of waiting for changes */
-  initial?: boolean;
-  /** Files and paths to exclude */
-  exclude?: string | RegExp;
+  /** Runs the task once when ready to wait for changes */
+  prime?: boolean;
+  /** Clear stdout before tasks execution */
+  clear?: boolean;
+  /** Paths to include */
+  include?: string | string[];
+  /** Paths to exclude */
+  exclude?: string | string[];
   /** Doesn't cancel tasks in execution when a new task runs */
   parallel?: boolean;
   /** Avoids rapid task restarts by debouncing by a set number of ms */
@@ -30,29 +36,32 @@ export interface WatchOptions {
  * `task` for every change event.
  * @returns Task
  */
-export function watch(
-  paths: string | string[],
-  options: WatchOptions | Empty,
-  task: Task
-): Task.Async {
+export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
   return async (ctx: Context): Promise<void> => {
-    into(ctx, log('debug', 'Watch:', paths));
-
-    const opts = Object.assign(
+    const opts = into(
       {
         glob: false,
-        initial: false,
-        exclude: undefined,
+        prime: false,
+        clear: false,
+        include: ['./'],
+        exclude: ['node_modules'],
         parallel: false,
         debounce: -1,
         depth: -1,
         poll: -1,
         symlinks: false
       },
-      options
+      (defaults): Required<WatchOptions> => Object.assign(defaults, options),
+      ({ include, exclude, ...options }) => ({
+        ...options,
+        include: Array.isArray(include) ? include : [include],
+        exclude: Array.isArray(exclude) ? exclude : [exclude]
+      })
     );
 
-    const watcher = chokidar.watch(paths, {
+    into(ctx, log('debug', 'Watch:', opts.include));
+
+    const watcher = chokidar.watch(opts.include, {
       persistent: true,
       ignored: opts.exclude,
       ignorePermissionErrors: false,
@@ -88,7 +97,7 @@ export function watch(
 
         current = after
           .then(() => {
-            return run(task, {
+            return run(series(i === 0 ? null : clear(), task), {
               ...ctx,
               route: opts.parallel ? ctx.route.concat(String(i++)) : ctx.route,
               cancellation: new Promise((resolve) => {
@@ -102,9 +111,9 @@ export function watch(
     );
 
     return new Promise((resolve, reject) => {
-      if (opts.initial) {
+      if (opts.prime) {
         watcher.on('ready', () => {
-          into(ctx, log('debug', 'Watch event:', 'initial'));
+          into(ctx, log('debug', 'Watch event:', 'prime'));
           onEvent(combine(close, reject));
         });
       }
