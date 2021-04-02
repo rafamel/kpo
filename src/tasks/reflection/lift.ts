@@ -3,7 +3,7 @@ import { parseToRecord } from '../../helpers/parse';
 import { getAbsolutePath } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
 import { run } from '../../utils/run';
-import { select } from '../aggregate/select';
+import { select } from '../transform/select';
 import { write } from '../filesystem/write';
 import { print } from '../stdio/print';
 import { Members } from 'type-core';
