@@ -2,6 +2,7 @@ import { Context } from '../definitions';
 import { styleString } from './style-string';
 import { stringifyRoute } from './stringify-route';
 import { into } from 'pipettes';
+import { TypeGuard } from 'type-core';
 
 export function getPrefix(
   extra: null | string,
@@ -9,9 +10,16 @@ export function getPrefix(
   context: Context
 ): string {
   return into(
-    context.route.length ? stringifyRoute(context.route) : '',
-    (prefix) => {
-      if (!prefix || (context.prefix !== target && context.prefix !== 'all')) {
+    {
+      prefix: context.route.length ? stringifyRoute(context.route) : '',
+      policy: TypeGuard.isString(context.prefix)
+        ? context.prefix
+        : context.prefix
+        ? 'all'
+        : 'none'
+    },
+    ({ prefix, policy }) => {
+      if (!prefix || (policy !== target && policy !== 'all')) {
         return extra ? extra + ' ' : null;
       }
       return (

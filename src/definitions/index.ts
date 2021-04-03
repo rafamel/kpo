@@ -52,7 +52,7 @@ export interface Context {
    * lines of its *stdout* and *stderr* writes
    * with the stringification of its route.
    */
-  readonly prefix: PrefixPolicy;
+  readonly prefix: PrefixPolicy | boolean;
   /**
    * A *Promise* representing a task's
    * cancellation token.

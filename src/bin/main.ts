@@ -97,7 +97,7 @@ export default async function main(
     file: cmd['--file'],
     dir: cmd['--dir'],
     level: cmd['--level'] as LogLevel,
-    prefix: (cmd['--prefix'] ? 'all' : 'none') as PrefixPolicy,
+    prefix: cmd['--prefix'],
     env: (cmd['--env'] || []).reduce((acc, str) => {
       const arr = str.split('=');
       if (arr.length !== 2) {
