@@ -1,7 +1,8 @@
 import { LogLevel, Task, PrefixPolicy } from '../definitions';
-import { print, log, list, raises, series, context, combine } from '../tasks';
+import { print, log, raises, series, context, combine } from '../tasks';
 import { fetch } from '../utils';
 import watch from './watch';
+import list from './list';
 import lift from './lift';
 import { Members } from 'type-core';
 import { flags, safePairs, splitBy } from 'cli-belt';
@@ -153,20 +154,10 @@ export default async function main(
       );
     }
     case ':list': {
-      return cmd._.length
-        ? series(
-            print(help + '\n'),
-            raises(Error(`Unknown subcommand: ${cmd._[0]}`))
-          )
-        : into(
-            series(
-              log('debug', 'Working directory:', process.cwd()),
-              log('info', chalk.bold(opts.bin), chalk.bold.blue(':list')),
-              print(),
-              list(record, { bin: opts.bin })
-            ),
-            withContext
-          );
+      return into(
+        await list({ argv: cmd._, record: record }, { bin: opts.bin }),
+        withContext
+      );
     }
     case ':lift': {
       return into(

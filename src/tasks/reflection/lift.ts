@@ -28,6 +28,10 @@ export interface LiftOptions {
    */
   mode?: 'default' | 'confirm' | 'dry' | 'audit';
   /**
+   * Lift default tasks and subtasks by their own
+   */
+  defaults?: boolean;
+  /**
    * Name of kpo's executable
    */
   bin?: string;
@@ -47,7 +51,7 @@ export function lift(
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
     const opts = shallow(
-      { purge: false, mode: 'default', bin: constants.bin },
+      { purge: false, mode: 'default', defaults: false, bin: constants.bin },
       options || undefined
     );
 
@@ -63,7 +67,11 @@ export function lift(
 
     const taskScripts = into(
       source,
-      parseToRecord.bind(null, { include: null, exclude: null }),
+      parseToRecord.bind(null, {
+        include: null,
+        exclude: null,
+        defaults: opts.defaults
+      }),
       (record) => Object.keys(record),
       (keys) => {
         return keys.reduce(

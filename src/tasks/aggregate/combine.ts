@@ -32,7 +32,11 @@ export function combine(
           task
         );
       }),
-      parseToRecord.bind(null, { include: keys, exclude: null }),
+      parseToRecord.bind(null, {
+        include: keys,
+        exclude: null,
+        defaults: true
+      }),
       (record) => keys.map((key) => record[key]),
       (arr) => series(...arr),
       (task) => run(task, ctx)

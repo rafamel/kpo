@@ -1,7 +1,8 @@
 import { Task } from '../definitions';
+import { constants } from '../constants';
 import { series } from '../tasks/aggregate/series';
 import { stringifyRoute } from './stringify-route';
-import { Members } from 'type-core';
+import { Members, TypeGuard } from 'type-core';
 
 interface Item {
   name: string;
@@ -9,17 +10,21 @@ interface Item {
   task: Task;
 }
 
-interface Options {
+interface ParseToArrayOptions {
+  defaults: boolean;
+}
+
+interface ParseToRecordOptions extends ParseToArrayOptions {
   include: string[] | null;
   exclude: string[] | null;
 }
 
 export function parseToRecord(
-  options: Options,
+  options: ParseToRecordOptions,
   record: Task.Record
 ): Members<Task> {
   const { include, exclude } = options;
-  const arr = parseToArray(record);
+  const arr = parseToArray({ defaults: options.defaults }, record);
 
   const members: Members<Task> = {};
   for (const item of arr) {
@@ -39,7 +44,10 @@ export function parseToRecord(
   return members;
 }
 
-export function parseToArray(record: Task.Record): Item[] {
+export function parseToArray(
+  options: ParseToArrayOptions,
+  record: Task.Record
+): Item[] {
   const names: string[] = [];
 
   return parseHelper(record)
@@ -56,24 +64,40 @@ export function parseToArray(record: Task.Record): Item[] {
       names.push(name);
       return { name, route, task };
     })
-    .filter((item): item is Item => Boolean(item.task));
+    .filter((item) => {
+      return options.defaults
+        ? Boolean(item.task)
+        : Boolean(
+            item.route.indexOf(constants.record.default) === -1 && item.task
+          );
+    });
 }
 
 function parseHelper(record: Task.Record): Array<[string[], Task]> {
   const arr: Array<[string[], Task]> = [];
 
   for (const [name, tasks] of Object.entries(record)) {
-    if (typeof tasks === 'function') {
+    if (TypeGuard.isFunction(tasks)) {
       arr.push([[name], tasks]);
     } else {
       const all: Task[] = [];
+      const defaults: Task[] = [];
       const every: Array<[string[], Task]> = [];
       for (const [route, task] of parseHelper(tasks)) {
         every.push([[name, ...route], task]);
-        if (route.length <= 1) all.push(task);
+        if (route.length <= 1) {
+          route[0] === constants.record.default
+            ? defaults.push(task)
+            : all.push(task);
+        }
       }
 
-      if (all.length) arr.push([[name], series(...all)]);
+      if (defaults.length) {
+        arr.push([[name], series(...defaults)]);
+      } else if (all.length) {
+        arr.push([[name], series(...all)]);
+      }
+
       if (every.length) arr.push(...every);
     }
   }

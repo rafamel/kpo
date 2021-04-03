@@ -1,5 +1,5 @@
 import { Task } from '../definitions';
-import { lift, series, raises, print, log } from '../tasks';
+import { list, series, raises, print, log } from '../tasks';
 import { stripIndent as indent } from 'common-tags';
 import { flags, safePairs } from 'cli-belt';
 import chalk from 'chalk';
@@ -19,22 +19,18 @@ export default async function bin(
   opts: Options
 ): Promise<Task> {
   const help = indent`
-    ${chalk.bold(`Lifts ${opts.bin} tasks to a package.json`)}
+    ${chalk.bold(`Lists ${opts.bin} tasks`)}
 
     Usage:
-      $ ${opts.bin} :lift [options]
+      $ ${opts.bin} :list [options]
 
     Options:
-      --purge             Purge all non-${opts.bin} scripts
-      --defaults          Lift default tasks and subtasks by their own
-      --mode <value>      Lift mode of operation (default, confirm, dry, audit)
-      -h, --help          Show help
+      --defaults      List default tasks and subtasks by their own
+      -h, --help      Show help
   `;
 
   const types = {
-    '--purge': Boolean,
     '--defaults': Boolean,
-    '--mode': String,
     '--help': Boolean
   };
 
@@ -55,21 +51,10 @@ export default async function bin(
     );
   }
 
-  if (
-    !['default', 'confirm', 'dry', 'audit'].includes(cmd['--mode'] || 'default')
-  ) {
-    return raises(Error(`Lift mode must be default, confirm, dry, or audit`));
-  }
-
   return series(
     log('debug', 'Working directory:', process.cwd()),
-    log('info', chalk.bold(opts.bin), chalk.bold.blue(':lift')),
+    log('info', chalk.bold(opts.bin), chalk.bold.blue(':list')),
     print(),
-    lift(params.record, {
-      purge: cmd['--purge'],
-      defaults: cmd['--defaults'],
-      mode: cmd['--mode'] as any,
-      bin: opts.bin
-    })
+    list(params.record, { defaults: cmd['--defaults'], bin: opts.bin })
   );
 }

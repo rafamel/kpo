@@ -11,6 +11,10 @@ import chalk from 'chalk';
 
 export interface ListOptions {
   /**
+   * List default tasks and subtasks by their own
+   */
+  defaults?: boolean;
+  /**
    * Name of kpo's executable.
    */
   bin?: string;
@@ -27,10 +31,13 @@ export function list(
   map?: (name: string, route: string[]) => string[]
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
-    const opts = shallow({ bin: constants.bin }, options || undefined);
+    const opts = shallow(
+      { defaults: false, bin: constants.bin },
+      options || undefined
+    );
 
     const source = await getTaskRecord(tasks);
-    const items = parseToArray(source);
+    const items = parseToArray({ defaults: opts.defaults }, source);
     const maxRouteLength = items.reduce(
       (acc, item) => (acc > item.route.length ? acc : item.route.length),
       0
