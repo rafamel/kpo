@@ -70,6 +70,7 @@ export function lift(
       parseToRecord.bind(null, {
         include: null,
         exclude: null,
+        roots: true,
         defaults: opts.defaults
       }),
       (record) => Object.keys(record),

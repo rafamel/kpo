@@ -113,7 +113,7 @@ export default async function bin(
                   names.join(' ')
                 );
               }),
-              combine(params.record, names)
+              combine(params.record, { include: names, defaults: true })
             )
           )
         )

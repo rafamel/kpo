@@ -39,8 +39,8 @@ export default async function main(
       -f, --file <path>       Configuration file
       -d, --dir <path>        Project directory
       -e, --env <value>       Environment variables
-      --prefix                Print task routes
       --level <value>         Logging level
+      --prefix                Prefix task output with its route
       -h, --help              Show help
       -v, --version           Show version number
 
@@ -59,8 +59,8 @@ export default async function main(
     '--file': String,
     '--dir': String,
     '--env': [String] as [StringConstructor],
-    '--prefix': Boolean,
     '--level': String,
+    '--prefix': Boolean,
     '--help': Boolean,
     '--version': Boolean
   };
@@ -137,7 +137,7 @@ export default async function main(
                 names.join(' ')
               ),
               print(),
-              combine(record, names)
+              combine(record, { include: names, defaults: true })
             ),
             context.bind(null, { args }),
             withContext

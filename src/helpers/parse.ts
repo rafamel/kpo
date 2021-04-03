@@ -11,6 +11,7 @@ interface Item {
 }
 
 interface ParseToArrayOptions {
+  roots: boolean;
   defaults: boolean;
 }
 
@@ -24,7 +25,10 @@ export function parseToRecord(
   record: Task.Record
 ): Members<Task> {
   const { include, exclude } = options;
-  const arr = parseToArray({ defaults: options.defaults }, record);
+  const arr = parseToArray(
+    { roots: options.roots, defaults: options.defaults },
+    record
+  );
 
   const members: Members<Task> = {};
   for (const item of arr) {
@@ -50,7 +54,7 @@ export function parseToArray(
 ): Item[] {
   const names: string[] = [];
 
-  return parseHelper(record)
+  return parseHelper(record, options.roots)
     .map(([route, task]) => {
       const name = stringifyRoute(route);
 
@@ -73,7 +77,10 @@ export function parseToArray(
     });
 }
 
-function parseHelper(record: Task.Record): Array<[string[], Task]> {
+function parseHelper(
+  record: Task.Record,
+  roots: boolean
+): Array<[string[], Task]> {
   const arr: Array<[string[], Task]> = [];
 
   for (const [name, tasks] of Object.entries(record)) {
@@ -83,7 +90,7 @@ function parseHelper(record: Task.Record): Array<[string[], Task]> {
       const all: Task[] = [];
       const defaults: Task[] = [];
       const every: Array<[string[], Task]> = [];
-      for (const [route, task] of parseHelper(tasks)) {
+      for (const [route, task] of parseHelper(tasks, roots)) {
         every.push([[name, ...route], task]);
         if (route.length <= 1) {
           route[0] === constants.record.default
@@ -92,10 +99,12 @@ function parseHelper(record: Task.Record): Array<[string[], Task]> {
         }
       }
 
-      if (defaults.length) {
-        arr.push([[name], series(...defaults)]);
-      } else if (all.length) {
-        arr.push([[name], series(...all)]);
+      if (roots) {
+        if (defaults.length) {
+          arr.push([[name], series(...defaults)]);
+        } else if (all.length) {
+          arr.push([[name], series(...all)]);
+        }
       }
 
       if (every.length) arr.push(...every);

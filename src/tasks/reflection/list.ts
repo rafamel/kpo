@@ -37,7 +37,10 @@ export function list(
     );
 
     const source = await getTaskRecord(tasks);
-    const items = parseToArray({ defaults: opts.defaults }, source);
+    const items = parseToArray(
+      { roots: true, defaults: opts.defaults },
+      source
+    );
     const maxRouteLength = items.reduce(
       (acc, item) => (acc > item.route.length ? acc : item.route.length),
       0
