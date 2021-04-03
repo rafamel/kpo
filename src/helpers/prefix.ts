@@ -1,7 +1,7 @@
 import { Context } from '../definitions';
+import { styleString } from './style-string';
 import { stringifyRoute } from './stringify-route';
 import { into } from 'pipettes';
-import chalk from 'chalk';
 
 export function getPrefix(
   extra: null | string,
@@ -14,7 +14,9 @@ export function getPrefix(
       if (!prefix || (context.prefix !== target && context.prefix !== 'all')) {
         return extra ? extra + ' ' : null;
       }
-      return chalk.bold(`${prefix} | `) + (extra ? extra + ' ' : '');
+      return (
+        styleString(`${prefix} | `, { bold: true }) + (extra ? extra + ' ' : '')
+      );
     },
     (prefix) => prefix || ''
   );

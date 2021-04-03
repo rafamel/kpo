@@ -1,8 +1,8 @@
 import { Task } from '../definitions';
+import { styleString } from '../helpers/style-string';
 import { lift, series, raises, print, log } from '../tasks';
 import { stripIndent as indent } from 'common-tags';
 import { flags, safePairs } from 'cli-belt';
-import chalk from 'chalk';
 import arg from 'arg';
 
 interface Params {
@@ -19,7 +19,7 @@ export default async function bin(
   opts: Options
 ): Promise<Task> {
   const help = indent`
-    ${chalk.bold(`Lifts ${opts.bin} tasks to a package.json`)}
+    ${styleString(`Lifts ${opts.bin} tasks to a package.json`, { bold: true })}
 
     Usage:
       $ ${opts.bin} :lift [options]
@@ -63,7 +63,11 @@ export default async function bin(
 
   return series(
     log('debug', 'Working directory:', process.cwd()),
-    log('info', chalk.bold(opts.bin), chalk.bold.blue(':lift')),
+    log(
+      'info',
+      styleString(opts.bin, { bold: true }),
+      styleString(':lift', { bold: true, color: 'blue' })
+    ),
     print(),
     lift(params.record, {
       purge: cmd['--purge'],

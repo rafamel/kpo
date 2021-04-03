@@ -1,5 +1,6 @@
 import { Task, Context } from '../../definitions';
 import { parseToArray } from '../../helpers/parse';
+import { styleString } from '../../helpers/style-string';
 import { getTaskRecord } from '../../helpers/get-task-record';
 import { constants } from '../../constants';
 import { print } from '../stdio/print';
@@ -7,7 +8,6 @@ import { Empty } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import table from 'as-table';
-import chalk from 'chalk';
 
 export interface ListOptions {
   /**
@@ -50,7 +50,10 @@ export function list(
       ? items.map((item) => map(item.name, item.route))
       : items.map((item) => {
           return [
-            opts.bin + ' ' + chalk.bold(item.name) + ' '.repeat(4),
+            opts.bin +
+              ' ' +
+              styleString(item.name, { bold: true }) +
+              ' '.repeat(4),
             ...Array(item.route.length).fill(''),
             item.route[item.route.length - 1],
             ...Array(maxRouteLength - item.route.length).fill('')

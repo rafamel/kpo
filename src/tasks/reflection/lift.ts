@@ -1,6 +1,7 @@
 import { Task, Context } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
 import { getAbsolutePath } from '../../helpers/paths';
+import { styleString } from '../../helpers/style-string';
 import { getTaskRecord } from '../../helpers/get-task-record';
 import { isCancelled } from '../../utils/is-cancelled';
 import { run } from '../../utils/run';
@@ -11,7 +12,6 @@ import { print } from '../stdio/print';
 import { shallow } from 'merge-strategies';
 import { Empty, Members } from 'type-core';
 import { into } from 'pipettes';
-import chalk from 'chalk';
 import fs from 'fs-extra';
 
 export interface LiftOptions {
@@ -155,24 +155,24 @@ function printChanges(
   if (areChangesPending) {
     if (addScriptNames.length) {
       strArr.push(
-        chalk.bold.green('Scripts to add'),
+        styleString('Scripts to add', { bold: true, color: 'green' }),
         addScriptNames.join(', ') + '\n'
       );
     }
     if (replaceScriptNames.length) {
       strArr.push(
-        chalk.bold.yellow('Scripts to replace'),
+        styleString('Scripts to replace', { bold: true, color: 'yellow' }),
         replaceScriptNames.join(', ') + '\n'
       );
     }
     if (removeScriptNames.length) {
       strArr.push(
-        chalk.bold.red('Scripts to remove'),
+        styleString('Scripts to remove', { bold: true, color: 'red' }),
         removeScriptNames.join(', ') + '\n'
       );
     }
   } else {
-    strArr.push(chalk.bold('No pending scripts changes'));
+    strArr.push(styleString('No pending scripts changes', { bold: true }));
   }
 
   into(context, print(strArr.join('\n')));

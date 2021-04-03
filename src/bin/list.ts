@@ -1,8 +1,8 @@
 import { Task } from '../definitions';
+import { styleString } from '../helpers/style-string';
 import { list, series, raises, print, log } from '../tasks';
 import { stripIndent as indent } from 'common-tags';
 import { flags, safePairs } from 'cli-belt';
-import chalk from 'chalk';
 import arg from 'arg';
 
 interface Params {
@@ -19,7 +19,7 @@ export default async function bin(
   opts: Options
 ): Promise<Task> {
   const help = indent`
-    ${chalk.bold(`Lists ${opts.bin} tasks`)}
+    ${styleString(`Lists ${opts.bin} tasks`, { bold: true })}
 
     Usage:
       $ ${opts.bin} :list [options]
@@ -53,7 +53,11 @@ export default async function bin(
 
   return series(
     log('debug', 'Working directory:', process.cwd()),
-    log('info', chalk.bold(opts.bin), chalk.bold.blue(':list')),
+    log(
+      'info',
+      styleString(opts.bin, { bold: true }),
+      styleString(':list', { bold: true, color: 'blue' })
+    ),
     print(),
     list(params.record, { defaults: cmd['--defaults'], bin: opts.bin })
   );

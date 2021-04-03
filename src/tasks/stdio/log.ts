@@ -1,7 +1,7 @@
 import { Task, LogLevel, Context } from '../../definitions';
+import { styleString } from '../../helpers/style-string';
 import { addPrefix } from '../../helpers/prefix';
 import { Members } from 'type-core';
-import chalk from 'chalk';
 import util from 'util';
 
 const rank: Members<number> = {
@@ -14,11 +14,16 @@ const rank: Members<number> = {
 };
 
 const color = {
-  trace: chalk.bold.bgMagenta.white,
-  debug: chalk.bold.bgCyan.white,
-  info: chalk.bold.bgGreen.white,
-  warn: chalk.bold.bgYellow.white,
-  error: chalk.bold.bgRed.white
+  trace: (str: string) =>
+    styleString(str, { bold: true, bg: 'magenta', color: 'white' }),
+  debug: (str: string) =>
+    styleString(str, { bold: true, bg: 'cyan', color: 'white' }),
+  info: (str: string) =>
+    styleString(str, { bold: true, bg: 'green', color: 'white' }),
+  warn: (str: string) =>
+    styleString(str, { bold: true, bg: 'yellow', color: 'white' }),
+  error: (str: string) =>
+    styleString(str, { bold: true, bg: 'red', color: 'white' })
 };
 
 /**
@@ -53,5 +58,5 @@ export function log(
 function getLoggerMessagePrefix(level: Exclude<LogLevel, 'silent'>): string {
   const fn = color[level];
   const name = level.toUpperCase();
-  return fn ? fn(` ${name} `) : chalk.bold(name);
+  return fn ? fn(` ${name} `) : styleString(name, { bold: true });
 }

@@ -1,4 +1,5 @@
 import { LogLevel, Task, PrefixPolicy } from '../definitions';
+import { styleString } from '../helpers/style-string';
 import { print, log, raises, series, context, combine } from '../tasks';
 import { fetch } from '../utils';
 import watch from './watch';
@@ -8,7 +9,6 @@ import { Members } from 'type-core';
 import { flags, safePairs, splitBy } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
 import { into } from 'pipettes';
-import chalk from 'chalk';
 import path from 'path';
 import arg from 'arg';
 
@@ -30,7 +30,7 @@ export default async function main(
   process.title = opts.bin;
 
   const help = indent`
-    ${chalk.bold(opts.description)}
+    ${styleString(opts.description, { bold: true })}
 
     Usage:
       $ ${opts.bin} [options] [command]
@@ -132,8 +132,8 @@ export default async function main(
               log('debug', 'Working directory:', process.cwd()),
               log(
                 'info',
-                chalk.bold(opts.bin),
-                chalk.bold.blue(':run'),
+                styleString(opts.bin, { bold: true }),
+                styleString(':run', { bold: true, color: 'blue' }),
                 names.join(' ')
               ),
               print(),

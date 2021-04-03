@@ -1,4 +1,5 @@
 import { Task } from '../definitions';
+import { styleString } from '../helpers/style-string';
 import {
   series,
   raises,
@@ -11,7 +12,6 @@ import {
 } from '../tasks';
 import { stripIndent as indent } from 'common-tags';
 import { flags, safePairs, splitBy } from 'cli-belt';
-import chalk from 'chalk';
 import arg from 'arg';
 
 interface Params {
@@ -28,7 +28,10 @@ export default async function bin(
   opts: Options
 ): Promise<Task> {
   const help = indent`
-    ${chalk.bold(`Watches a path and runs ${opts.bin} tasks on change events`)}
+    ${styleString(
+      `Watches a path and runs ${opts.bin} tasks on change events`,
+      { bold: true }
+    )}
 
     Usage:
       $ ${opts.bin} :watch [options]
@@ -85,8 +88,8 @@ export default async function bin(
           log('debug', 'Working directory:', process.cwd()),
           log(
             'info',
-            chalk.bold(opts.bin),
-            chalk.bold.blue(':watch'),
+            styleString(opts.bin, { bold: true }),
+            styleString(':watch', { bold: true, color: 'blue' }),
             names.join(' ')
           ),
           print(),
@@ -108,8 +111,8 @@ export default async function bin(
                 if (first) return (first = false) || null;
                 return log(
                   'info',
-                  chalk.bold(opts.bin),
-                  chalk.bold.blue(':watch'),
+                  styleString(opts.bin, { bold: true }),
+                  styleString(':watch', { bold: true, color: 'blue' }),
                   names.join(' ')
                 );
               }),
