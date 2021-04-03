@@ -3,6 +3,7 @@ import { parseToRecord } from '../../helpers/parse';
 import { getAbsolutePath } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
 import { run } from '../../utils/run';
+import { constants } from '../../constants';
 import { select } from '../transform/select';
 import { write } from '../filesystem/write';
 import { print } from '../stdio/print';
@@ -38,7 +39,7 @@ export interface LiftOptions {
 export function lift(tasks: Task.Record, options?: LiftOptions): Task.Async {
   return async (ctx: Context): Promise<void> => {
     const opts = Object.assign(
-      { purge: false, mode: 'default', bin: 'kpo' },
+      { purge: false, mode: 'default', bin: constants.bin },
       options
     );
 

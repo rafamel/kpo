@@ -1,5 +1,6 @@
 import { Task, Context } from '../../definitions';
 import { parseToArray } from '../../helpers/parse';
+import { constants } from '../../constants';
 import { print } from '../stdio/print';
 import { Empty } from 'type-core';
 import { into } from 'pipettes';
@@ -24,7 +25,7 @@ export function list(
   map?: (name: string, route: string[]) => string[]
 ): Task.Sync {
   return (ctx: Context): void => {
-    const opts = Object.assign({ bin: 'kpo' }, options);
+    const opts = Object.assign({ bin: constants.bin }, options);
     const items = parseToArray(tasks);
     const maxRouteLength = items.reduce(
       (acc, item) => (acc > item.route.length ? acc : item.route.length),

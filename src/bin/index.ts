@@ -1,9 +1,9 @@
 import { formatMessage } from '../helpers/format-message';
 import { run } from '../utils/run';
 import { log } from '../tasks/stdio/log';
+import { constants } from '../constants';
 import main from './main';
 import { NullaryFn } from 'type-core';
-import { loadPackage } from 'cli-belt';
 import { attach, options as _options, resolver, add } from 'exits';
 
 export interface BinOptions {
@@ -22,16 +22,16 @@ export interface BinOptions {
  */
 export async function bin(options?: BinOptions): Promise<void> {
   try {
-    const pkg = await loadPackage(__dirname, { title: false });
     const opts = Object.assign(
       {
-        bin: 'kpo',
-        file: 'kpo.tasks.js',
-        description: pkg.description || '',
-        version: pkg.version || 'Unknown'
+        bin: constants.bin,
+        file: constants.file,
+        description: constants.description,
+        version: constants.version
       },
       options
     );
+
     const task = await main({ argv: process.argv.slice(2) }, opts);
 
     const cbs: NullaryFn[] = [];
