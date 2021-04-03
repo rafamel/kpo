@@ -5,6 +5,7 @@ import { clear } from '../stdio/clear';
 import { series } from '../aggregate/series';
 import { NullaryFn, UnaryFn, Empty } from 'type-core';
 import { into, combine } from 'pipettes';
+import { shallow } from 'merge-strategies';
 import chokidar from 'chokidar';
 import debounce from 'debounce';
 
@@ -51,7 +52,7 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
         poll: -1,
         symlinks: false
       },
-      (defaults): Required<WatchOptions> => Object.assign(defaults, options),
+      (defaults) => shallow(defaults, options || undefined),
       ({ include, exclude, ...options }) => ({
         ...options,
         include: Array.isArray(include) ? include : [include],

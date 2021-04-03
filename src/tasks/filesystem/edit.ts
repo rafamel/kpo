@@ -3,6 +3,7 @@ import { getPaths, useSource } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
 import { log } from '../stdio/log';
 import { Serial } from 'type-core';
+import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
 
@@ -33,7 +34,7 @@ export function edit(
   return async (ctx: Context): Promise<void> => {
     into(ctx, log('debug', 'Edit:', paths));
 
-    const opts = Object.assign({ glob: false, strict: false }, options);
+    const opts = shallow({ glob: false, strict: false }, options || undefined);
     const sources = await getPaths(paths, ctx, {
       glob: opts.glob,
       strict: opts.strict

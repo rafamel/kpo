@@ -4,6 +4,7 @@ import { log } from '../tasks/stdio/log';
 import { constants } from '../constants';
 import main from './main';
 import { NullaryFn } from 'type-core';
+import { shallow } from 'merge-strategies';
 import { attach, options as _options, resolver, add } from 'exits';
 
 export interface BinOptions {
@@ -22,14 +23,14 @@ export interface BinOptions {
  */
 export async function bin(options?: BinOptions): Promise<void> {
   try {
-    const opts = Object.assign(
+    const opts = shallow(
       {
         bin: constants.bin,
         file: constants.file,
         description: constants.description,
         version: constants.version
       },
-      options
+      options || undefined
     );
 
     const task = await main({ argv: process.argv.slice(2) }, opts);

@@ -1,6 +1,7 @@
 import { Task, Context, LogLevel } from '../../definitions';
 import { formatMessage } from '../../helpers/format-message';
 import { log } from '../stdio/log';
+import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 
 export interface CatchesOptions {
@@ -24,7 +25,7 @@ export function catches(
   options?: CatchesOptions
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
-    const opts = Object.assign({ level: 'warn' }, options);
+    const opts = shallow({ level: 'warn' }, options || undefined);
     try {
       await task(ctx);
     } catch (err) {

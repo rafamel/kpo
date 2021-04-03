@@ -2,9 +2,10 @@ import { Task, Context } from '../../definitions';
 import { getPrefix } from '../../helpers/prefix';
 import { log } from '../stdio/log';
 import { Empty } from 'type-core';
+import { shallow } from 'merge-strategies';
+import transform from 'prefix-stream';
 import { WriteStream } from 'tty';
 import { into } from 'pipettes';
-import transform from 'prefix-stream';
 import execa from 'execa';
 
 export interface ExecOptions extends execa.Options {
@@ -24,7 +25,7 @@ export function exec(
   options?: ExecOptions | Empty,
   cb?: (ps: execa.ExecaChildProcess) => void
 ): Task.Async {
-  const opts = Object.assign({ extendEnv: true }, options || undefined);
+  const opts = shallow({ extendEnv: true }, options || undefined);
   return async (ctx: Context): Promise<void> => {
     const fullArgs = (args || []).concat(ctx.args || []);
 

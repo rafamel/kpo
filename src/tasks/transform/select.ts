@@ -4,6 +4,7 @@ import { run } from '../../utils/run';
 import { print } from '../stdio/print';
 import { log } from '../stdio/log';
 import { Members, Empty } from 'type-core';
+import { shallow } from 'merge-strategies';
 import { createInterface } from 'readline';
 import { into } from 'pipettes';
 
@@ -38,13 +39,13 @@ export function select(
   options: SelectOptions | Empty,
   tasks: Members<Task | Empty>
 ): Task.Async {
-  const opts = Object.assign(
+  const opts = shallow(
     {
       message: 'Continue?',
       timeout: -1,
       default: null as string | null
     },
-    options
+    options || undefined
   );
 
   const lowercaseDefault =

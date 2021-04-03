@@ -2,6 +2,7 @@ import { Task, Context } from '../../definitions';
 import { getPaths } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
 import { log } from '../stdio/log';
+import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
 
@@ -21,7 +22,7 @@ export function mkdir(
   return async (ctx: Context): Promise<void> => {
     into(ctx, log('debug', 'Create directories:', paths));
 
-    const opts = Object.assign({ ensure: false }, options);
+    const opts = shallow({ ensure: false }, options || undefined);
 
     const dirs = await getPaths(paths, ctx, { glob: false, strict: false });
 

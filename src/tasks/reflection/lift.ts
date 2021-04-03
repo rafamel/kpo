@@ -7,6 +7,7 @@ import { constants } from '../../constants';
 import { select } from '../transform/select';
 import { write } from '../filesystem/write';
 import { print } from '../stdio/print';
+import { shallow } from 'merge-strategies';
 import { Members } from 'type-core';
 import { into } from 'pipettes';
 import chalk from 'chalk';
@@ -38,9 +39,9 @@ export interface LiftOptions {
  */
 export function lift(tasks: Task.Record, options?: LiftOptions): Task.Async {
   return async (ctx: Context): Promise<void> => {
-    const opts = Object.assign(
+    const opts = shallow(
       { purge: false, mode: 'default', bin: constants.bin },
-      options
+      options || undefined
     );
 
     const pkgPath = getAbsolutePath('package.json', ctx);

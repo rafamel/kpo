@@ -2,6 +2,7 @@ import { Task, Context } from '../../definitions';
 import { useDestination } from '../../helpers/paths';
 import { log } from '../stdio/log';
 import { Serial } from 'type-core';
+import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
 
@@ -31,7 +32,7 @@ export function write(
     await useDestination(
       path,
       ctx,
-      Object.assign({ exists: 'error' }, options),
+      shallow({ exists: 'error' }, options || undefined),
       (dest) => fs.writeFile(dest, data)
     );
   };

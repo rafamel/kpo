@@ -2,6 +2,7 @@ import { Task, Context } from '../../definitions';
 import { getPathPairs, usePair } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
 import { log } from '../stdio/log';
+import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
 
@@ -29,9 +30,9 @@ export function move(
   return async (ctx: Context): Promise<void> => {
     into(ctx, log('debug', 'Move', paths, 'to', destination));
 
-    const opts = Object.assign(
+    const opts = shallow(
       { glob: false, single: false, strict: false, exists: 'error' },
-      options
+      options || undefined
     );
     const pairs = await getPathPairs(paths, destination, ctx, {
       glob: opts.glob,

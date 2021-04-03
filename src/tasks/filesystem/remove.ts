@@ -2,6 +2,7 @@ import { Task, Context } from '../../definitions';
 import { getPaths, useSource } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
 import { log } from '../stdio/log';
+import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
 
@@ -25,9 +26,9 @@ export function remove(
   return async (ctx: Context): Promise<void> => {
     into(ctx, log('debug', 'Remove:', paths));
 
-    const opts = Object.assign(
+    const opts = shallow(
       { glob: false, strict: false, exists: 'error' },
-      options
+      options || undefined
     );
     const sources = await getPaths(paths, ctx, {
       glob: opts.glob,
