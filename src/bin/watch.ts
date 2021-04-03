@@ -1,5 +1,14 @@
 import { Task } from '../definitions';
-import { series, raises, print, log, combine, watch, context } from '../tasks';
+import {
+  series,
+  raises,
+  print,
+  log,
+  combine,
+  watch,
+  context,
+  bundle
+} from '../tasks';
 import { stripIndent as indent } from 'common-tags';
 import { flags, safePairs, splitBy } from 'cli-belt';
 import chalk from 'chalk';
@@ -67,6 +76,7 @@ export default async function bin(
 
   if (cmd['--help']) return print(help + '\n');
 
+  let first = true;
   const [names, args] = splitBy(cmd._, '--');
   return names.length
     ? context(
@@ -93,7 +103,18 @@ export default async function bin(
               poll: cmd['--poll'],
               symlinks: cmd['--symlinks']
             },
-            combine(params.record, names)
+            series(
+              bundle(() => {
+                if (first) return (first = false) || null;
+                return log(
+                  'info',
+                  chalk.bold(opts.bin),
+                  chalk.bold.blue(':watch'),
+                  names.join(' ')
+                );
+              }),
+              combine(params.record, names)
+            )
           )
         )
       )

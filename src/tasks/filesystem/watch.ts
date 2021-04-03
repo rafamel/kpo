@@ -88,7 +88,7 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
       cancel();
     }
 
-    let i = 0;
+    let i = -1;
     let current: Promise<void> = Promise.resolve();
     const onEvent = debounce(
       (onError: UnaryFn<Error>): void => {
@@ -98,9 +98,10 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
 
         current = after
           .then(() => {
-            return run(series(i === 0 ? null : clear(), task), {
+            i += 1;
+            return run(series(i > 0 && opts.clear ? clear() : null, task), {
               ...ctx,
-              route: opts.parallel ? ctx.route.concat(String(i++)) : ctx.route,
+              route: opts.parallel ? ctx.route.concat(String(i)) : ctx.route,
               cancellation: new Promise((resolve) => {
                 cbs.push(resolve);
               })
