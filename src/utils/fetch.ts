@@ -1,5 +1,6 @@
 import { Task } from '../definitions';
 import { find } from '../helpers/find';
+import { constants } from '../constants';
 import { Empty, TypeGuard } from 'type-core';
 import path from 'path';
 
@@ -13,7 +14,7 @@ export interface FetchOptions {
  * default export.
  */
 export async function fetch(
-  file: string,
+  file?: string | Empty,
   options?: FetchOptions | Empty,
   cb?: (path: string) => void
 ): Promise<Task.Record> {
@@ -25,13 +26,13 @@ export async function fetch(
   };
 
   const filepath = await find({
-    file: file,
+    file: file || constants.file,
     cwd: opts.dir,
     exact: Boolean(options && options.dir)
   });
 
   if (!filepath) {
-    const filename = path.basename(file);
+    const filename = path.basename(file || constants.file);
     throw Error(`File not found in path: ${filename}`);
   }
 

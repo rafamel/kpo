@@ -1,5 +1,6 @@
 import { Task, Context } from '../../definitions';
 import { parseToArray } from '../../helpers/parse';
+import { getTaskRecord } from '../../helpers/get-task-record';
 import { constants } from '../../constants';
 import { print } from '../stdio/print';
 import { Empty } from 'type-core';
@@ -21,13 +22,15 @@ export interface ListOptions {
  * @returns Task
  */
 export function list(
-  tasks: Task.Record,
+  tasks?: Task.Record | Empty,
   options?: ListOptions | Empty,
   map?: (name: string, route: string[]) => string[]
-): Task.Sync {
-  return (ctx: Context): void => {
+): Task.Async {
+  return async (ctx: Context): Promise<void> => {
     const opts = shallow({ bin: constants.bin }, options || undefined);
-    const items = parseToArray(tasks);
+
+    const source = await getTaskRecord(tasks);
+    const items = parseToArray(source);
     const maxRouteLength = items.reduce(
       (acc, item) => (acc > item.route.length ? acc : item.route.length),
       0

@@ -1,6 +1,7 @@
 import { Task, Context } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
 import { getAbsolutePath } from '../../helpers/paths';
+import { getTaskRecord } from '../../helpers/get-task-record';
 import { isCancelled } from '../../utils/is-cancelled';
 import { run } from '../../utils/run';
 import { constants } from '../../constants';
@@ -8,7 +9,7 @@ import { select } from '../transform/select';
 import { write } from '../filesystem/write';
 import { print } from '../stdio/print';
 import { shallow } from 'merge-strategies';
-import { Members } from 'type-core';
+import { Empty, Members } from 'type-core';
 import { into } from 'pipettes';
 import chalk from 'chalk';
 import fs from 'fs-extra';
@@ -35,15 +36,22 @@ export interface LiftOptions {
 /**
  * Lifts all tasks on a `tasks` record to a package.json file,
  * which is expected to be available at the context's working directory.
+ * The `tasks` argument can be a record itself, a string
+ * with the path of the tasks record, or empty to fetch
+ * it at the default path.
  * @returns Task
  */
-export function lift(tasks: Task.Record, options?: LiftOptions): Task.Async {
+export function lift(
+  tasks: string | Task.Record | Empty,
+  options?: LiftOptions
+): Task.Async {
   return async (ctx: Context): Promise<void> => {
     const opts = shallow(
       { purge: false, mode: 'default', bin: constants.bin },
       options || undefined
     );
 
+    const source = await getTaskRecord(tasks);
     const pkgPath = getAbsolutePath('package.json', ctx);
     const pkgExists = await fs.pathExists(pkgPath);
     if (!pkgExists) {
@@ -54,7 +62,7 @@ export function lift(tasks: Task.Record, options?: LiftOptions): Task.Async {
     const pkgScripts: Members<string> = pkg.scripts || {};
 
     const taskScripts = into(
-      tasks,
+      source,
       parseToRecord.bind(null, { include: null, exclude: null }),
       (record) => Object.keys(record),
       (keys) => {
