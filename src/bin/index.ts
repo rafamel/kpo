@@ -5,7 +5,6 @@ import { constants } from '../constants';
 import main from './main';
 import { NullaryFn } from 'type-core';
 import { shallow } from 'merge-strategies';
-import { attach, options as _options, resolver, add } from 'exits';
 
 export interface BinOptions {
   /** Name of kpo's executable. */
@@ -37,16 +36,20 @@ export async function bin(options?: BinOptions): Promise<void> {
 
     const cbs: NullaryFn[] = [];
     const cancellation = new Promise<void>((resolve) => cbs.push(resolve));
+
+    const exits = await import('exits');
     const promise = run(task, { cancellation });
 
-    attach();
-    _options({
+    exits.attach();
+    exits.options({
       spawned: { signals: 'none', wait: 'none' },
       resolver(type, arg) {
-        return type === 'signal' ? resolver('exit', 1) : resolver(type, arg);
+        return type === 'signal'
+          ? exits.resolver('exit', 1)
+          : exits.resolver(type, arg);
       }
     });
-    add(async () => {
+    exits.add(async () => {
       cbs.map((cb) => cb());
       await Promise.all([cancellation, promise]).catch(() => undefined);
     });
