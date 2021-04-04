@@ -8,7 +8,7 @@ import {
   combine,
   watch,
   context,
-  bundle
+  create
 } from '../tasks';
 import { stripIndent as indent } from 'common-tags';
 import { flags, safePairs, splitBy } from 'cli-belt';
@@ -107,7 +107,7 @@ export default async function bin(
               symlinks: cmd['--symlinks']
             },
             series(
-              bundle(() => {
+              create(() => {
                 if (first) return (first = false) || null;
                 return series(
                   log(

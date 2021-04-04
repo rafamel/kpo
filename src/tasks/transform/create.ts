@@ -8,7 +8,7 @@ import { Empty, UnaryFn } from 'type-core';
  * *Task* into a single sequential *Task*.
  * @returns Task
  */
-export function bundle(
+export function create(
   fn: UnaryFn<Context, Task | Empty | Promise<Task | Empty>>
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
