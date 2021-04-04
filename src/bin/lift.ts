@@ -19,7 +19,7 @@ export default async function bin(
   opts: Options
 ): Promise<Task> {
   const help = indent`
-    ${styleString(`Lifts ${opts.bin} tasks to a package.json`, { bold: true })}
+    ${styleString(`Lifts tasks to a package.json`, { bold: true })}
 
     Usage:
       $ ${opts.bin} :lift [options]

@@ -45,7 +45,7 @@ export default async function main(
       -v, --version           Show version number
 
     Commands:
-      :run           Default command -can be omitted
+      :run           Runs tasks (default)
       :watch         Watches paths and run tasks on change events
       :list          List available tasks
       :lift          Lift tasks to package

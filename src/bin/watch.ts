@@ -28,10 +28,9 @@ export default async function bin(
   opts: Options
 ): Promise<Task> {
   const help = indent`
-    ${styleString(
-      `Watches a path and runs ${opts.bin} tasks on change events`,
-      { bold: true }
-    )}
+    ${styleString(`Watches a path and runs tasks on change events`, {
+      bold: true
+    })}
 
     Usage:
       $ ${opts.bin} :watch [options]
