@@ -28,19 +28,20 @@ Options:
   -f, --file <path>       Configuration file
   -d, --dir <path>        Project directory
   -e, --env <value>       Environment variables
-  --prefix                Print task routes
   --level <value>         Logging level
+  --prefix                Prefix task output with its route
   -h, --help              Show help
   -v, --version           Show version number
 
 Commands:
-  :run           Default command -can be omitted
+  :run           Runs tasks (default)
+  :watch         Watches paths and run tasks on change events
   :list          List available tasks
   :lift          Lift tasks to package
 
 Examples:
   $ kpo foo bar baz
-  $ kpo -e NODE_ENV=development -e BABEL_ENV=browser :run foo bar baz
+  $ kpo -e NODE_ENV=development -e BABEL_ENV=node :run foo bar baz
 ```
 
 ### `kpo :run`
@@ -51,34 +52,56 @@ Runs tasks.
 
 Note that the `:run` command can be omitted. When no command is passed, *kpo* will assume you're passing it tasks to run. Hence, `kpo :run foo bar` and `kpo foo bar` are equivalent.
 
-### `kpo :list`
-
-List available tasks.
-
-`kpo :list` doesn't take additional options, other than the general [CLI options.](#cli-options)
+### `kpo :watch`
 
 ```
+Watches a path and runs tasks on change events
+
+Usage:
+  $ kpo :watch [options]
+
+Options:
+  -g, --glob              Parse globs in paths
+  -p, --prime             Runs the task once when ready to wait for changes
+  -c, --clear             Clear stdout before tasks execution
+  -i, --include <value>   Paths to include
+  -e, --exclude <value>   Paths to exclude
+  -s, --symlinks          Follow symlinks
+  --parallel              Don't cancel running tasks
+  --debounce <number>     Avoid rapid task restarts (ms)
+  --depth <number>        Limit subdirectories to traverse
+  --poll <number>         Use polling for every ms interval
+  -h, --help              Show help
+
+  Examples:
+    $ kpo :watch -i ./src -i ./test foo bar baz
+    $ kpo -e NODE_ENV=development :watch -i ./src foo bar baz
+```
+
+### `kpo :list`
+
+```
+Lists available tasks
+
 Usage:
   $ kpo :list [options]
 
-Lists tasks
-
 Options:
-  --all            List all, including hidden tasks
-  --scopes         List scopes
-  -h, --help       Show help
+  --defaults      List default tasks and subtasks by their own
+  -h, --help      Show help
 ```
 
 ### `kpo :lift`
 
-Lift kpo tasks to a `package.json`.
-
 ```
+Lifts tasks to a package.json
+
 Usage:
   $ kpo :lift [options]
 
 Options:
-  --purge          Purge all non-kpo scripts
-  --mode           Lift mode of operation
-  -h, --help       Show help
+  --purge             Purge all non-kpo scripts
+  --defaults          Lift default tasks and subtasks by their own
+  --mode <value>      Lift mode of operation (default, confirm, dry, audit)
+  -h, --help          Show help
 ```
