@@ -1,3 +1,30 @@
+# [0.17.0](https://github.com/rafamel/kpo/compare/v0.16.0...v0.17.0) (2021-04-04)
+
+
+### Bug Fixes
+
+* **tasks:** fix context merge ([2ff3f85](https://github.com/rafamel/kpo/commit/2ff3f8560c2d5eb3fc131ee2994a7fe64922f112))
+* **tasks:** fix lift confirm mode when there are no pending changes ([cc7576d](https://github.com/rafamel/kpo/commit/cc7576d24cc0a46ce24c719c801c00472a51825c))
+* default options assignment for undefined values -uses merge-strategies ([b3f430c](https://github.com/rafamel/kpo/commit/b3f430ca56cf5e32c482da2b516461337a543b44))
+* fix stdout clear for watch task and command ([a1cc544](https://github.com/rafamel/kpo/commit/a1cc5442fb905cbc477dfb2ebafe3c1f8a9da5d1))
+
+
+### Features
+
+* **tasks:** remove defaults option for combine: default tasks will be combined unless explicitly excluded ([ba1f0cc](https://github.com/rafamel/kpo/commit/ba1f0cc22a97854f0235bd56037a83d61dae28af))
+* allow combine task and recreate util to take a Task.Record returning function ([2b409da](https://github.com/rafamel/kpo/commit/2b409da3b21bcc10ba8af1b9f99046d78bb19299))
+* **tasks:** add announce task ([3182d0a](https://github.com/rafamel/kpo/commit/3182d0a9f319515e3e1c7ab3d0093d6a01fbf9e5))
+* **tasks:** allow log task to take silent as a level ([19170ca](https://github.com/rafamel/kpo/commit/19170ca69d007fbb010641a1f8be84489abfe44d))
+* **tasks:** lift and list tasks can no longer fetch task files ([2079576](https://github.com/rafamel/kpo/commit/2079576e11c16c928f749316b19d21f19186abcb))
+* allow context prefix to be a boolean ([405b0ce](https://github.com/rafamel/kpo/commit/405b0ce60ae879b1586a8f1bb40dfb358377c66b))
+* differentiate between print and key route names ([11e8755](https://github.com/rafamel/kpo/commit/11e87552cd6c6673c2e007d9c250ae502392183e))
+* **tasks:** combine task takes include, exclude, and defaults options ([c9f948a](https://github.com/rafamel/kpo/commit/c9f948a6b15d087ec32ff698f66f679d0bc42315))
+* lift and list tasks can fetch default tasks file; fetch will use the default tasks file name when none is provided ([2c939b0](https://github.com/rafamel/kpo/commit/2c939b0e600a31cd3f3f08c3ca1958a7295afc3f))
+* treat 'default' keys in Task.Record as the task to be run for its top level ([90c1527](https://github.com/rafamel/kpo/commit/90c15275d84ce57c51c3f95e634d991af0822c53))
+* **tasks:** add clear option to watch task; modify watch options names and function signature ([165233b](https://github.com/rafamel/kpo/commit/165233bc0b8c98ed3398cb545ec1284f81a7f477))
+
+
+
 # [0.16.0](https://github.com/rafamel/kpo/compare/v0.15.0...v0.16.0) (2021-04-02)
 
 
