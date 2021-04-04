@@ -87,17 +87,19 @@ export function lift(
     pkg.scripts = opts.purge ? taskScripts : { ...pkg.scripts, ...taskScripts };
 
     const isDefault = !['confirm', 'dry', 'audit'].includes(opts.mode);
+    const areChangesPending = evaluateChanges(pkgScripts, taskScripts, ctx, {
+      purge: opts.purge,
+      print: !isDefault
+    });
+
+    if (!areChangesPending || (await isCancelled(ctx))) return;
 
     if (isDefault) {
       return run(write(pkgPath, pkg, { exists: 'overwrite' }), ctx);
     }
-
-    if (await isCancelled(ctx)) return;
-    printChanges(pkgScripts, taskScripts, ctx, {
-      purge: opts.purge,
-      audit: opts.mode === 'audit'
-    });
-
+    if (opts.mode === 'audit') {
+      throw Error(`There are pending scripts changes`);
+    }
     if (opts.mode === 'confirm') {
       return run(
         select(
@@ -113,12 +115,12 @@ export function lift(
   };
 }
 
-function printChanges(
+function evaluateChanges(
   pkgScripts: Members<string>,
   taskScripts: Members<string>,
   context: Context,
-  options: { purge: boolean; audit: boolean }
-): void {
+  options: { print: boolean; purge: boolean }
+): boolean {
   const pkgScriptNames = Object.keys(pkgScripts);
   const taskScriptNames = Object.keys(taskScripts);
 
@@ -151,32 +153,32 @@ function printChanges(
       removeScriptNames.length
   );
 
-  if (areChangesPending) {
-    if (addScriptNames.length) {
-      strArr.push(
-        styleString('Scripts to add', { bold: true, color: 'green' }),
-        addScriptNames.join(', ') + '\n'
-      );
+  if (options.print) {
+    if (areChangesPending) {
+      if (addScriptNames.length) {
+        strArr.push(
+          styleString('Scripts to add', { bold: true, color: 'green' }),
+          addScriptNames.join(', ') + '\n'
+        );
+      }
+      if (replaceScriptNames.length) {
+        strArr.push(
+          styleString('Scripts to replace', { bold: true, color: 'yellow' }),
+          replaceScriptNames.join(', ') + '\n'
+        );
+      }
+      if (removeScriptNames.length) {
+        strArr.push(
+          styleString('Scripts to remove', { bold: true, color: 'red' }),
+          removeScriptNames.join(', ') + '\n'
+        );
+      }
+    } else {
+      strArr.push(styleString('No pending scripts changes', { bold: true }));
     }
-    if (replaceScriptNames.length) {
-      strArr.push(
-        styleString('Scripts to replace', { bold: true, color: 'yellow' }),
-        replaceScriptNames.join(', ') + '\n'
-      );
-    }
-    if (removeScriptNames.length) {
-      strArr.push(
-        styleString('Scripts to remove', { bold: true, color: 'red' }),
-        removeScriptNames.join(', ') + '\n'
-      );
-    }
-  } else {
-    strArr.push(styleString('No pending scripts changes', { bold: true }));
+
+    into(context, print(strArr.join('\n')));
   }
 
-  into(context, print(strArr.join('\n')));
-
-  if (options.audit && areChangesPending) {
-    throw Error(`There are pending scripts changes`);
-  }
+  return areChangesPending;
 }
