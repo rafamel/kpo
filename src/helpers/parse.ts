@@ -1,7 +1,7 @@
 import { Task } from '../definitions';
 import { constants } from '../constants';
 import { series } from '../tasks/aggregate/series';
-import { stringifyRoute } from './stringify-route';
+import { stringifyKeyRoute } from './stringify-route';
 import { Members, TypeGuard } from 'type-core';
 
 interface Item {
@@ -56,7 +56,7 @@ export function parseToArray(
 
   return parseHelper(record, options.roots)
     .map(([route, task]) => {
-      const name = stringifyRoute(route);
+      const name = stringifyKeyRoute(route);
 
       if (names.includes(name)) {
         throw Error(`Task name collusion on parse: ${name}`);
