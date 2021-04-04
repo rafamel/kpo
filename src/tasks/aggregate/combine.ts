@@ -2,7 +2,7 @@ import { Task, Context } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
 import { run } from '../../utils/run';
 import { recreate } from '../../utils/recreate';
-import { context } from '../transform/context';
+import { context } from '../creation/context';
 import { series } from './series';
 import { NullaryFn } from 'type-core';
 import { shallow } from 'merge-strategies';

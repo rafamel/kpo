@@ -1,5 +1,5 @@
 import { Task } from '../definitions';
-import { context } from '../tasks/transform/context';
+import { context } from '../tasks/creation/context';
 import { Members, Empty, TypeGuard } from 'type-core';
 import { into } from 'pipettes';
 
@@ -14,13 +14,7 @@ export function flatten(
       if (!TypeGuard.isObject(task)) return [task];
       return Object.entries(task || {}).map(([key, task]): Task | Empty => {
         return task
-          ? context(
-              (ctx) => ({
-                ...ctx,
-                route: ctx.route.concat(key)
-              }),
-              task
-            )
+          ? context((ctx) => ({ ...ctx, route: ctx.route.concat(key) }), task)
           : null;
       });
     },
