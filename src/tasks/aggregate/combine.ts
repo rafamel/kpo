@@ -24,10 +24,6 @@ export interface CombineOptions {
    * joined by with a ':' character for each depth level.
    */
   exclude?: string[] | null;
-  /**
-   * Whether to consider default tasks as separate from their root.
-   */
-  defaults?: boolean;
 }
 
 /**
@@ -41,7 +37,7 @@ export function combine(
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
     const opts: Required<CombineOptions> = shallow(
-      { include: null, exclude: null, defaults: false },
+      { include: null, exclude: null },
       options || undefined
     );
 
@@ -55,7 +51,7 @@ export function combine(
       parseToRecord.bind(null, {
         include: opts.include,
         exclude: opts.exclude,
-        defaults: opts.defaults,
+        defaults: true,
         roots: Array.isArray(opts.include)
       }),
       (record) => {

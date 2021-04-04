@@ -109,14 +109,17 @@ export default async function bin(
             series(
               bundle(() => {
                 if (first) return (first = false) || null;
-                return log(
-                  'info',
-                  styleString(opts.bin, { bold: true }),
-                  styleString(':watch', { bold: true, color: 'blue' }),
-                  names.join(' ')
+                return series(
+                  log(
+                    'info',
+                    styleString(opts.bin, { bold: true }),
+                    styleString(':watch', { bold: true, color: 'blue' }),
+                    names.join(' ')
+                  ),
+                  print()
                 );
               }),
-              combine(params.record, { include: names, defaults: true })
+              combine(params.record, { include: names })
             )
           )
         )

@@ -1,4 +1,4 @@
-import { LogLevel, Task, PrefixPolicy } from '../definitions';
+import { LogLevel, Task } from '../definitions';
 import { styleString } from '../helpers/style-string';
 import { print, log, raises, series, context, combine } from '../tasks';
 import { fetch } from '../utils';
@@ -137,7 +137,7 @@ export default async function main(
                 names.join(' ')
               ),
               print(),
-              combine(record, { include: names, defaults: true })
+              combine(record, { include: names })
             ),
             context.bind(null, { args }),
             withContext
