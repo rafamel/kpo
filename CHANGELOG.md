@@ -1,3 +1,12 @@
+## [0.17.1](https://github.com/rafamel/kpo/compare/v0.17.0...v0.17.1) (2021-04-04)
+
+
+### Bug Fixes
+
+* fix type definitions build ([fada578](https://github.com/rafamel/kpo/commit/fada578878a927b828056a33f10a5ff5e1b01429))
+
+
+
 # [0.17.0](https://github.com/rafamel/kpo/compare/v0.16.0...v0.17.0) (2021-04-04)
 
 
