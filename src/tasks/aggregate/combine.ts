@@ -4,6 +4,7 @@ import { run } from '../../utils/run';
 import { recreate } from '../../utils/recreate';
 import { context } from '../transform/context';
 import { series } from './series';
+import { NullaryFn } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 
@@ -35,7 +36,7 @@ export interface CombineOptions {
  * @returns Task
  */
 export function combine(
-  tasks: Task.Record,
+  tasks: Task.Record | NullaryFn<Task.Record>,
   options?: CombineOptions
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
@@ -45,8 +46,7 @@ export function combine(
     );
 
     return into(
-      tasks,
-      recreate.bind(null, (task, route) => {
+      recreate(tasks, (task, route) => {
         return context(
           (ctx) => ({ ...ctx, route: ctx.route.concat(route) }),
           task

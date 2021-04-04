@@ -1,14 +1,52 @@
 import { Task } from '../definitions';
-import { Empty } from 'type-core';
+import { context } from '../tasks/transform/context';
+import { announce } from '../tasks/transform/announce';
+import { Empty, NullaryFn, TypeGuard } from 'type-core';
+import { shallow } from 'merge-strategies';
+import { into } from 'pipettes';
+
+export interface RecreateOptions {
+  /**
+   * Fixes current routes for tasks according to their
+   * current paths, so they won't be dinamically reassigned.
+   */
+  fix?: boolean;
+  /**
+   * Prints routes before execution for all tasks.
+   */
+  announce?: boolean;
+}
+
+export interface RecreateMap {
+  (task: Task, route: string[]): Task | Empty;
+}
 
 /**
  * Maps all tasks in a `Task.Record`.
  */
 export function recreate(
-  map: (task: Task, route: string[]) => Task | Empty,
-  tasks: Task.Record
+  tasks: Task.Record | NullaryFn<Task.Record>,
+  options?: RecreateOptions | RecreateMap
 ): Task.Record {
-  return recreateHelper([], tasks, map);
+  const record = TypeGuard.isFunction(tasks) ? tasks() : tasks;
+
+  if (TypeGuard.isEmpty(options)) {
+    return record;
+  } else if (TypeGuard.isFunction(options)) {
+    return recreateHelper([], record, options);
+  } else {
+    const opts: RecreateOptions = shallow(
+      { fix: false, announce: false },
+      options || undefined
+    );
+    return recreateHelper([], record, (task, route) => {
+      return into(
+        task,
+        (task) => (opts.announce ? announce(task) : task),
+        (task) => (opts.fix ? context({ route }, task) : task)
+      );
+    });
+  }
 }
 
 function recreateHelper(
