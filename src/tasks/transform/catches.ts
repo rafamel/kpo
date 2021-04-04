@@ -29,12 +29,8 @@ export function catches(
     try {
       await task(ctx);
     } catch (err) {
-      if (opts.level !== 'silent') {
-        into(ctx, log(opts.level, formatMessage(err)));
-      }
-      if (alternate) {
-        await alternate(ctx);
-      }
+      into(ctx, log(opts.level, formatMessage(err)));
+      if (alternate) await alternate(ctx);
     }
   };
 }

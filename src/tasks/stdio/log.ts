@@ -33,16 +33,14 @@ const color = {
  * of the call.
  * @returns Task
  */
-export function log(
-  level: Exclude<LogLevel, 'silent'>,
-  item: any,
-  ...data: any[]
-): Task.Sync {
-  const nLevel = rank[String(level).toLowerCase()] || 5;
+export function log(level: LogLevel, item: any, ...data: any[]): Task.Sync {
+  level = String(level) as LogLevel;
+  const nLevel = rank[level.toLowerCase()] || 5;
 
   return (ctx: Context): void => {
-    const nCurrent = rank[String(ctx.level).toLowerCase()] || 0;
+    if (level === 'silent' || level.toLowerCase() === 'silent') return;
 
+    const nCurrent = rank[String(ctx.level).toLowerCase()] || 0;
     if (nCurrent >= nLevel) {
       const str = addPrefix(
         util.format(item, ...data) + '\n',
