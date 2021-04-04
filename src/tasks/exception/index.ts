@@ -1,3 +1,3 @@
 export * from './catches';
-export * from './final';
+export * from './finalize';
 export * from './raises';

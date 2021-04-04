@@ -7,7 +7,7 @@ import { Task, Context } from '../../definitions';
  * does not, it will finally throw the initial exception.
  * @returns Task
  */
-export function final(task: Task, final?: Task | null): Task.Async {
+export function finalize(task: Task, final?: Task | null): Task.Async {
   return async (ctx: Context): Promise<void> => {
     try {
       await task(ctx);
