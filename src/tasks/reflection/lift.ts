@@ -2,7 +2,6 @@ import { Task, Context } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
 import { getAbsolutePath } from '../../helpers/paths';
 import { styleString } from '../../helpers/style-string';
-import { getTaskRecord } from '../../helpers/get-task-record';
 import { isCancelled } from '../../utils/is-cancelled';
 import { run } from '../../utils/run';
 import { constants } from '../../constants';
@@ -10,7 +9,7 @@ import { select } from '../transform/select';
 import { write } from '../filesystem/write';
 import { print } from '../stdio/print';
 import { shallow } from 'merge-strategies';
-import { Empty, Members } from 'type-core';
+import { Members, NullaryFn, TypeGuard } from 'type-core';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
 
@@ -46,7 +45,7 @@ export interface LiftOptions {
  * @returns Task
  */
 export function lift(
-  tasks: string | Task.Record | Empty,
+  tasks: Task.Record | NullaryFn<Task.Record>,
   options?: LiftOptions
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
@@ -55,7 +54,7 @@ export function lift(
       options || undefined
     );
 
-    const source = await getTaskRecord(tasks);
+    const source = TypeGuard.isFunction(tasks) ? tasks() : tasks;
     const pkgPath = getAbsolutePath('package.json', ctx);
     const pkgExists = await fs.pathExists(pkgPath);
     if (!pkgExists) {
