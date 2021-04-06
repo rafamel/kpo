@@ -1,11 +1,13 @@
 import { Task, Context, LogLevel } from '../../definitions';
 import { formatMessage } from '../../helpers/format-message';
+import { isCancelled } from '../../utils/is-cancelled';
+import { run } from '../../utils/run';
 import { log } from '../stdio/log';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 
 export interface CatchesOptions {
-  /** Logs the error message with a given level. Default: `'info'` */
+  /** Logs the error message with a given level. Default: `'warn'` */
   level?: LogLevel;
 }
 
@@ -27,10 +29,12 @@ export function catches(
   return async (ctx: Context): Promise<void> => {
     const opts = shallow({ level: 'warn' }, options || undefined);
     try {
-      await task(ctx);
+      await run(task, ctx);
     } catch (err) {
+      if (await isCancelled(ctx)) return;
+
       into(ctx, log(opts.level, formatMessage(err)));
-      if (alternate) await alternate(ctx);
+      if (alternate) await run(alternate, ctx);
     }
   };
 }
