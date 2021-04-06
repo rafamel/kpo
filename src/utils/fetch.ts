@@ -1,43 +1,40 @@
 import { Task } from '../definitions';
-import { find } from '../helpers/find';
 import { constants } from '../constants';
-import { Empty, TypeGuard } from 'type-core';
+import { resolveProject } from '../helpers/resolve-project';
+import { TypeGuard } from 'type-core';
+import { into } from 'pipettes';
 import path from 'path';
 
 export interface FetchOptions {
+  /** Tasks file name */
+  file?: string;
   /** File directory */
-  dir?: string;
+  directory?: string;
+  /** Change the process cwd before an import */
+  chdir?: boolean;
 }
 
 /**
- * Fetches a tasks file with a `Task.Record` as a
+ * Fetch a tasks file with a `Task.Record` as a
  * default export.
  */
-export async function fetch(
-  file?: string | Empty,
-  options?: FetchOptions | Empty,
-  cb?: (path: string) => void
-): Promise<Task.Record> {
-  const opts = {
-    dir:
-      options && options.dir
-        ? path.resolve(process.cwd(), options.dir)
-        : process.cwd()
-  };
+export async function fetch(options?: FetchOptions): Promise<Task.Record> {
+  const opts = into(options || {}, (options) => ({
+    file: options.file || constants.cli.file,
+    directory: options.directory || null,
+    chdir: options.chdir || false
+  }));
 
-  const filepath = await find({
-    file: file || constants.defaults.file,
-    cwd: opts.dir,
-    exact: Boolean(options && options.dir)
+  const project = await resolveProject({
+    fail: true,
+    file: opts.file,
+    directory: opts.directory
   });
 
-  if (!filepath) {
-    const filename = path.basename(file || constants.defaults.file);
-    throw Error(`File not found in path: ${filename}`);
-  }
-
-  if (cb) cb(filepath);
+  if (opts.chdir) process.chdir(project.directory);
+  const filepath = path.resolve(project.directory, project.file);
   const data = await import(filepath);
+
   if (
     !Object.hasOwnProperty.call(data, 'default') ||
     !TypeGuard.isRecord(data.default)

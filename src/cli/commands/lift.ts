@@ -1,31 +1,20 @@
-import { Task } from '../definitions';
-import { styleString } from '../helpers/style-string';
-import { lift, series, raises, print, log } from '../tasks';
-import { stripIndent as indent } from 'common-tags';
-import { flags, safePairs } from 'cli-belt';
 import arg from 'arg';
+import { flags, safePairs } from 'cli-belt';
+import { stripIndent as indent } from 'common-tags';
+import { fetch } from '../../utils';
+import { Task, CLI } from '../../definitions';
+import { styleString } from '../../helpers/style-string';
+import { lift as _lift, series, raises, print } from '../../tasks';
 
-interface Params {
-  argv: string[];
-  record: Task.Record;
-}
-
-interface Options {
-  bin: string;
-}
-
-export default async function bin(
-  params: Params,
-  opts: Options
-): Promise<Task> {
+export async function lift(params: CLI.Extension.Params): Promise<Task> {
   const help = indent`
-    ${styleString(`Lifts tasks to a package.json`, { bold: true })}
+    ${styleString(`Lift tasks to a package.json`, { bold: true })}
 
     Usage:
-      $ ${opts.bin} :lift [options]
+      $ ${params.options.bin} :lift [options]
 
     Options:
-      --purge             Purge all non-${opts.bin} scripts
+      --purge             Purge all non-${params.options.bin} scripts
       --defaults          Lift default tasks and subtasks by their own
       --mode <value>      Lift mode of operation (default, confirm, dry, audit)
       -h, --help          Show help
@@ -61,19 +50,16 @@ export default async function bin(
     return raises(Error(`Lift mode must be default, confirm, dry, or audit`));
   }
 
-  return series(
-    log('debug', 'Working directory:', process.cwd()),
-    log(
-      'info',
-      styleString(opts.bin, { bold: true }),
-      styleString(':lift', { bold: true, color: 'blue' })
-    ),
-    print(),
-    lift(params.record, {
-      purge: cmd['--purge'],
-      defaults: cmd['--defaults'],
-      mode: cmd['--mode'] as any,
-      bin: opts.bin
-    })
-  );
+  const tasks = await fetch({
+    chdir: true,
+    file: params.options.file,
+    directory: params.options.directory
+  });
+
+  return _lift(tasks, {
+    purge: cmd['--purge'],
+    defaults: cmd['--defaults'],
+    mode: cmd['--mode'] as any,
+    bin: params.options.bin
+  });
 }

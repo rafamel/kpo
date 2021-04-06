@@ -1,0 +1,34 @@
+import { NullaryFn } from 'type-core';
+import { stringifyError } from '../../helpers/stringify';
+import { create, log } from '../../tasks';
+import { Task } from '../../definitions';
+import { run } from '../../utils';
+
+export async function execute(task: NullaryFn<Task>): Promise<void> {
+  try {
+    const cbs: NullaryFn[] = [];
+    const cancellation = new Promise<void>((resolve) => cbs.push(resolve));
+
+    const exits = await import('exits');
+    const promise = run(create(task), { cancellation });
+
+    exits.attach();
+    exits.options({
+      spawned: { signals: 'none', wait: 'none' },
+      resolver(type, arg) {
+        return type === 'signal'
+          ? exits.resolver('exit', 1)
+          : exits.resolver(type, arg);
+      }
+    });
+    exits.add(async () => {
+      cbs.map((cb) => cb());
+      await Promise.all([cancellation, promise]).catch(() => undefined);
+    });
+
+    await promise;
+  } catch (err) {
+    await run(log('error', stringifyError(err)));
+    return process.exit(1);
+  }
+}

@@ -5,13 +5,14 @@ export const constants = into(
   ({ pkg }) => ({
     cli: {
       bin: 'kpo',
+      file: 'kpo.tasks.js',
       version: pkg.version || 'Unknown',
-      description: pkg.description || ''
+      description: pkg.description || '',
+      multitask: true
     },
     defaults: {
       task: 'default',
-      level: 'info' as 'info',
-      file: 'kpo.tasks.js'
+      level: 'info' as 'info'
     },
     collections: {
       restrict: [':'],
