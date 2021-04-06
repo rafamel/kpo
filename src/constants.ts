@@ -3,12 +3,19 @@ import { into } from 'pipettes';
 export const constants = into(
   { pkg: require('../package.json') },
   ({ pkg }) => ({
-    bin: 'kpo',
-    file: 'kpo.tasks.js',
-    description: pkg.description || '',
-    version: pkg.version || 'Unknown',
-    record: {
-      default: 'default'
+    cli: {
+      bin: 'kpo',
+      version: pkg.version || 'Unknown',
+      description: pkg.description || ''
+    },
+    defaults: {
+      task: 'default',
+      level: 'info' as 'info',
+      file: 'kpo.tasks.js'
+    },
+    collections: {
+      restrict: [':'],
+      levels: ['silent', 'error', 'warn', 'info', 'debug', 'trace']
     }
   })
 );

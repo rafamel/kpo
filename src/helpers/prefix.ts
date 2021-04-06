@@ -1,6 +1,6 @@
 import { Context } from '../definitions';
 import { styleString } from './style-string';
-import { stringifyPrintRoute } from './stringify-route';
+import { stringifyPrintRoute } from './stringify';
 import { into } from 'pipettes';
 import { TypeGuard } from 'type-core';
 

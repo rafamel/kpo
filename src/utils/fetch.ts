@@ -26,13 +26,13 @@ export async function fetch(
   };
 
   const filepath = await find({
-    file: file || constants.file,
+    file: file || constants.defaults.file,
     cwd: opts.dir,
     exact: Boolean(options && options.dir)
   });
 
   if (!filepath) {
-    const filename = path.basename(file || constants.file);
+    const filename = path.basename(file || constants.defaults.file);
     throw Error(`File not found in path: ${filename}`);
   }
 
@@ -52,13 +52,17 @@ export async function fetch(
     throw Error(`Task record must not have empty string keys`);
   }
 
-  const restricted = Object.keys(tasks)
-    .filter((name) => name[0] === ':')
-    .map((name) => `"${name}"`);
-  if (restricted.length) {
-    throw Error(
-      `Root task keys must not start with ":": ${restricted.join(', ')}`
+  if (constants.collections.restrict.length) {
+    const restricted = Object.keys(tasks).filter((name) =>
+      constants.collections.restrict.includes(name[0])
     );
+    if (restricted.length) {
+      throw Error(
+        'Task names must not start with: "' +
+          constants.collections.restrict.join('", "') +
+          '"'
+      );
+    }
   }
 
   return tasks;

@@ -2,10 +2,10 @@ import { Task, Context } from '../../definitions';
 import { parseToArray } from '../../helpers/parse';
 import { styleString } from '../../helpers/style-string';
 import { constants } from '../../constants';
+import { run } from '../../utils/run';
 import { print } from '../stdio/print';
 import { NullaryFn, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
-import { into } from 'pipettes';
 import table from 'as-table';
 
 export interface ListOptions {
@@ -30,7 +30,7 @@ export function list(
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
     const opts = shallow(
-      { defaults: false, bin: constants.bin },
+      { defaults: false, bin: constants.cli.bin },
       options || undefined
     );
 
@@ -53,13 +53,13 @@ export function list(
       ];
     });
 
-    into(
-      ctx,
+    await run(
       print(
         table
           .configure({ delimiter: ' '.repeat(2) })(rows)
           .trim()
-      )
+      ),
+      ctx
     );
   };
 }

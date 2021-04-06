@@ -1,5 +1,5 @@
 import { Context, LogLevel, Task } from '../../definitions';
-import { stringifyPrintRoute } from '../../helpers/stringify-route';
+import { stringifyPrintRoute } from '../../helpers/stringify';
 import { styleString } from '../../helpers/style-string';
 import { run } from '../../utils/run';
 import { series } from '../aggregate/series';

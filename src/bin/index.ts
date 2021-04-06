@@ -1,4 +1,4 @@
-import { formatMessage } from '../helpers/format-message';
+import { stringifyError } from '../helpers/stringify';
 import { run } from '../utils/run';
 import { log } from '../tasks/stdio/log';
 import { constants } from '../constants';
@@ -24,10 +24,10 @@ export async function bin(options?: BinOptions): Promise<void> {
   try {
     const opts = shallow(
       {
-        bin: constants.bin,
-        file: constants.file,
-        description: constants.description,
-        version: constants.version
+        bin: constants.cli.bin,
+        file: constants.defaults.file,
+        description: constants.cli.description,
+        version: constants.cli.version
       },
       options || undefined
     );
@@ -56,7 +56,7 @@ export async function bin(options?: BinOptions): Promise<void> {
 
     await promise;
   } catch (err) {
-    await run(log('error', formatMessage(err)));
+    await run(log('error', stringifyError(err)));
     return process.exit(1);
   }
 }

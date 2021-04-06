@@ -1,6 +1,7 @@
 import { LogLevel, Task } from '../definitions';
 import { styleString } from '../helpers/style-string';
 import { print, log, raises, series, context, combine } from '../tasks';
+import { constants } from '../constants';
 import { fetch } from '../utils';
 import watch from './watch';
 import list from './list';
@@ -84,12 +85,14 @@ export default async function main(
   }
 
   if (
-    !['silent', 'error', 'warn', 'info', 'debug', 'trace'].includes(
-      cmd['--level'] || 'info'
-    )
+    cmd['--level'] &&
+    !constants.collections.levels.includes(cmd['--level'].toLowerCase())
   ) {
     return raises(
-      Error(`Logging level must be silent, error, warn, info, debug, or trace`)
+      Error(
+        'Logging level must be one of: ' +
+          constants.collections.levels.join(', ')
+      )
     );
   }
 

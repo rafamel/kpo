@@ -1,7 +1,7 @@
 import { Task } from '../definitions';
 import { constants } from '../constants';
 import { series } from '../tasks/aggregate/series';
-import { stringifyKeyRoute } from './stringify-route';
+import { stringifyKeyRoute } from './stringify';
 import { Members, TypeGuard } from 'type-core';
 
 interface Item {
@@ -72,7 +72,7 @@ export function parseToArray(
       return options.defaults
         ? Boolean(item.task)
         : Boolean(
-            item.route.indexOf(constants.record.default) === -1 && item.task
+            item.route.indexOf(constants.defaults.task) === -1 && item.task
           );
     });
 }
@@ -93,7 +93,7 @@ function parseHelper(
       for (const [route, task] of parseHelper(tasks, roots)) {
         every.push([[name, ...route], task]);
         if (route.length <= 1) {
-          route[0] === constants.record.default
+          route[0] === constants.defaults.task
             ? defaults.push(task)
             : all.push(task);
         }

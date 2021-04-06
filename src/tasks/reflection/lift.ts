@@ -50,7 +50,12 @@ export function lift(
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
     const opts = shallow(
-      { purge: false, mode: 'default', defaults: false, bin: constants.bin },
+      {
+        purge: false,
+        mode: 'default',
+        defaults: false,
+        bin: constants.cli.bin
+      },
       options || undefined
     );
 

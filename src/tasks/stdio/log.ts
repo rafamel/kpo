@@ -34,7 +34,7 @@ const color = {
  * @returns Task
  */
 export function log(level: LogLevel, item: any, ...data: any[]): Task.Sync {
-  level = String(level) as LogLevel;
+  level = String(level).toLowerCase() as LogLevel;
   const nLevel = rank[level.toLowerCase()] || 5;
 
   return (ctx: Context): void => {

@@ -135,11 +135,9 @@ export function select(
     const index = lowercaseNames.indexOf(response);
     const name = names[index];
 
-    if (!Object.hasOwnProperty.call(tasks, name)) {
-      throw Error(`Task for "${name}" couldn't be retrieved`);
-    }
-
     const task = tasks[name];
-    return task ? run(task, ctx) : undefined;
+    if (!task) throw Error(`Task for "${name}" couldn't be retrieved`);
+
+    return run(task, ctx);
   };
 }

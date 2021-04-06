@@ -1,5 +1,5 @@
 import { Task, Context, LogLevel } from '../../definitions';
-import { formatMessage } from '../../helpers/format-message';
+import { stringifyError } from '../../helpers/stringify';
 import { isCancelled } from '../../utils/is-cancelled';
 import { run } from '../../utils/run';
 import { log } from '../stdio/log';
@@ -33,7 +33,7 @@ export function catches(
     } catch (err) {
       if (await isCancelled(ctx)) return;
 
-      into(ctx, log(opts.level, formatMessage(err)));
+      into(ctx, log(opts.level, stringifyError(err)));
       if (alternate) await run(alternate, ctx);
     }
   };
