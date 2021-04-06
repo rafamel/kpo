@@ -7,7 +7,7 @@ import { styleString } from '../../helpers/style-string';
 import { resolveProject } from '../../helpers/resolve-project';
 import { stringifyArgvCommands } from '../../helpers/stringify';
 import { print, raises, series, create, context, log } from '../../tasks';
-import { Task, LogLevel, CLI } from '../../definitions';
+import { Task, LogLevel, CLI, Context } from '../../definitions';
 import { constants } from '../../constants';
 
 export function main(argv: string[], options: Required<CLI.Options>): Task {
@@ -175,6 +175,16 @@ export function main(argv: string[], options: Required<CLI.Options>): Task {
         )
       );
     }),
+    (task) => {
+      return async (ctx: Context): Promise<void> => {
+        try {
+          await task(ctx);
+        } catch (err) {
+          into(ctx, log('trace', err));
+          throw err;
+        }
+      };
+    },
     context.bind(null, {
       level: opts.level,
       prefix: opts.prefix,

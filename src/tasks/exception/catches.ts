@@ -33,6 +33,7 @@ export function catches(
     } catch (err) {
       if (await isCancelled(ctx)) return;
 
+      into(ctx, log('trace', err));
       into(ctx, log(opts.level, stringifyError(err)));
       if (alternate) await run(alternate, ctx);
     }

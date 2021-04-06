@@ -1,6 +1,8 @@
+import { into } from 'pipettes';
 import { Task, Context } from '../../definitions';
 import { isCancelled } from '../../utils/is-cancelled';
 import { run } from '../../utils/run';
+import { log } from '../stdio/log';
 
 /**
  * Always executes a `final` task after another.
@@ -27,6 +29,11 @@ export function finalize(task: Task, final?: Task | null): Task.Async {
     }
 
     if (!errors.length || (await isCancelled(ctx))) return;
-    throw errors.pop();
+
+    const err = errors.pop();
+    while (errors.length > 0) {
+      into(ctx, log('trace', errors.shift()));
+    }
+    throw err;
   };
 }

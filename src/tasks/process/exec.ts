@@ -91,6 +91,7 @@ export function exec(
       const cmd = file || fullArgs.filter((arg) => arg[0] !== '-')[0];
       message += !cmd || cmd.includes(path.sep) ? '' : `: ${file}`;
 
+      into(ctx, log('trace', err));
       throw Error(message);
     });
   };
