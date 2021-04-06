@@ -7,31 +7,37 @@ import transform from 'prefix-stream';
 import { WriteStream } from 'tty';
 import { into } from 'pipettes';
 import execa from 'execa';
+import path from 'path';
 
-export interface ExecOptions extends execa.Options {
-  /**
-   * Produces a brief error message with only the exit code.
-   */
-  briefError?: boolean;
-}
+export type ExecOptions = execa.Options;
 
 /**
  * Spawns a process.
+ * When no file is passed, it will execute node.
  * @returns Task
  */
 export function exec(
-  file: string,
+  file: string | null,
   args?: string[] | Empty,
   options?: ExecOptions | Empty,
   cb?: (ps: execa.ExecaChildProcess) => void
 ): Task.Async {
-  const opts = shallow({ extendEnv: true }, options || undefined);
   return async (ctx: Context): Promise<void> => {
     const fullArgs = (args || []).concat(ctx.args || []);
-
     into(
       ctx,
       log('debug', `Exec: ${file}`, fullArgs.length ? fullArgs : undefined)
+    );
+
+    const opts = shallow(
+      {
+        cwd: ctx.cwd,
+        localDir: ctx.cwd,
+        execPath: process.execPath,
+        extendEnv: true,
+        preferLocal: true
+      },
+      options || undefined
     );
 
     const isStdioTty =
@@ -41,10 +47,9 @@ export function exec(
     const pipeOutput = !opts.stdio && prefix;
     const forceColor = pipeOutput && isStdioTty;
 
-    const ps = execa(file, fullArgs, {
-      ...options,
+    const ps = execa(file || opts.execPath, fullArgs, {
+      ...opts,
       extendEnv: false,
-      cwd: opts.cwd || ctx.cwd,
       env: Object.assign(
         forceColor ? { FORCE_COLOR: true } : {},
         opts.extendEnv ? ctx.env : undefined,
@@ -56,7 +61,6 @@ export function exec(
         pipeOutput ? 'pipe' : ctx.stdio[2]
       ]
     });
-
     if (pipeOutput) {
       if (ps.stdout) {
         ps.stdout.pipe(transform(prefix)).pipe(ctx.stdio[1]);
@@ -74,20 +78,20 @@ export function exec(
       ps.cancel();
     });
 
-    let exitCode: number | null = null;
-    ps.on('exit', (code) => (exitCode = code));
+    await ps.catch(async (err) => {
+      if (cancelled) return undefined;
 
-    return ps.then(
-      () => undefined,
-      (err) => {
-        if (cancelled) return undefined;
-
-        if (opts.briefError) {
-          err.message =
-            `Command failed` + (exitCode ? ` with exit code ${exitCode}` : '');
-        }
-        return Promise.reject(err);
+      let message = 'Command failed';
+      if (err.exitCode) {
+        message += ' with exit code ' + err.exitCode;
+      } else if ((err as NodeJS.ErrnoException).code) {
+        message += ' with ' + (err as NodeJS.ErrnoException).code;
       }
-    );
+
+      const cmd = file || fullArgs.filter((arg) => arg[0] !== '-')[0];
+      message += !cmd || cmd.includes(path.sep) ? '' : `: ${file}`;
+
+      throw Error(message);
+    });
   };
 }
