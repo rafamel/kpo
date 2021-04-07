@@ -55,6 +55,10 @@ export interface Context {
    */
   readonly prefix: PrefixPolicy | boolean;
   /**
+   * Sets a context as non-interactive.
+   */
+  readonly interactive: boolean;
+  /**
    * A *Promise* representing a task's
    * cancellation token.
    * Tasks should cancel when it resolves.
