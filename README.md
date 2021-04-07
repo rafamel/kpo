@@ -29,19 +29,20 @@ Options:
   -d, --dir <path>        Project directory
   -e, --env <value>       Environment variables
   --level <value>         Logging level
-  --prefix                Prefix task output with its route
+  --prefix                Prefix tasks output with their route
+  --non-interactive       Set the context as non-interactive
   -h, --help              Show help
   -v, --version           Show version number
 
 Commands:
-  :run           Runs tasks (default)
-  :watch         Watches paths and run tasks on change events
-  :list          List available tasks
-  :lift          Lift tasks to package
+  :run          Runs tasks (default)
+  :watch        Watch paths and run tasks on change events
+  :list         List available tasks
+  :lift         Lift tasks to package
 
 Examples:
   $ kpo foo bar baz
-  $ kpo -e NODE_ENV=development -e BABEL_ENV=node :run foo bar baz
+  $ kpo -e NODE_ENV=development -e BABEL_ENV=node :run foo
 ```
 
 ### `kpo :run`
@@ -55,14 +56,15 @@ Note that the `:run` command can be omitted. When no command is passed, *kpo* wi
 ### `kpo :watch`
 
 ```
-Watches a path and runs tasks on change events
+Watch a path and run tasks on change events
 
 Usage:
-  $ kpo :watch [options]
+  $ kpo :watch [options] -- [args]
 
 Options:
   -g, --glob              Parse globs in paths
   -p, --prime             Runs the task once when ready to wait for changes
+  -f, --fail              Finalizes the watch effort if a given task fails
   -c, --clear             Clear stdout before tasks execution
   -i, --include <value>   Paths to include
   -e, --exclude <value>   Paths to exclude
@@ -73,15 +75,16 @@ Options:
   --poll <number>         Use polling for every ms interval
   -h, --help              Show help
 
-  Examples:
-    $ kpo :watch -i ./src -i ./test foo bar baz
-    $ kpo -e NODE_ENV=development :watch -i ./src foo bar baz
+Examples:
+  $ kpo :watch -i ./src foo bar baz
+  $ kpo :watch -i ./src -i ./test foo
+  $ kpo -e NODE_ENV=development :watch -i ./src bar
 ```
 
 ### `kpo :list`
 
 ```
-Lists available tasks
+List available tasks
 
 Usage:
   $ kpo :list [options]
@@ -94,7 +97,7 @@ Options:
 ### `kpo :lift`
 
 ```
-Lifts tasks to a package.json
+Lift tasks to a package.json
 
 Usage:
   $ kpo :lift [options]
