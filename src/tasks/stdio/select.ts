@@ -30,6 +30,11 @@ export interface SelectOptions {
   default?: string | null;
 }
 
+/**
+ * Uses a context's stdio to prompt for input.
+ * Takes in a record of `tasks`.
+ * @returns Task
+ */
 export function select(
   options: SelectOptions | Empty,
   tasks: Members<Task | Empty>
@@ -37,11 +42,19 @@ export function select(
   return create(async (ctx) => {
     const opts = shallow(
       {
-        message: 'Select to continue:',
+        message: 'Select to continue',
         timeout: -1,
         default: null as string | null
       },
       options || undefined
+    );
+
+    into(
+      ctx,
+      print(
+        style(figures(figures.pointer), { bold: true, color: 'yellow' }),
+        ' ' + opts.message
+      )
     );
 
     const names = Object.keys(tasks);
@@ -52,7 +65,11 @@ export function select(
     if (!isInteractive(ctx)) {
       if (fallback >= 0 && opts.default) {
         return series(
-          log('info', 'Default selection [non-interactive]:', opts.default),
+          log(
+            'info',
+            'Default selection [non-interactive]:',
+            style(opts.default, { bold: true })
+          ),
           tasks[opts.default]
         );
       }
@@ -60,14 +77,6 @@ export function select(
         Error(`Must provide a default selection for non-interactive contexts`)
       );
     }
-
-    into(
-      ctx,
-      print(style(figures(figures.pointer)) + ' ' + opts.message, {
-        bold: true,
-        color: 'yellow'
-      })
-    );
 
     const stdin = ctx.stdio[0];
     function cancel(): void {
@@ -94,7 +103,7 @@ export function select(
       ...(fallback >= 0 ? { defaultValue: fallback } : {}),
       selected: figures(figures.circleFilled),
       unselected: figures(figures.circle),
-      indentation: 2,
+      indentation: 4,
       outputStream: ctx.stdio[2] as NodeJS.WriteStream,
       inputStream: Object.create(stdin, {
         setRawMode: {
@@ -117,14 +126,21 @@ export function select(
 
     // Explicit response by user
     if (response !== null) {
-      return series(log('info', 'Select:', response), tasks[response]);
+      return series(
+        log('info', 'Select:', style(response, { bold: true })),
+        tasks[response]
+      );
     }
     // No response and no timeout triggered
     if (!didTimeout) return raises(Error(`User cancellation`));
     // No response and timeout triggered with a default selection available
     if (fallback >= 0 && opts.default) {
       return series(
-        log('info', 'Default selection [timeout]:', opts.default),
+        log(
+          'info',
+          'Default selection [timeout]:',
+          style(opts.default, { bold: true })
+        ),
         tasks[opts.default]
       );
     }
