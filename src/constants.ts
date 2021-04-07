@@ -16,7 +16,7 @@ export const constants = into(
     },
     collections: {
       restrict: [':'],
-      levels: ['silent', 'error', 'warn', 'info', 'debug', 'trace']
+      levels: ['silent', 'error', 'warn', 'success', 'info', 'debug', 'trace']
     }
   })
 );

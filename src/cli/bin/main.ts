@@ -160,7 +160,6 @@ export function main(argv: string[], options: Required<CLI.Options>): Task {
           style(':' + extension.name, { bold: true, color: 'blue' }),
           stringifyArgvCommands(cmd._)
         ),
-        print(),
         context(
           { cwd: project.directory },
           create(

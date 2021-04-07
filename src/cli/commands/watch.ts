@@ -108,8 +108,7 @@ export async function watch(params: CLI.Extension.Params): Promise<Task> {
               style(params.options.bin, { bold: true }),
               style(':watch', { bold: true, color: 'blue' }),
               stringifyArgvCommands(params.argv)
-            ),
-            print()
+            )
           );
         }),
         combine(tasks, { include: names })

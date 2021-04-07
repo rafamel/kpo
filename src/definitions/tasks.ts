@@ -66,7 +66,14 @@ export interface Context {
   readonly cancellation: Promise<void>;
 }
 
-export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
+export type LogLevel =
+  | 'trace'
+  | 'debug'
+  | 'info'
+  | 'success'
+  | 'warn'
+  | 'error'
+  | 'silent';
 
 export type PrefixPolicy = 'none' | 'print' | 'exec' | 'all';
 
