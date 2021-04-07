@@ -1,4 +1,5 @@
 import { Task, Context } from '../../definitions';
+import { stringifyError } from '../../helpers/stringify';
 import { run } from '../../utils/run';
 import { log } from '../stdio/log';
 import { clear } from '../stdio/clear';
@@ -14,6 +15,8 @@ export interface WatchOptions {
   glob?: boolean;
   /** Runs the task once when ready to wait for changes */
   prime?: boolean;
+  /** Finalizes the watch effort if a given task fails */
+  fail?: boolean;
   /** Clear stdout before tasks execution */
   clear?: boolean;
   /** Paths to include */
@@ -43,6 +46,7 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
       {
         glob: false,
         prime: false,
+        fail: false,
         clear: false,
         include: ['./'],
         exclude: ['node_modules'],
@@ -107,7 +111,14 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
               })
             });
           })
-          .catch(onError);
+          .catch((err) => {
+            return opts.fail
+              ? onError(err)
+              : run(
+                  series(log('trace', err), log('warn', stringifyError(err))),
+                  ctx
+                );
+          });
       },
       opts.debounce >= 0 ? opts.debounce : 0
     );

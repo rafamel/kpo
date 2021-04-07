@@ -28,6 +28,7 @@ export async function watch(params: CLI.Extension.Params): Promise<Task> {
     Options:
       -g, --glob              Parse globs in paths
       -p, --prime             Runs the task once when ready to wait for changes
+      -f, --fail              Finalizes the watch effort if a given task fails
       -c, --clear             Clear stdout before tasks execution
       -i, --include <value>   Paths to include
       -e, --exclude <value>   Paths to exclude
@@ -47,9 +48,10 @@ export async function watch(params: CLI.Extension.Params): Promise<Task> {
   const types = {
     '--glob': Boolean,
     '--prime': Boolean,
+    '--fail': Boolean,
+    '--clear': Boolean,
     '--include': [String] as [StringConstructor],
     '--exclude': [String] as [StringConstructor],
-    '--clear': Boolean,
     '--parallel': Boolean,
     '--symlinks': Boolean,
     '--debounce': Number,
@@ -90,6 +92,7 @@ export async function watch(params: CLI.Extension.Params): Promise<Task> {
       {
         glob: cmd['--glob'],
         prime: cmd['--prime'],
+        fail: cmd['--fail'],
         clear: cmd['--clear'],
         include: cmd['--include'],
         exclude: cmd['--exclude'],
