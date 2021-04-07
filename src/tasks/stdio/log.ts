@@ -1,6 +1,6 @@
 import { Task, LogLevel, Context } from '../../definitions';
-import { styleString } from '../../helpers/style-string';
 import { addPrefix } from '../../helpers/prefix';
+import { style } from '../../utils/style';
 import { Members } from 'type-core';
 import util from 'util';
 
@@ -15,15 +15,14 @@ const rank: Members<number> = {
 
 const color = {
   trace: (str: string) =>
-    styleString(str, { bold: true, bg: 'magenta', color: 'white' }),
+    style(str, { bold: true, bg: 'magenta', color: 'white' }),
   debug: (str: string) =>
-    styleString(str, { bold: true, bg: 'cyan', color: 'white' }),
+    style(str, { bold: true, bg: 'cyan', color: 'white' }),
   info: (str: string) =>
-    styleString(str, { bold: true, bg: 'green', color: 'white' }),
+    style(str, { bold: true, bg: 'green', color: 'white' }),
   warn: (str: string) =>
-    styleString(str, { bold: true, bg: 'yellow', color: 'white' }),
-  error: (str: string) =>
-    styleString(str, { bold: true, bg: 'red', color: 'white' })
+    style(str, { bold: true, bg: 'yellow', color: 'white' }),
+  error: (str: string) => style(str, { bold: true, bg: 'red', color: 'white' })
 };
 
 /**
@@ -56,5 +55,5 @@ export function log(level: LogLevel, item: any, ...data: any[]): Task.Sync {
 function getLoggerMessagePrefix(level: Exclude<LogLevel, 'silent'>): string {
   const fn = color[level];
   const name = level.toUpperCase();
-  return fn ? fn(` ${name} `) : styleString(name, { bold: true });
+  return fn ? fn(` ${name} `) : style(name, { bold: true });
 }

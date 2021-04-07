@@ -4,9 +4,9 @@ import cliSelect from 'cli-select';
 import { into } from 'pipettes';
 import figures from 'figures';
 import { Task } from '../../definitions';
-import { styleString } from '../../helpers/style-string';
 import { isInteractive } from '../../utils/is-interactive';
 import { isCancelled } from '../../utils/is-cancelled';
+import { style } from '../../utils/style';
 import { series } from '../aggregate/series';
 import { raises } from '../exception/raises';
 import { create } from '../creation/create';
@@ -63,7 +63,7 @@ export function select(
 
     into(
       ctx,
-      print(styleString(figures(figures.pointer)) + ' ' + opts.message, {
+      print(style(figures(figures.pointer)) + ' ' + opts.message, {
         bold: true,
         color: 'yellow'
       })

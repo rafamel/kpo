@@ -1,5 +1,5 @@
 import { Context } from '../definitions';
-import { styleString } from './style-string';
+import { style } from '../utils/style';
 import { stringifyPrintRoute } from './stringify';
 import { into } from 'pipettes';
 import { TypeGuard } from 'type-core';
@@ -22,9 +22,7 @@ export function getPrefix(
       if (!prefix || (policy !== target && policy !== 'all')) {
         return extra ? extra + ' ' : null;
       }
-      return (
-        styleString(`${prefix} | `, { bold: true }) + (extra ? extra + ' ' : '')
-      );
+      return style(`${prefix} | `, { bold: true }) + (extra ? extra + ' ' : '');
     },
     (prefix) => prefix || ''
   );

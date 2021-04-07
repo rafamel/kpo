@@ -1,9 +1,9 @@
 import chalk, { ForegroundColor, Chalk } from 'chalk';
 import { into } from 'pipettes';
 
-export interface StyleStringOptions {
-  color?: typeof ForegroundColor;
-  bg?: typeof ForegroundColor;
+export interface StyleOptions {
+  color?: StyleColor;
+  bg?: StyleColor;
   dim?: boolean;
   bold?: boolean;
   italic?: boolean;
@@ -11,10 +11,10 @@ export interface StyleStringOptions {
   strikethrough?: boolean;
 }
 
-export function styleString(
-  str: string,
-  options: StyleStringOptions = {}
-): string {
+export type StyleColor = typeof ForegroundColor;
+
+/** Styles a string */
+export function style(str: string, options: StyleOptions = {}): string {
   return into(
     chalk,
     (chalk) => (options.color ? chalk[options.color] : chalk),

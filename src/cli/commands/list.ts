@@ -1,14 +1,13 @@
 import arg from 'arg';
 import { flags, safePairs } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
-import { fetch } from '../../utils';
 import { Task, CLI } from '../../definitions';
-import { styleString } from '../../helpers/style-string';
+import { style, fetch } from '../../utils';
 import { list as _list, series, raises, print } from '../../tasks';
 
 export async function list(params: CLI.Extension.Params): Promise<Task> {
   const help = indent`
-    ${styleString(`List available tasks`, { bold: true })}
+    ${style(`List available tasks`, { bold: true })}
 
     Usage:
       $ ${params.options.bin} :list [options]

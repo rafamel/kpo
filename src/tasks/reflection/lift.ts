@@ -1,8 +1,8 @@
 import { Task, Context } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
 import { getAbsolutePath } from '../../helpers/paths';
-import { styleString } from '../../helpers/style-string';
 import { isCancelled } from '../../utils/is-cancelled';
+import { style } from '../../utils/style';
 import { run } from '../../utils/run';
 import { constants } from '../../constants';
 import { write } from '../filesystem/write';
@@ -162,24 +162,24 @@ function evaluateChanges(
     if (areChangesPending) {
       if (addScriptNames.length) {
         strArr.push(
-          styleString('Scripts to add', { bold: true, color: 'green' }),
+          style('Scripts to add', { bold: true, color: 'green' }),
           addScriptNames.join(', ') + '\n'
         );
       }
       if (replaceScriptNames.length) {
         strArr.push(
-          styleString('Scripts to replace', { bold: true, color: 'yellow' }),
+          style('Scripts to replace', { bold: true, color: 'yellow' }),
           replaceScriptNames.join(', ') + '\n'
         );
       }
       if (removeScriptNames.length) {
         strArr.push(
-          styleString('Scripts to remove', { bold: true, color: 'red' }),
+          style('Scripts to remove', { bold: true, color: 'red' }),
           removeScriptNames.join(', ') + '\n'
         );
       }
     } else {
-      strArr.push(styleString('No pending scripts changes', { bold: true }));
+      strArr.push(style('No pending scripts changes', { bold: true }));
     }
 
     into(context, print(strArr.join('\n')));

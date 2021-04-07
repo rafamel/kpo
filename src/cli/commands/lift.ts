@@ -1,14 +1,13 @@
 import arg from 'arg';
 import { flags, safePairs } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
-import { fetch } from '../../utils';
 import { Task, CLI } from '../../definitions';
-import { styleString } from '../../helpers/style-string';
+import { style, fetch } from '../../utils';
 import { lift as _lift, series, raises, print } from '../../tasks';
 
 export async function lift(params: CLI.Extension.Params): Promise<Task> {
   const help = indent`
-    ${styleString(`Lift tasks to a package.json`, { bold: true })}
+    ${style(`Lift tasks to a package.json`, { bold: true })}
 
     Usage:
       $ ${params.options.bin} :lift [options]

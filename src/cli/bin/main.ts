@@ -3,12 +3,12 @@ import table from 'as-table';
 import { into } from 'pipettes';
 import { flags, safePairs } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
-import { styleString } from '../../helpers/style-string';
 import { resolveProject } from '../../helpers/resolve-project';
 import { stringifyArgvCommands } from '../../helpers/stringify';
 import { print, raises, series, create, context, log } from '../../tasks';
 import { Task, LogLevel, CLI, Context } from '../../definitions';
 import { constants } from '../../constants';
+import { style } from '../../utils';
 
 export function main(argv: string[], options: Required<CLI.Options>): Task {
   const extensions = into(
@@ -22,7 +22,7 @@ export function main(argv: string[], options: Required<CLI.Options>): Task {
   );
   const help = into(
     indent`
-      ${styleString(options.description, { bold: true })}
+      ${style(options.description, { bold: true })}
 
       Usage:
         $ ${options.bin} [options] [command]
@@ -156,8 +156,8 @@ export function main(argv: string[], options: Required<CLI.Options>): Task {
         log('debug', 'Arguments:', [':' + extension.name, ...cmd._]),
         log(
           'info',
-          styleString(options.bin, { bold: true }),
-          styleString(':' + extension.name, { bold: true, color: 'blue' }),
+          style(options.bin, { bold: true }),
+          style(':' + extension.name, { bold: true, color: 'blue' }),
           stringifyArgvCommands(cmd._)
         ),
         print(),

@@ -1,6 +1,6 @@
 import { Context, LogLevel, Task } from '../../definitions';
 import { stringifyPrintRoute } from '../../helpers/stringify';
-import { styleString } from '../../helpers/style-string';
+import { style } from '../../utils/style';
 import { run } from '../../utils/run';
 import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
@@ -23,7 +23,7 @@ export function announce(task: Task, options?: AnnounceOptions): Task.Async {
       ctx.route.length
         ? log(
             opts.level,
-            styleString('task |', { bold: true }),
+            style('task |', { bold: true }),
             stringifyPrintRoute(ctx.route)
           )
         : null,

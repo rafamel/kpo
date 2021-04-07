@@ -1,9 +1,8 @@
 import arg from 'arg';
 import { flags, safePairs, splitBy } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
-import { fetch } from '../../utils';
 import { Task, CLI } from '../../definitions';
-import { styleString } from '../../helpers/style-string';
+import { style, fetch } from '../../utils';
 import { stringifyArgvCommands } from '../../helpers/stringify';
 import {
   watch as _watch,
@@ -19,7 +18,7 @@ import {
 export async function watch(params: CLI.Extension.Params): Promise<Task> {
   const { bin, multitask } = params.options;
   const help = indent`
-    ${styleString(`Watch a path and run tasks on change events`, {
+    ${style(`Watch a path and run tasks on change events`, {
       bold: true
     })}
 
@@ -106,8 +105,8 @@ export async function watch(params: CLI.Extension.Params): Promise<Task> {
           return series(
             log(
               'info',
-              styleString(params.options.bin, { bold: true }),
-              styleString(':watch', { bold: true, color: 'blue' }),
+              style(params.options.bin, { bold: true }),
+              style(':watch', { bold: true, color: 'blue' }),
               stringifyArgvCommands(params.argv)
             ),
             print()

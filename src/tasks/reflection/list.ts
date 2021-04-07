@@ -1,7 +1,7 @@
 import { Task, Context } from '../../definitions';
 import { parseToArray } from '../../helpers/parse';
-import { styleString } from '../../helpers/style-string';
 import { constants } from '../../constants';
+import { style } from '../../utils/style';
 import { run } from '../../utils/run';
 import { print } from '../stdio/print';
 import { NullaryFn, TypeGuard } from 'type-core';
@@ -46,7 +46,7 @@ export function list(
 
     const rows = items.map((item) => {
       return [
-        opts.bin + ' ' + styleString(item.name, { bold: true }) + ' '.repeat(4),
+        opts.bin + ' ' + style(item.name, { bold: true }) + ' '.repeat(4),
         ...Array(item.route.length).fill(''),
         item.route[item.route.length - 1],
         ...Array(maxRouteLength - item.route.length).fill('')
