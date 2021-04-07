@@ -5,7 +5,6 @@ import { into } from 'pipettes';
 import figures from 'figures';
 import { Task } from '../../definitions';
 import { styleString } from '../../helpers/style-string';
-import { emitterIntercept } from '../../helpers/emitter-intercept';
 import { isInteractive } from '../../utils/is-interactive';
 import { isCancelled } from '../../utils/is-cancelled';
 import { series } from '../aggregate/series';
@@ -70,10 +69,9 @@ export function select(
       })
     );
 
-    const { emitter, emit } = emitterIntercept(ctx.stdio[0]);
-
+    const stdin = ctx.stdio[0];
     function cancel(): void {
-      return emit('keypress', {
+      stdin.emit('keypress', undefined, {
         sequence: '\u001b',
         name: 'escape',
         ctrl: false,
@@ -88,10 +86,7 @@ export function select(
         ? null
         : setTimeout(() => (didTimeout = true) && cancel(), opts.timeout);
 
-    ctx.cancellation.finally(() => {
-      if (timeout) clearTimeout(timeout);
-      cancel();
-    });
+    ctx.cancellation.finally(() => cancel());
 
     const response = await cliSelect({
       cleanup: true,
@@ -101,11 +96,11 @@ export function select(
       unselected: figures(figures.circle),
       indentation: 2,
       outputStream: ctx.stdio[2] as NodeJS.WriteStream,
-      inputStream: Object.create(emitter, {
+      inputStream: Object.create(stdin, {
         setRawMode: {
           value(...args: any[]) {
-            return (emitter as any).setRawMode
-              ? (emitter as any).setRawMode.apply(this, args)
+            return (stdin as any).setRawMode
+              ? (stdin as any).setRawMode.apply(this, args)
               : () => undefined;
           }
         }
