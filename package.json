@@ -18,7 +18,7 @@
     "node": ">=12"
   },
   "bin": {
-    "kpo": "dist/bin/kpo.js"
+    "kpo": "dist/cli/kpo.js"
   },
   "main": "pkg/dist/index.js",
   "types": "pkg/dist/index.d.ts",
