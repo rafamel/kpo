@@ -6,6 +6,7 @@ import { Empty, NullaryFn, Members } from 'type-core';
 /**
  * Returns a `Task` that will run in parallel
  * a set of given tasks.
+ * Suppresses the context's stdin.
  * For tasks passed as arguments, the route
  * will be left unmodified, while task
  * lists and records will inherit their
@@ -34,6 +35,7 @@ export function parallel(
         items.map((task) => {
           return run(task, {
             ...ctx,
+            stdio: [null, ctx.stdio[1], ctx.stdio[2]],
             cancellation: new Promise((resolve) => {
               cbs.push(resolve);
             })
