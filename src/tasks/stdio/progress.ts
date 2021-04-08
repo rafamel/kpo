@@ -1,16 +1,15 @@
 import { TypeGuard } from 'type-core';
 import isUnicodeSupported from 'is-unicode-supported';
-import { into } from 'pipettes';
 import ora from 'ora';
-import { Stdio, Task } from '../../definitions';
+import { Task } from '../../definitions';
 import { stringifyPrintRoute } from '../../helpers/stringify';
 import { getLogLevelPrefix, isLogLevelActive } from '../../helpers/logging';
 import { isInteractive } from '../../utils/is-interactive';
 import { style } from '../../utils/style';
 import { run } from '../../utils/run';
-import { context } from '../creation/context';
 import { create } from '../creation/create';
 import { announce } from './announce';
+import { silence } from './silence';
 
 export interface ProgressOptions {
   /** Use instead of the task route */
@@ -20,27 +19,23 @@ export interface ProgressOptions {
 /**
  * Shows a spinner upon task initialization,
  * and a success message on successful finalization.
- * Fallsback to `anounce` on non-interactive environments
- * and logging levels equal or above debug.
- * Otherwise, it suppresses the context's stdio.
+ * Will suppress the context's stdio.
+ * Non-interactive environments will fallback to `announce`.
+ * Logging levels equal or above debug will fallback
+ * to `announce` and maintain the context's stdout and stderr.
  * @returns Task
  */
 export function progress(task: Task, options?: ProgressOptions): Task.Async {
   return create(async (ctx) => {
     const opts = options || {};
-    const isDebug = isLogLevelActive('debug', ctx);
-
-    const contextual = into(
-      isDebug ? [null, ctx.stdio[1], ctx.stdio[2]] : [null, null, null],
-      (stdio: Stdio) => context({ stdio }, task)
-    );
+    const silent = silence(task);
 
     const message = TypeGuard.isString(opts.message)
       ? opts.message
       : style('task ', { bold: true }) + stringifyPrintRoute(ctx.route);
 
-    if (isDebug || !isInteractive(ctx)) {
-      return announce(contextual, { message, info: true, success: true });
+    if (!isInteractive(ctx) || isLogLevelActive('debug', ctx)) {
+      return announce(silent, { message, info: true, success: true });
     }
 
     const spinner = ora({
@@ -56,7 +51,7 @@ export function progress(task: Task, options?: ProgressOptions): Task.Async {
     let wasCancelled = false;
     ctx.cancellation.finally(() => (wasCancelled = true) && spinner.stop());
     try {
-      await run(contextual, ctx);
+      await run(silent, ctx);
     } catch (err) {
       spinner.stopAndPersist({
         text: message,
