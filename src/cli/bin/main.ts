@@ -3,10 +3,15 @@ import table from 'as-table';
 import { into } from 'pipettes';
 import { flags, safePairs } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
-import { resolveProject } from '../../helpers/resolve-project';
-import { stringifyArgvCommands } from '../../helpers/stringify';
-import { print, raises, series, create, context, log } from '../../tasks';
 import { Task, LogLevel, CLI, Context } from '../../definitions';
+import { stringifyArgvCommands } from '../../helpers/stringify';
+import { resolveProject } from '../../helpers/resolve-project';
+import {
+  getLogLevels,
+  isLogLevel,
+  normalizeLogLevel
+} from '../../helpers/logging';
+import { print, raises, series, create, context, log } from '../../tasks';
 import { constants } from '../../constants';
 import { run, style } from '../../utils';
 
@@ -93,11 +98,9 @@ export function main(argv: string[], options: Required<CLI.Options>): Task {
     directory: cmd['--dir'],
     prefix: cmd['--prefix'],
     nonInteractive: cmd['--non-interactive'],
-    level:
-      cmd['--level'] &&
-      constants.collections.levels.includes(cmd['--level'].toLowerCase())
-        ? (cmd['--level'].toLowerCase() as LogLevel)
-        : constants.defaults.level,
+    level: isLogLevel(normalizeLogLevel(cmd['--level']))
+      ? (normalizeLogLevel(cmd['--level']) as LogLevel)
+      : constants.defaults.level,
     env: {
       ...process.env,
       ...(cmd['--env'] || []).reduce((acc, str) => {
@@ -121,10 +124,7 @@ export function main(argv: string[], options: Required<CLI.Options>): Task {
         return series(
           print(help),
           raises(
-            Error(
-              `Logging level must be one of: ` +
-                constants.collections.levels.join(', ')
-            )
+            Error(`Logging level must be one of: ` + getLogLevels().join(', '))
           )
         );
       }

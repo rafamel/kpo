@@ -15,8 +15,7 @@ export const constants = into(
       level: 'info' as 'info'
     },
     collections: {
-      restrict: [':'],
-      levels: ['silent', 'error', 'warn', 'success', 'info', 'debug', 'trace']
+      restrict: [':']
     }
   })
 );
