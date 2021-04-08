@@ -71,11 +71,8 @@ export type PrefixPolicy = 'none' | 'print' | 'exec' | 'all';
 
 export type Stdio = [Readable | null, Writable | null, Writable | null];
 
-export type LogLevel =
-  | 'trace'
-  | 'debug'
-  | 'info'
-  | 'success'
-  | 'warn'
-  | 'error'
-  | 'silent';
+export type LogLevel = LogLevel.None | LogLevel.Core;
+export declare namespace LogLevel {
+  export type None = 'silent';
+  export type Core = 'error' | 'warn' | 'success' | 'info' | 'debug' | 'trace';
+}

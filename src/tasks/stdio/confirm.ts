@@ -2,8 +2,8 @@ import { Empty, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { createInterface } from 'readline';
 import { into } from 'pipettes';
-import figures from 'figures';
 import { Task } from '../../definitions';
+import { getBadge } from '../../helpers/badges';
 import { isInteractive } from '../../utils/is-interactive';
 import { isCancelled } from '../../utils/is-cancelled';
 import { style } from '../../utils/style';
@@ -52,9 +52,7 @@ export function confirm(
     );
 
     if (!isInteractive(ctx)) {
-      const message =
-        style(figures(figures.pointer), { bold: true, color: 'yellow' }) +
-        `  ${opts.message}`;
+      const message = getBadge('prompt') + ` ${opts.message}`;
       return TypeGuard.isBoolean(opts.default)
         ? series(
             print(message),
@@ -79,12 +77,7 @@ export function confirm(
       opts.message,
       (msg) => msg + (opts.default === true ? ' [Y/' : ' [y/'),
       (msg) => msg + (opts.default === false ? 'N]: ' : 'n]: '),
-      (msg) => {
-        return (
-          style(figures(figures.pointer), { bold: true, color: 'yellow' }) +
-          `  ${msg}`
-        );
-      }
+      (msg) => getBadge('prompt') + ` ${msg}`
     );
 
     const readline = createInterface({

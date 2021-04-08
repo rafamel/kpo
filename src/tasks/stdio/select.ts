@@ -1,8 +1,8 @@
 import { Empty, Members, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import cliSelect from 'cli-select';
-import figures from 'figures';
 import { Task } from '../../definitions';
+import { getBadge } from '../../helpers/badges';
 import { isInteractive } from '../../utils/is-interactive';
 import { isCancelled } from '../../utils/is-cancelled';
 import { style } from '../../utils/style';
@@ -53,9 +53,7 @@ export function select(
     const fallback: number = TypeGuard.isString(opts.default)
       ? names.indexOf(opts.default)
       : -1;
-    const message =
-      style(figures(figures.pointer), { bold: true, color: 'yellow' }) +
-      `  ${opts.message}`;
+    const message = getBadge('prompt') + ` ${opts.message}`;
 
     await run(print(message), ctx);
     if (await isCancelled(ctx)) return;
@@ -100,10 +98,10 @@ export function select(
       cleanup: true,
       values: names,
       ...(fallback >= 0 ? { defaultValue: fallback } : {}),
-      selected: figures(figures.circleFilled),
-      unselected: figures(figures.circle),
+      selected: getBadge('selected'),
+      unselected: getBadge('unselected'),
       indentation: 4,
-      outputStream: ctx.stdio[2],
+      outputStream: ctx.stdio[1],
       inputStream: Object.create(stdin, {
         setRawMode: {
           value(...args: any[]) {

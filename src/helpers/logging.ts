@@ -1,5 +1,7 @@
-import { StyleColor } from '~/utils';
+import isUnicodeSupported from 'is-unicode-supported';
 import { Context, LogLevel } from '../definitions';
+import { style } from '../utils/style';
+import { getBadge, getBadgeColor } from './badges';
 
 const ranks: Record<LogLevel, number> = {
   silent: 0,
@@ -11,30 +13,7 @@ const ranks: Record<LogLevel, number> = {
   trace: 6
 };
 
-// Symbols: 🅧, 🆇, ⓧ, ✖, ‼, ⚠, ✔︎, ✓, ⓘ, ⅈ, ℹ︎, 🅳, 🅓, ⓓ, », 🆃, 🅣, ⓣ, ⊗, ⊘
-const styles: Record<LogLevel, [string, StyleColor | null]> = {
-  silent: ['', null],
-  error: ['🆇 ', 'red'],
-  warn: ['‼ ', 'yellow'],
-  success: ['✔︎✔︎', 'green'],
-  info: ['ⅈ ', 'blue'],
-  debug: ['🅳 ', 'magenta'],
-  trace: ['🆃 ', 'grey']
-};
-
-export function isLogLevel(level: string): level is LogLevel {
-  return Object.keys(ranks).includes(level);
-}
-
-export function isLogLevelActive(level: LogLevel, context: Context): boolean {
-  const levelArg = normalizeLogLevel(level);
-  const levelArgRank = ranks[levelArg] || Math.min(...Object.values(ranks));
-  if (levelArgRank <= 0) return false;
-
-  const levelCtx = normalizeLogLevel(context.level);
-  const levelCtxRank = ranks[levelCtx] || Math.max(...Object.values(ranks));
-  return levelCtxRank >= levelArgRank;
-}
+const unicode = isUnicodeSupported();
 
 export function normalizeLogLevel<T extends string>(level?: T): T {
   return String(level).toLowerCase() as T;
@@ -44,10 +23,36 @@ export function getLogLevels(): LogLevel[] {
   return Object.keys(ranks) as LogLevel[];
 }
 
-export function getLogLevelSymbol(level: LogLevel): string {
-  return styles[level][0];
+export function getLogLevelPrefix(level: LogLevel): string {
+  const normal = normalizeLogLevel(level);
+  if (!isLogLevel(normal) || normal === 'silent') {
+    return style(` ${normal.toUpperCase()} `, { bold: true });
+  }
+  if (!unicode) {
+    return style(` ${normal.toUpperCase()} `, {
+      bold: true,
+      color: 'whiteBright',
+      bg: getBadgeColor(normal)
+    });
+  }
+  return getBadge(normal);
 }
 
-export function getLogLevelColor(level: LogLevel): StyleColor | undefined {
-  return styles[level][1] || undefined;
+export function isLogLevel(level: string): level is LogLevel {
+  return Object.hasOwnProperty.call(ranks, normalizeLogLevel(level));
+}
+
+export function isLogLevelActive(level: LogLevel, context: Context): boolean {
+  const levelArg = normalizeLogLevel(level);
+  const levelArgRank = isLogLevel(levelArg)
+    ? ranks[levelArg]
+    : Math.min(...Object.values(ranks));
+  if (levelArgRank <= 0) return false;
+
+  const levelCtx = normalizeLogLevel(context.level);
+  const levelCtxRank = isLogLevel(levelCtx)
+    ? ranks[levelCtx]
+    : Math.max(...Object.values(ranks));
+
+  return levelCtxRank >= levelArgRank;
 }

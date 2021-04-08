@@ -1,17 +1,11 @@
-import isUnicodeSupported from 'is-unicode-supported';
 import util from 'util';
 import { Task, LogLevel, Context } from '../../definitions';
 import { addPrefix } from '../../helpers/prefix';
-import { style } from '../../utils/style';
 import {
-  getLogLevelColor,
-  getLogLevelSymbol,
-  isLogLevel,
+  getLogLevelPrefix,
   isLogLevelActive,
   normalizeLogLevel
 } from '../../helpers/logging';
-
-const unicode = isUnicodeSupported();
 
 /**
  * Writes a message or other data into a
@@ -25,7 +19,7 @@ export function log(level: LogLevel, item: any, ...data: any[]): Task.Sync {
     if (isLogLevelActive(level, ctx)) {
       const str = addPrefix(
         util.format(item, ...data) + '\n',
-        getLoggerMessagePrefix(normalizeLogLevel(level)),
+        getLogLevelPrefix(level),
         'print',
         ctx
       );
@@ -35,23 +29,4 @@ export function log(level: LogLevel, item: any, ...data: any[]): Task.Sync {
         : ctx.stdio[1] && ctx.stdio[1].write(str);
     }
   };
-}
-
-function getLoggerMessagePrefix(level: LogLevel): string {
-  if (!isLogLevel(level)) {
-    return style((level as string).toUpperCase(), {
-      bold: true
-    });
-  }
-  if (unicode) {
-    return style(getLogLevelSymbol(level), {
-      bold: true,
-      color: getLogLevelColor(level)
-    });
-  }
-  return style(` ${level.toUpperCase()} `, {
-    bold: true,
-    bg: getLogLevelColor(level),
-    color: 'white'
-  });
 }
