@@ -103,7 +103,7 @@ export function select(
       selected: figures(figures.circleFilled),
       unselected: figures(figures.circle),
       indentation: 4,
-      outputStream: ctx.stdio[2] as NodeJS.WriteStream,
+      outputStream: ctx.stdio[2],
       inputStream: Object.create(stdin, {
         setRawMode: {
           value(...args: any[]) {

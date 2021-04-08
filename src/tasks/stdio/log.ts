@@ -31,8 +31,8 @@ export function log(level: LogLevel, item: any, ...data: any[]): Task.Sync {
       );
 
       normalizeLogLevel(level) === 'error'
-        ? ctx.stdio[2].write(str)
-        : ctx.stdio[1].write(str);
+        ? ctx.stdio[2] && ctx.stdio[2].write(str)
+        : ctx.stdio[1] && ctx.stdio[1].write(str);
     }
   };
 }

@@ -38,7 +38,6 @@ export function main(argv: string[], options: Required<CLI.Options>): Task {
         -e, --env <value>       Environment variables
         --level <value>         Logging level
         --prefix                Prefix tasks output with their route
-        --non-interactive       Set the context as non-interactive
         -h, --help              Show help
         -v, --version           Show version number
 
@@ -73,7 +72,6 @@ export function main(argv: string[], options: Required<CLI.Options>): Task {
     '--env': [String] as [StringConstructor],
     '--level': String,
     '--prefix': Boolean,
-    '--non-interactive': Boolean,
     '--help': Boolean,
     '--version': Boolean
   };
@@ -97,7 +95,6 @@ export function main(argv: string[], options: Required<CLI.Options>): Task {
     file: cmd['--file'],
     directory: cmd['--dir'],
     prefix: cmd['--prefix'],
-    nonInteractive: cmd['--non-interactive'],
     level: isLogLevel(normalizeLogLevel(cmd['--level']))
       ? (normalizeLogLevel(cmd['--level']) as LogLevel)
       : constants.defaults.level,
@@ -190,8 +187,7 @@ export function main(argv: string[], options: Required<CLI.Options>): Task {
     context.bind(null, {
       env: opts.env,
       level: opts.level,
-      prefix: opts.prefix,
-      interactive: !opts.nonInteractive
+      prefix: opts.prefix
     })
   );
 }

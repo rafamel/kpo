@@ -54,16 +54,22 @@ export interface Context {
    */
   readonly prefix: PrefixPolicy | boolean;
   /**
-   * Sets a context as non-interactive.
-   */
-  readonly interactive: boolean;
-  /**
    * A *Promise* representing a task's
    * cancellation token.
    * Tasks should cancel when it resolves.
    */
   readonly cancellation: Promise<void>;
 }
+
+export declare namespace Context {
+  export interface Interactive extends Context {
+    readonly stdio: [NodeJS.ReadStream, NodeJS.WriteStream, Writable | null];
+  }
+}
+
+export type PrefixPolicy = 'none' | 'print' | 'exec' | 'all';
+
+export type Stdio = [Readable | null, Writable | null, Writable | null];
 
 export type LogLevel =
   | 'trace'
@@ -73,7 +79,3 @@ export type LogLevel =
   | 'warn'
   | 'error'
   | 'silent';
-
-export type PrefixPolicy = 'none' | 'print' | 'exec' | 'all';
-
-export type Stdio = [Readable, Writable, Writable];

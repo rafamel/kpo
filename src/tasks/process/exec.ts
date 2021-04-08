@@ -56,16 +56,16 @@ export function exec(
             opts.env
           ),
           stdio: opts.stdio || [
-            ctx.stdio[0],
-            pipeOutput ? 'pipe' : ctx.stdio[1],
-            pipeOutput ? 'pipe' : ctx.stdio[2]
+            ctx.stdio[0] || 'ignore',
+            pipeOutput ? 'pipe' : ctx.stdio[1] || 'ignore',
+            pipeOutput ? 'pipe' : ctx.stdio[2] || 'ignore'
           ]
         });
         if (pipeOutput) {
-          if (ps.stdout) {
+          if (ps.stdout && ctx.stdio[1]) {
             ps.stdout.pipe(transform(prefix)).pipe(ctx.stdio[1]);
           }
-          if (ps.stderr) {
+          if (ps.stderr && ctx.stdio[2]) {
             ps.stderr.pipe(transform(prefix)).pipe(ctx.stdio[2]);
           }
         }

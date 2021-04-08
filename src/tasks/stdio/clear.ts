@@ -1,11 +1,12 @@
 import { Task, Context } from '../../definitions';
 
 /**
- * Clears a context's stdout.
+ * Supresses the task output
+ * and
  * @returns Task
  */
 export function clear(): Task.Sync {
   return (ctx: Context): void => {
-    ctx.stdio[1].write('\x1Bc');
+    if (ctx.stdio[1]) ctx.stdio[1].write('\x1Bc');
   };
 }

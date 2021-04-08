@@ -30,7 +30,6 @@ Options:
   -e, --env <value>       Environment variables
   --level <value>         Logging level
   --prefix                Prefix tasks output with their route
-  --non-interactive       Set the context as non-interactive
   -h, --help              Show help
   -v, --version           Show version number
 

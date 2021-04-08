@@ -1,7 +1,6 @@
 import { Context } from '../definitions';
 import { constants } from '../constants';
 import { into } from 'pipettes';
-import { TypeGuard } from 'type-core';
 
 const cancellation = new Promise<void>(() => undefined);
 
@@ -16,9 +15,6 @@ export function createContext(context?: Partial<Context>): Context {
       level: context.level || constants.defaults.level,
       route: context.route || [],
       prefix: context.prefix || false,
-      interactive: TypeGuard.isUndefined(context.interactive)
-        ? true
-        : context.interactive,
       cancellation: context.cancellation
         ? context.cancellation.then(() => undefined)
         : cancellation
