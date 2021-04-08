@@ -1,10 +1,11 @@
-import { Context } from '../definitions';
-import { log } from '../tasks/stdio/log';
-import { run } from '../utils/run';
 import { UnaryFn } from 'type-core';
 import fs from 'fs-extra';
 import path from 'path';
 import glob from 'glob';
+import { Context } from '../definitions';
+import { isCancelled } from '../utils/is-cancelled';
+import { log } from '../tasks/stdio/log';
+import { run } from '../utils/run';
 
 export async function usePair(
   pair: [string, string],
@@ -30,6 +31,8 @@ export async function useSource(
 ): Promise<void> {
   const src = getAbsolutePath(source, context);
   const exists = await fs.pathExists(src);
+  if (await isCancelled(context)) return;
+
   if (exists) return cb(src);
   if (options.strict) {
     throw Error(`Source path doesn't exist: ${src}`);
@@ -47,6 +50,8 @@ export async function useDestination(
   if (options.exists === 'overwrite') return cb(dest);
 
   const exists = await fs.pathExists(dest);
+
+  if (await isCancelled(context)) return;
   if (!exists) return cb(dest);
 
   if (options.exists === 'ignore') {
