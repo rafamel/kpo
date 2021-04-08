@@ -89,7 +89,7 @@ export function exec(
           }
 
           const cmd = file || fullArgs.filter((arg) => arg[0] !== '-')[0];
-          message += !cmd || cmd.includes(path.sep) ? '' : `: ${file}`;
+          message += !cmd || cmd.includes(path.sep) ? '' : `: ${cmd}`;
 
           await run(log('trace', err), ctx);
           throw Error(message);
