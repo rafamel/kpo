@@ -12,13 +12,18 @@ export async function run(
   task: Task,
   context?: Partial<Context>
 ): Promise<void> {
-  const ctx = createContext(context);
-  const safe = { ...ctx, cancellation: ctx.cancellation.catch(noop) };
+  const unsafe = createContext(context);
+  const ctx = { ...unsafe, cancellation: unsafe.cancellation.catch(noop) };
 
-  if (await isCancelled(safe)) return await ctx.cancellation;
+  if (await isCancelled(ctx)) return;
+  if (!TypeGuard.isFunction(task)) {
+    throw Error(`Task is not a function: ${task}`);
+  }
 
-  if (TypeGuard.isFunction(task)) await task(safe);
-  else throw Error(`Task is not a function: ${task}`);
-
-  if (await isCancelled(safe)) return await ctx.cancellation;
+  try {
+    await task(ctx);
+  } catch (err) {
+    if (await isCancelled(ctx)) return;
+    throw err;
+  }
 }
