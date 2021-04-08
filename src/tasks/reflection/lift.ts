@@ -1,3 +1,7 @@
+import { Members, NullaryFn, TypeGuard } from 'type-core';
+import { shallow } from 'merge-strategies';
+import { into } from 'pipettes';
+import fs from 'fs-extra';
 import { Task, Context } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
 import { getAbsolutePath } from '../../helpers/paths';
@@ -5,13 +9,10 @@ import { isCancelled } from '../../utils/is-cancelled';
 import { style } from '../../utils/style';
 import { run } from '../../utils/run';
 import { constants } from '../../constants';
+import { create } from '../creation/create';
 import { write } from '../filesystem/write';
-import { select } from '../stdio/select';
+import { confirm } from '../stdio/confirm';
 import { print } from '../stdio/print';
-import { shallow } from 'merge-strategies';
-import { Members, NullaryFn, TypeGuard } from 'type-core';
-import { into } from 'pipettes';
-import fs from 'fs-extra';
 
 export interface LiftOptions {
   /**
@@ -48,7 +49,7 @@ export function lift(
   tasks: Task.Record | NullaryFn<Task.Record>,
   options?: LiftOptions
 ): Task.Async {
-  return async (ctx: Context): Promise<void> => {
+  return create(async (ctx) => {
     const opts = shallow(
       {
         purge: false,
@@ -102,24 +103,19 @@ export function lift(
     if (!areChangesPending || (await isCancelled(ctx))) return;
 
     if (isDefault) {
-      return run(write(pkgPath, pkg, { exists: 'overwrite' }), ctx);
+      return write(pkgPath, pkg, { exists: 'overwrite' });
     }
     if (opts.mode === 'audit') {
       throw Error(`There are pending scripts changes`);
     }
     if (opts.mode === 'confirm') {
-      return run(
-        select(
-          { message: 'Continue?', default: 'y' },
-          {
-            y: write(pkgPath, pkg, { exists: 'overwrite' }),
-            n: null
-          }
-        ),
-        ctx
+      return confirm(
+        { message: 'Continue?', default: true },
+        write(pkgPath, pkg, { exists: 'overwrite' }),
+        null
       );
     }
-  };
+  });
 }
 
 async function evaluateChanges(
