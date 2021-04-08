@@ -1,9 +1,9 @@
 import { Task, Context } from '../../definitions';
 import { getPathPairs, usePair } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
+import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
 import { shallow } from 'merge-strategies';
-import { into } from 'pipettes';
 import fs from 'fs-extra';
 
 export interface CopyOptions {
@@ -27,35 +27,36 @@ export function copy(
   destination: string,
   options?: CopyOptions
 ): Task.Async {
-  return async (ctx: Context): Promise<void> => {
-    into(ctx, log('debug', 'Copy', paths, 'to', destination));
-
-    const opts = shallow(
-      { glob: false, single: false, strict: false, exists: 'error' },
-      options || undefined
-    );
-    const pairs = await getPathPairs(paths, destination, ctx, {
-      glob: opts.glob,
-      single: opts.single,
-      strict: opts.strict
-    });
-
-    for (const pair of pairs) {
-      if (await isCancelled(ctx)) return;
-
-      await usePair(
-        pair,
-        ctx,
-        { strict: opts.strict, exists: opts.exists },
-        ([src, dest]) => {
-          return fs.copy(src, dest, {
-            overwrite: true,
-            errorOnExist: true,
-            dereference: false,
-            preserveTimestamps: false
-          });
-        }
+  return series(
+    log('debug', 'Copy', paths, 'to', destination),
+    async (ctx: Context): Promise<void> => {
+      const opts = shallow(
+        { glob: false, single: false, strict: false, exists: 'error' },
+        options || undefined
       );
+      const pairs = await getPathPairs(paths, destination, ctx, {
+        glob: opts.glob,
+        single: opts.single,
+        strict: opts.strict
+      });
+
+      for (const pair of pairs) {
+        if (await isCancelled(ctx)) return;
+
+        await usePair(
+          pair,
+          ctx,
+          { strict: opts.strict, exists: opts.exists },
+          ([src, dest]) => {
+            return fs.copy(src, dest, {
+              overwrite: true,
+              errorOnExist: true,
+              dereference: false,
+              preserveTimestamps: false
+            });
+          }
+        );
+      }
     }
-  };
+  );
 }

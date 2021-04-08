@@ -1,7 +1,7 @@
 import { Task, Context, LogLevel } from '../../definitions';
 import { stringifyError } from '../../helpers/stringify';
-import { isCancelled } from '../../utils/is-cancelled';
 import { run } from '../../utils/run';
+import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
@@ -28,14 +28,18 @@ export function catches(
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
     const opts = shallow({ level: 'warn' }, options || undefined);
+
     try {
       await run(task, ctx);
     } catch (err) {
-      if (await isCancelled(ctx)) return;
-
-      into(ctx, log('trace', err));
-      into(ctx, log(opts.level, stringifyError(err)));
-      if (alternate) await run(alternate, ctx);
+      await into(
+        series(
+          log('trace', err),
+          log(opts.level, stringifyError(err)),
+          alternate
+        ),
+        (task) => run(task, ctx)
+      );
     }
   };
 }

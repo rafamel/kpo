@@ -92,10 +92,12 @@ export function lift(
     pkg.scripts = opts.purge ? taskScripts : { ...pkg.scripts, ...taskScripts };
 
     const isDefault = !['confirm', 'dry', 'audit'].includes(opts.mode);
-    const areChangesPending = evaluateChanges(pkgScripts, taskScripts, ctx, {
-      purge: opts.purge,
-      print: !isDefault
-    });
+    const areChangesPending = await evaluateChanges(
+      pkgScripts,
+      taskScripts,
+      ctx,
+      { purge: opts.purge, print: !isDefault }
+    );
 
     if (!areChangesPending || (await isCancelled(ctx))) return;
 
@@ -120,12 +122,12 @@ export function lift(
   };
 }
 
-function evaluateChanges(
+async function evaluateChanges(
   pkgScripts: Members<string>,
   taskScripts: Members<string>,
   context: Context,
   options: { print: boolean; purge: boolean }
-): boolean {
+): Promise<boolean> {
   const pkgScriptNames = Object.keys(pkgScripts);
   const taskScriptNames = Object.keys(taskScripts);
 
@@ -182,7 +184,7 @@ function evaluateChanges(
       strArr.push(style('No pending scripts changes', { bold: true }));
     }
 
-    into(context, print(strArr.join('\n')));
+    await run(print(strArr.join('\n')), context);
   }
 
   return areChangesPending;

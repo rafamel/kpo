@@ -1,6 +1,7 @@
 import { into } from 'pipettes';
 import { Task, Context } from '../../definitions';
 import { isCancelled } from '../../utils/is-cancelled';
+import { series } from '../aggregate/series';
 import { run } from '../../utils/run';
 import { log } from '../stdio/log';
 
@@ -31,9 +32,12 @@ export function finalize(task: Task, final?: Task | null): Task.Async {
     if (!errors.length || (await isCancelled(ctx))) return;
 
     const err = errors.pop();
-    while (errors.length > 0) {
-      into(ctx, log('trace', errors.shift()));
-    }
+    await into(
+      errors,
+      (arr) => arr.map((err) => log('trace', err)),
+      (tasks) => series(...tasks),
+      (task) => run(task, ctx)
+    );
     throw err;
   };
 }

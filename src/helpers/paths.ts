@@ -1,7 +1,7 @@
 import { Context } from '../definitions';
 import { log } from '../tasks/stdio/log';
+import { run } from '../utils/run';
 import { UnaryFn } from 'type-core';
-import { into } from 'pipettes';
 import fs from 'fs-extra';
 import path from 'path';
 import glob from 'glob';
@@ -34,7 +34,7 @@ export async function useSource(
   if (options.strict) {
     throw Error(`Source path doesn't exist: ${src}`);
   }
-  into(context, log('debug', 'Ignore source:', src));
+  await run(log('debug', 'Ignore source:', src), context);
 }
 
 export async function useDestination(
@@ -50,7 +50,7 @@ export async function useDestination(
   if (!exists) return cb(dest);
 
   if (options.exists === 'ignore') {
-    into(context, log('debug', 'Ignore destination:', dest));
+    await run(log('debug', 'Ignore destination:', dest), context);
   } else {
     throw Error(`Destination exists: ${dest}`);
   }

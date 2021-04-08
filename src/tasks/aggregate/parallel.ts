@@ -1,9 +1,7 @@
 import { Task, Context } from '../../definitions';
 import { flatten } from '../../helpers/flatten';
 import { run } from '../../utils/run';
-import { log } from '../stdio/log';
 import { Empty, NullaryFn, Members } from 'type-core';
-import { into } from 'pipettes';
 
 /**
  * Returns a `Task` that will run in parallel
@@ -21,8 +19,6 @@ export function parallel(
   const items = flatten(task, ...tasks);
 
   return async (ctx: Context): Promise<void> => {
-    into(ctx, log('debug', 'Run tasks in parallel'));
-
     const cbs: NullaryFn[] = [];
     function cancel(): void {
       while (cbs.length) {

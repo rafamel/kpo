@@ -1,8 +1,8 @@
-import { Task, Context } from '../../definitions';
+import { Task } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
-import { run } from '../../utils/run';
 import { recreate } from '../../utils/recreate';
 import { context } from '../creation/context';
+import { create } from '../creation/create';
 import { series } from './series';
 import { NullaryFn } from 'type-core';
 import { shallow } from 'merge-strategies';
@@ -35,7 +35,7 @@ export function combine(
   tasks: Task.Record | NullaryFn<Task.Record>,
   options?: CombineOptions
 ): Task.Async {
-  return async (ctx: Context): Promise<void> => {
+  return create(() => {
     const opts: Required<CombineOptions> = shallow(
       { include: null, exclude: null },
       options || undefined
@@ -59,8 +59,7 @@ export function combine(
           ? opts.include.map((name) => record[name])
           : Object.values(record);
       },
-      (arr) => series(...arr),
-      (task) => run(task, ctx)
+      (arr) => series(...arr)
     );
-  };
+  });
 }

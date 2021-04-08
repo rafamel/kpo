@@ -1,10 +1,10 @@
 import { Task, Context } from '../../definitions';
 import { getPaths, useSource } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
+import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
 import { Serial } from 'type-core';
 import { shallow } from 'merge-strategies';
-import { into } from 'pipettes';
 import fs from 'fs-extra';
 
 export interface EditOptions {
@@ -31,31 +31,35 @@ export function edit(
   ) => Buffer | Serial.Type | Promise<Buffer | Serial.Type>,
   options?: EditOptions
 ): Task.Async {
-  return async (ctx: Context): Promise<void> => {
-    into(ctx, log('debug', 'Edit:', paths));
+  return series(
+    log('debug', 'Edit:', paths),
+    async (ctx: Context): Promise<void> => {
+      const opts = shallow(
+        { glob: false, strict: false },
+        options || undefined
+      );
+      const sources = await getPaths(paths, ctx, {
+        glob: opts.glob,
+        strict: opts.strict
+      });
 
-    const opts = shallow({ glob: false, strict: false }, options || undefined);
-    const sources = await getPaths(paths, ctx, {
-      glob: opts.glob,
-      strict: opts.strict
-    });
-
-    for (const source of sources) {
-      if (await isCancelled(ctx)) return;
-
-      await useSource(source, ctx, { strict: opts.strict }, async () => {
-        const buffer = await fs.readFile(source);
-        const content = await cb(buffer, source);
-
+      for (const source of sources) {
         if (await isCancelled(ctx)) return;
 
-        const data = Buffer.isBuffer(content)
-          ? content
-          : typeof content === 'object'
-          ? JSON.stringify(content, null, 2)
-          : String(content);
-        await fs.writeFile(source, data);
-      });
+        await useSource(source, ctx, { strict: opts.strict }, async () => {
+          const buffer = await fs.readFile(source);
+          const content = await cb(buffer, source);
+
+          if (await isCancelled(ctx)) return;
+
+          const data = Buffer.isBuffer(content)
+            ? content
+            : typeof content === 'object'
+            ? JSON.stringify(content, null, 2)
+            : String(content);
+          await fs.writeFile(source, data);
+        });
+      }
     }
-  };
+  );
 }

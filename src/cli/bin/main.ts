@@ -8,7 +8,7 @@ import { stringifyArgvCommands } from '../../helpers/stringify';
 import { print, raises, series, create, context, log } from '../../tasks';
 import { Task, LogLevel, CLI, Context } from '../../definitions';
 import { constants } from '../../constants';
-import { style } from '../../utils';
+import { run, style } from '../../utils';
 
 export function main(argv: string[], options: Required<CLI.Options>): Task {
   const extensions = into(
@@ -180,9 +180,9 @@ export function main(argv: string[], options: Required<CLI.Options>): Task {
     (task) => {
       return async (ctx: Context): Promise<void> => {
         try {
-          await task(ctx);
+          await run(task, ctx);
         } catch (err) {
-          into(ctx, log('trace', err));
+          await run(log('trace', err), ctx);
           throw err;
         }
       };

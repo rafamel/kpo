@@ -1,12 +1,12 @@
-import { Task, Context } from '../../definitions';
-import { parseToArray } from '../../helpers/parse';
-import { constants } from '../../constants';
-import { style } from '../../utils/style';
-import { run } from '../../utils/run';
-import { print } from '../stdio/print';
 import { NullaryFn, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import table from 'as-table';
+import { Task } from '../../definitions';
+import { parseToArray } from '../../helpers/parse';
+import { constants } from '../../constants';
+import { style } from '../../utils/style';
+import { create } from '../creation/create';
+import { print } from '../stdio/print';
 
 export interface ListOptions {
   /**
@@ -28,7 +28,7 @@ export function list(
   tasks: Task.Record | NullaryFn<Task.Record>,
   options?: ListOptions
 ): Task.Async {
-  return async (ctx: Context): Promise<void> => {
+  return create(async () => {
     const opts = shallow(
       { defaults: false, bin: constants.cli.bin },
       options || undefined
@@ -53,13 +53,10 @@ export function list(
       ];
     });
 
-    await run(
-      print(
-        table
-          .configure({ delimiter: ' '.repeat(2) })(rows)
-          .trim()
-      ),
-      ctx
+    return print(
+      table
+        .configure({ delimiter: ' '.repeat(2) })(rows)
+        .trim()
     );
-  };
+  });
 }

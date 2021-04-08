@@ -105,13 +105,11 @@ export async function watch(params: CLI.Extension.Params): Promise<Task> {
       series(
         create(() => {
           if (first) return (first = false) || null;
-          return series(
-            log(
-              'info',
-              style(params.options.bin, { bold: true }),
-              style(':watch', { bold: true, color: 'blue' }),
-              stringifyArgvCommands(params.argv)
-            )
+          return log(
+            'info',
+            style(params.options.bin, { bold: true }),
+            style(':watch', { bold: true, color: 'blue' }),
+            stringifyArgvCommands(params.argv)
           );
         }),
         combine(tasks, { include: names })

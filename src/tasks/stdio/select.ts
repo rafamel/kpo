@@ -1,12 +1,12 @@
 import { Empty, Members, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import cliSelect from 'cli-select';
-import { into } from 'pipettes';
 import figures from 'figures';
 import { Task } from '../../definitions';
 import { isInteractive } from '../../utils/is-interactive';
 import { isCancelled } from '../../utils/is-cancelled';
 import { style } from '../../utils/style';
+import { run } from '../../utils/run';
 import { series } from '../aggregate/series';
 import { raises } from '../exception/raises';
 import { create } from '../creation/create';
@@ -49,33 +49,32 @@ export function select(
       options || undefined
     );
 
-    into(
-      ctx,
-      print(
-        style(figures(figures.pointer), { bold: true, color: 'yellow' }),
-        ' ' + opts.message
-      )
-    );
-
     const names = Object.keys(tasks);
     const fallback: number = TypeGuard.isString(opts.default)
       ? names.indexOf(opts.default)
       : -1;
+    const message =
+      style(figures(figures.pointer), { bold: true, color: 'yellow' }) +
+      `  ${opts.message}`;
+
+    await run(print(message), ctx);
+    if (await isCancelled(ctx)) return;
 
     if (!isInteractive(ctx)) {
-      if (fallback >= 0 && opts.default) {
-        return series(
-          log(
-            'info',
-            'Default selection [non-interactive]:',
-            style(opts.default, { bold: true })
-          ),
-          tasks[opts.default]
-        );
-      }
-      return raises(
-        Error(`Must provide a default selection for non-interactive contexts`)
-      );
+      return fallback >= 0 && opts.default
+        ? series(
+            log(
+              'info',
+              'Default selection [non-interactive]:',
+              style(opts.default, { bold: true })
+            ),
+            tasks[opts.default]
+          )
+        : raises(
+            Error(
+              `Must provide a default selection for non-interactive contexts`
+            )
+          );
     }
 
     const stdin = ctx.stdio[0];

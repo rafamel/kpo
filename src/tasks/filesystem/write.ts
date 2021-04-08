@@ -1,9 +1,9 @@
 import { Task, Context } from '../../definitions';
 import { useDestination } from '../../helpers/paths';
+import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
 import { Serial } from 'type-core';
 import { shallow } from 'merge-strategies';
-import { into } from 'pipettes';
 import fs from 'fs-extra';
 
 export interface WriteOptions {
@@ -20,20 +20,21 @@ export function write(
   content: Buffer | Serial.Type,
   options?: WriteOptions
 ): Task.Async {
-  return async (ctx: Context): Promise<void> => {
-    into(ctx, log('debug', 'Write:', path));
+  return series(
+    log('debug', 'Write:', path),
+    async (ctx: Context): Promise<void> => {
+      const data = Buffer.isBuffer(content)
+        ? content
+        : typeof content === 'object'
+        ? JSON.stringify(content, null, 2)
+        : String(content);
 
-    const data = Buffer.isBuffer(content)
-      ? content
-      : typeof content === 'object'
-      ? JSON.stringify(content, null, 2)
-      : String(content);
-
-    await useDestination(
-      path,
-      ctx,
-      shallow({ exists: 'error' }, options || undefined),
-      (dest) => fs.writeFile(dest, data)
-    );
-  };
+      await useDestination(
+        path,
+        ctx,
+        shallow({ exists: 'error' }, options || undefined),
+        (dest) => fs.writeFile(dest, data)
+      );
+    }
+  );
 }

@@ -1,10 +1,10 @@
-import { Task, Context } from '../../definitions';
+import { Task } from '../../definitions';
 import { isInteractive } from '../../utils/is-interactive';
-import { run } from '../../utils/run';
+import { series } from '../aggregate/series';
 import { raises } from '../exception/raises';
+import { create } from '../creation/create';
 import { log } from './log';
 import { Empty } from 'type-core';
-import { into } from 'pipettes';
 
 /**
  * Marks a task as interactive.
@@ -13,23 +13,17 @@ import { into } from 'pipettes';
  * @returns Task
  */
 export function interactive(task: Task, alternate: Task | Empty): Task.Async {
-  return async (ctx: Context): Promise<void> => {
+  return create(async (ctx) => {
     const interactive = isInteractive(ctx);
-
-    into(
-      ctx,
+    return series(
       log(
         'debug',
         interactive ? 'Interactive' : 'Non-interactive',
-        'environment detected'
-      )
-    );
-
-    return run(
+        'environment'
+      ),
       interactive
         ? task
-        : alternate || raises(Error('Non-interactive environment detected')),
-      ctx
+        : alternate || raises(Error('Non-interactive environment detected'))
     );
-  };
+  });
 }

@@ -7,6 +7,7 @@ import { Task } from '../../definitions';
 import { isInteractive } from '../../utils/is-interactive';
 import { isCancelled } from '../../utils/is-cancelled';
 import { style } from '../../utils/style';
+import { run } from '../../utils/run';
 import { series } from '../aggregate/series';
 import { raises } from '../exception/raises';
 import { create } from '../creation/create';
@@ -51,26 +52,27 @@ export function confirm(
     );
 
     if (!isInteractive(ctx)) {
-      into(
-        ctx,
-        print(
-          style(figures(figures.pointer), { bold: true, color: 'yellow' }),
-          ' ' + opts.message
-        )
-      );
-      if (TypeGuard.isBoolean(opts.default)) {
-        return series(
-          log(
-            'info',
-            'Default selection [non-interactive]:',
-            style(opts.default ? 'yes' : 'no', { bold: true })
-          ),
-          opts.default ? yes : no
-        );
-      }
-      return raises(
-        Error(`Must provide a default selection on non-interactive contexts`)
-      );
+      const message =
+        style(figures(figures.pointer), { bold: true, color: 'yellow' }) +
+        `  ${opts.message}`;
+      return TypeGuard.isBoolean(opts.default)
+        ? series(
+            print(message),
+            log(
+              'info',
+              'Default selection [non-interactive]:',
+              style(opts.default ? 'yes' : 'no', { bold: true })
+            ),
+            opts.default ? yes : no
+          )
+        : series(
+            print(message),
+            raises(
+              Error(
+                `Must provide a default selection on non-interactive contexts`
+              )
+            )
+          );
     }
 
     const message = into(
@@ -113,11 +115,14 @@ export function confirm(
               return resolve(opts.default);
             }
 
-            isCancelled(ctx).then((cancelled) => {
-              if (cancelled) return resolve(null);
-              into(ctx, log('error', 'Invalid response'));
-              resolve(read());
-            }, reject);
+            isCancelled(ctx).then(
+              async (cancelled) => {
+                if (cancelled) return resolve(null);
+                await run(log('error', 'Invalid response'), ctx);
+                resolve(read());
+              },
+              (err) => reject(err)
+            );
           });
         });
       })
@@ -125,7 +130,7 @@ export function confirm(
 
     readline.close();
     if (timeout) clearTimeout(timeout);
-    if (response === null) into(ctx, print(''));
+    if (response === null) ctx.stdio[1].write('\n');
     if (await isCancelled(ctx)) return;
 
     // Explicit response by user

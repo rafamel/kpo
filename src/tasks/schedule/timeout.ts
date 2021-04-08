@@ -1,10 +1,10 @@
-import { Task, Context } from '../../definitions';
-import { isCancelled } from '../../utils/is-cancelled';
+import { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { raises } from '../exception/raises';
 import { log } from '../stdio/log';
 import { Empty } from 'type-core';
-import { into } from 'pipettes';
+import { create } from '../creation/create';
+import { series } from '../aggregate/series';
 
 /**
  * Timeout for a `task`, in milliseconds.
@@ -16,38 +16,33 @@ export function timeout(
   task: Task,
   alternate: Task | Empty
 ): Task.Async {
-  return async (ctx: Context): Promise<void> => {
-    if (ms < 0) {
-      into(ctx, log('debug', 'Timeout disabled:', ms));
-      return run(task, ctx);
-    }
+  return ms < 0
+    ? series(log('debug', 'Timeout disabled:', ms), task)
+    : series(
+        log('debug', 'Task timeout set at', ms),
+        create(async (ctx) => {
+          const altTask = alternate || raises('Task timeout');
+          if (ms <= 0) return altTask;
 
-    const params = {
-      ms: Math.max(ms, 0),
-      alternate: alternate || raises('Task timeout')
-    };
+          let didTimeout = false;
+          let timeout: NodeJS.Timeout | null = null;
+          await run(task, {
+            ...ctx,
+            cancellation: Promise.race([
+              new Promise<void>((resolve) => {
+                timeout = setTimeout(
+                  () => (didTimeout = true) && resolve(),
+                  ms
+                );
+              }),
+              ctx.cancellation.finally(() => timeout && clearTimeout(timeout))
+            ])
+          });
 
-    into(ctx, log('debug', 'Task timeout set at', params.ms));
-
-    if (params.ms <= 0) return run(params.alternate, ctx);
-    let didTimeout = false;
-    let timeout: NodeJS.Timeout | null = null;
-    await run(task, {
-      ...ctx,
-      cancellation: Promise.race([
-        new Promise<void>((resolve) => {
-          timeout = setTimeout(() => {
-            into(ctx, log('debug', 'Task timeout'));
-            didTimeout = true;
-            resolve();
-          }, params.ms);
-        }),
-        ctx.cancellation.finally(() => timeout && clearTimeout(timeout))
-      ])
-    });
-
-    if (timeout) clearTimeout(timeout);
-    if (await isCancelled(ctx)) return;
-    if (didTimeout) return run(params.alternate, ctx);
-  };
+          if (timeout) clearTimeout(timeout);
+          if (didTimeout) {
+            return series(log('debug', 'Task timeout'), altTask);
+          }
+        })
+      );
 }

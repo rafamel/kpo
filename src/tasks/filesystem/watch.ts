@@ -1,12 +1,13 @@
-import { Task, Context } from '../../definitions';
+import { Task } from '../../definitions';
 import { stringifyError } from '../../helpers/stringify';
 import { run } from '../../utils/run';
 import { log } from '../stdio/log';
 import { clear } from '../stdio/clear';
+import { create } from '../creation/create';
 import { series } from '../aggregate/series';
 import { NullaryFn, UnaryFn, Empty } from 'type-core';
-import { into, combine } from 'pipettes';
 import { shallow } from 'merge-strategies';
+import { into } from 'pipettes';
 import chokidar from 'chokidar';
 import debounce from 'debounce';
 
@@ -41,7 +42,7 @@ export interface WatchOptions {
  * @returns Task
  */
 export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
-  return async (ctx: Context): Promise<void> => {
+  return create((ctx) => {
     const opts = into(
       {
         glob: false,
@@ -64,78 +65,86 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
       })
     );
 
-    into(ctx, log('debug', 'Watch:', opts.include));
-
-    const watcher = chokidar.watch(opts.include, {
-      persistent: true,
-      ignored: opts.exclude,
-      ignorePermissionErrors: false,
-      ignoreInitial: true,
-      cwd: ctx.cwd,
-      disableGlobbing: !opts.glob,
-      depth: opts.depth >= 0 ? opts.depth : undefined,
-      usePolling: opts.poll >= 0,
-      interval: opts.poll,
-      binaryInterval: opts.poll,
-      followSymlinks: opts.symlinks
-    });
-
-    const cbs: NullaryFn[] = [];
-    function cancel(): void {
-      while (cbs.length) {
-        const cb = cbs.shift();
-        if (cb) cb();
-      }
-    }
-    function close(): void {
-      watcher.close();
-      cancel();
-    }
-
-    let i = -1;
-    let current: Promise<void> = Promise.resolve();
-    const onEvent = debounce(
-      (onError: UnaryFn<Error>): void => {
-        if (!opts.parallel) cancel();
-
-        const after = opts.parallel ? Promise.resolve() : current;
-
-        current = after
-          .then(() => {
-            i += 1;
-            return run(series(i > 0 && opts.clear ? clear() : null, task), {
-              ...ctx,
-              route: opts.parallel ? ctx.route.concat(String(i)) : ctx.route,
-              cancellation: new Promise((resolve) => {
-                cbs.push(resolve);
-              })
-            });
-          })
-          .catch((err) => {
-            return opts.fail
-              ? onError(err)
-              : run(
-                  series(log('trace', err), log('warn', stringifyError(err))),
-                  ctx
-                );
-          });
-      },
-      opts.debounce >= 0 ? opts.debounce : 0
-    );
-
-    return new Promise((resolve, reject) => {
-      if (opts.prime) {
-        watcher.on('ready', () => {
-          into(ctx, log('debug', 'Watch event:', 'prime'));
-          onEvent(combine(close, reject));
-        });
-      }
-      watcher.on('all', (event) => {
-        into(ctx, log('debug', 'Watch event:', event));
-        onEvent(combine(close, reject));
+    return series(log('debug', 'Watch:', opts.include), async () => {
+      const watcher = chokidar.watch(opts.include, {
+        persistent: true,
+        ignored: opts.exclude,
+        ignorePermissionErrors: false,
+        ignoreInitial: true,
+        cwd: ctx.cwd,
+        disableGlobbing: !opts.glob,
+        depth: opts.depth >= 0 ? opts.depth : undefined,
+        usePolling: opts.poll >= 0,
+        interval: opts.poll,
+        binaryInterval: opts.poll,
+        followSymlinks: opts.symlinks
       });
-      watcher.on('error', combine(close, reject));
-      ctx.cancellation.finally(combine(close, resolve));
+
+      const cbs: NullaryFn[] = [];
+      function cancel(): void {
+        while (cbs.length) {
+          const cb = cbs.shift();
+          if (cb) cb();
+        }
+      }
+
+      let i = -1;
+      let current: Promise<void> = Promise.resolve();
+      const onEvent = debounce(
+        (onError: UnaryFn<Error>): void => {
+          if (!opts.parallel) cancel();
+
+          const after = opts.parallel ? Promise.resolve() : current;
+
+          current = after
+            .then(() => {
+              i += 1;
+              return run(series(i > 0 && opts.clear ? clear() : null, task), {
+                ...ctx,
+                route: opts.parallel ? ctx.route.concat(String(i)) : ctx.route,
+                cancellation: new Promise((resolve) => {
+                  cbs.push(resolve);
+                })
+              });
+            })
+            .catch((err) => {
+              return opts.fail
+                ? onError(err)
+                : run(
+                    series(
+                      log('trace', err),
+                      log('error', stringifyError(err))
+                    ),
+                    ctx
+                  );
+            });
+        },
+        opts.debounce >= 0 ? opts.debounce : 0
+      );
+
+      const promises: Array<Promise<void>> = [];
+      await new Promise<void>((resolve, reject) => {
+        if (opts.prime) {
+          watcher.on('ready', () => {
+            promises.push(
+              run(log('debug', 'Watch event:', 'prime'), ctx).catch(reject)
+            );
+            onEvent(reject);
+          });
+        }
+        watcher.on('all', (event) => {
+          promises.push(
+            run(log('debug', 'Watch event:', event), ctx).catch(reject)
+          );
+          onEvent(reject);
+        });
+        watcher.on('error', reject);
+        ctx.cancellation.finally(resolve);
+      }).finally(() => {
+        watcher.close();
+        cancel();
+      });
+      await Promise.all(promises);
     });
-  };
+  });
 }

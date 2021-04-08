@@ -2,9 +2,7 @@ import { Task, Context } from '../../definitions';
 import { flatten } from '../../helpers/flatten';
 import { isCancelled } from '../../utils/is-cancelled';
 import { run } from '../../utils/run';
-import { log } from '../stdio/log';
 import { Empty, Members } from 'type-core';
-import { into } from 'pipettes';
 
 /**
  * Returns a `Task` that will run in series
@@ -22,8 +20,6 @@ export function series(
   const items = flatten(task, ...tasks);
 
   return async (ctx: Context): Promise<void> => {
-    into(ctx, log('debug', 'Run tasks in series'));
-
     for (const task of items) {
       if (await isCancelled(ctx)) break;
       await run(task, ctx);
