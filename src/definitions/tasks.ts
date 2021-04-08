@@ -1,4 +1,4 @@
-import { Empty, Members, UnaryFn } from 'type-core';
+import { Members } from 'type-core';
 import { Writable, Readable } from 'stream';
 
 /**
@@ -13,7 +13,6 @@ export declare namespace Task {
   export interface Record {
     [key: string]: Task | Record;
   }
-  export type Create = UnaryFn<Context, Task | Empty | Promise<Task | Empty>>;
 }
 
 /**
