@@ -40,7 +40,7 @@ export function progress(task: Task, options?: ProgressOptions): Task.Async {
       : style('task ', { bold: true }) + stringifyPrintRoute(ctx.route);
 
     if (isDebug || !isInteractive(ctx)) {
-      return announce(contextual, { name: message, info: true, success: true });
+      return announce(contextual, { message, info: true, success: true });
     }
 
     const spinner = ora({
