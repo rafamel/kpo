@@ -55,10 +55,13 @@ export async function lift(params: CLI.Extension.Params): Promise<Task> {
     directory: params.options.directory
   });
 
-  return _lift(tasks, {
-    purge: cmd['--purge'],
-    defaults: cmd['--defaults'],
-    mode: cmd['--mode'] as any,
-    bin: params.options.bin
-  });
+  return series(
+    print(),
+    _lift(tasks, {
+      purge: cmd['--purge'],
+      defaults: cmd['--defaults'],
+      mode: cmd['--mode'] as any,
+      bin: params.options.bin
+    })
+  );
 }

@@ -45,8 +45,11 @@ export async function list(params: CLI.Extension.Params): Promise<Task> {
     directory: params.options.directory
   });
 
-  return _list(tasks, {
-    defaults: cmd['--defaults'],
-    bin: params.options.bin
-  });
+  return series(
+    print(),
+    _list(tasks, {
+      defaults: cmd['--defaults'],
+      bin: params.options.bin
+    })
+  );
 }

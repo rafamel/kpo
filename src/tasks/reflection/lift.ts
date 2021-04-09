@@ -97,7 +97,7 @@ export function lift(
       pkgScripts,
       taskScripts,
       ctx,
-      { purge: opts.purge, print: !isDefault }
+      { post: isDefault, purge: opts.purge }
     );
 
     if (!areChangesPending || (await isCancelled(ctx))) return;
@@ -110,7 +110,7 @@ export function lift(
     }
     if (opts.mode === 'confirm') {
       return confirm(
-        { message: 'Continue?', default: true },
+        { default: true, message: 'Continue?' },
         write(pkgPath, pkg, { exists: 'overwrite' }),
         null
       );
@@ -122,7 +122,7 @@ async function evaluateChanges(
   pkgScripts: Members<string>,
   taskScripts: Members<string>,
   context: Context,
-  options: { print: boolean; purge: boolean }
+  options: { post: boolean; purge: boolean }
 ): Promise<boolean> {
   const pkgScriptNames = Object.keys(pkgScripts);
   const taskScriptNames = Object.keys(taskScripts);
@@ -156,32 +156,36 @@ async function evaluateChanges(
       removeScriptNames.length
   );
 
-  if (options.print) {
-    if (areChangesPending) {
-      if (addScriptNames.length) {
-        strArr.push(
-          style('Scripts to add', { bold: true, color: 'green' }),
-          addScriptNames.join(', ') + '\n'
-        );
-      }
-      if (replaceScriptNames.length) {
-        strArr.push(
-          style('Scripts to replace', { bold: true, color: 'yellow' }),
-          replaceScriptNames.join(', ') + '\n'
-        );
-      }
-      if (removeScriptNames.length) {
-        strArr.push(
-          style('Scripts to remove', { bold: true, color: 'red' }),
-          removeScriptNames.join(', ') + '\n'
-        );
-      }
-    } else {
-      strArr.push(style('No pending scripts changes', { bold: true }));
+  if (areChangesPending) {
+    if (addScriptNames.length) {
+      strArr.push(
+        style(options.post ? 'Scripts added: ' : 'Scripts to add: ', {
+          bold: true,
+          color: 'blue'
+        }) + addScriptNames.join(', ')
+      );
     }
-
-    await run(print(strArr.join('\n')), context);
+    if (replaceScriptNames.length) {
+      strArr.push(
+        style(options.post ? 'Scripts replaced: ' : 'Scripts to replace: ', {
+          bold: true,
+          color: 'yellow'
+        }) + replaceScriptNames.join(', ')
+      );
+    }
+    if (removeScriptNames.length) {
+      strArr.push(
+        style(options.post ? 'Scripts removed: ' : 'Scripts to remove: ', {
+          bold: true,
+          color: 'red'
+        }) + removeScriptNames.join(', ')
+      );
+    }
+  } else {
+    strArr.push(style('No pending scripts changes', { bold: true }));
   }
+
+  await run(print(strArr.join('\n')), context);
 
   return areChangesPending;
 }
