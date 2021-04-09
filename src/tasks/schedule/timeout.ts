@@ -19,7 +19,7 @@ export function timeout(
   return ms < 0
     ? series(log('debug', 'Timeout disabled:', ms), task)
     : series(
-        log('debug', 'Task timeout set at', ms),
+        log('debug', 'Task timeout set at', ms, 'milliseconds'),
         create(async (ctx) => {
           const altTask = alternate || raises('Task timeout');
           if (ms <= 0) return altTask;
