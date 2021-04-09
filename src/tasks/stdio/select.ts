@@ -129,7 +129,7 @@ export function select(
       );
     }
     // No response and no timeout triggered
-    if (!didTimeout) return raises(Error(`User cancellation`));
+    if (!didTimeout) throw Error(`User cancellation`);
     // No response and timeout triggered with a default selection available
     if (fallback >= 0 && opts.default) {
       return series(
@@ -142,6 +142,6 @@ export function select(
       );
     }
     // No response and timeout triggered without a default selection available
-    return raises(Error(`Select timeout: ${opts.timeout}ms`));
+    throw Error(`Select timeout: ${opts.timeout}ms`);
   });
 }
