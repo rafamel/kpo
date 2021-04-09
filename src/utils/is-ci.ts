@@ -2,6 +2,8 @@ import { Context } from '../definitions';
 import { TypeGuard } from 'type-core';
 import vendors from 'ci-info/vendors.json';
 
+const envs = vendors.map((vendor) => vendor.env);
+
 /**
  * Returns `true` when a context's environment
  * variables indicate it's running in a CI.
@@ -11,9 +13,7 @@ export function isCI(context: Context): boolean {
     return true;
   }
 
-  const arr = vendors.map((vendor) => vendor.env);
-
-  for (const env of arr) {
+  for (const env of envs) {
     if (TypeGuard.isString(env)) {
       if (env in context.env) return true;
     } else if (TypeGuard.isArray(env)) {
