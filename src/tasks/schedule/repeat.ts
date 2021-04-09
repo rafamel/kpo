@@ -6,7 +6,7 @@ import { log } from '../stdio/log';
 
 /**
  * Run `task` for `times` repetitions,
- * or indifinitely otherwise.
+ * or indefinitely otherwise.
  * @returns Task
  */
 export function repeat(times: number | null, task: Task): Task.Async {

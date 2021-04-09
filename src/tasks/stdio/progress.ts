@@ -21,8 +21,9 @@ export interface ProgressOptions {
  * and a success message on successful finalization.
  * Will suppress the context's stdio.
  * Non-interactive environments will fallback to `announce`.
- * Logging levels equal or above debug will fallback
- * to `announce` and maintain the context's stdout and stderr.
+ * Logging levels equal or above debug will fallback to
+ * logging the start and successful finalization of a task,
+ * while maintaining the context's stdout and stderr.
  * @returns Task
  */
 export function progress(task: Task, options?: ProgressOptions): Task.Async {
