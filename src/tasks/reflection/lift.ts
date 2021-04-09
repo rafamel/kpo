@@ -21,12 +21,12 @@ export interface LiftOptions {
   purge?: boolean;
   /**
    * Lift mode of operation:
-   * * `'default'`: produces an immediate write.
    * * `'confirm'`: prints the changes and waits for confirmation before a write.
+   * * `'fix'`: produces an immediate write.
    * * `'dry'`: prints the expected changes.
    * * `'audit'`: prints the expected changes and fails if there are pending changes.
    */
-  mode?: 'default' | 'confirm' | 'dry' | 'audit';
+  mode?: 'confirm' | 'fix' | 'dry' | 'audit';
   /**
    * Lift default tasks and subtasks by their own
    */
@@ -35,6 +35,10 @@ export interface LiftOptions {
    * Name of kpo's executable
    */
   bin?: string;
+  /**
+   * Whether kpo's executable allows running multiple tasks.
+   */
+  multitask?: boolean;
 }
 
 /**
@@ -53,9 +57,10 @@ export function lift(
     const opts = shallow(
       {
         purge: false,
-        mode: 'default',
+        mode: 'confirm',
         defaults: false,
-        bin: constants.cli.bin
+        bin: constants.cli.bin,
+        multitask: constants.cli.multitask
       },
       options || undefined
     );
@@ -83,7 +88,7 @@ export function lift(
         return keys.reduce(
           (acc: Members<string>, name) => ({
             ...acc,
-            [name]: `${opts.bin} ${name} --`
+            [name]: opts.bin + ' ' + name + (opts.multitask ? ' --' : '')
           }),
           {}
         );
@@ -92,29 +97,27 @@ export function lift(
 
     pkg.scripts = opts.purge ? taskScripts : { ...pkg.scripts, ...taskScripts };
 
-    const isDefault = !['confirm', 'dry', 'audit'].includes(opts.mode);
     const areChangesPending = await evaluateChanges(
       pkgScripts,
       taskScripts,
       ctx,
-      { post: isDefault, purge: opts.purge }
+      { post: opts.mode === 'fix', purge: opts.purge }
     );
 
     if (!areChangesPending || (await isCancelled(ctx))) return;
 
-    if (isDefault) {
-      return write(pkgPath, pkg, { exists: 'overwrite' });
-    }
+    if (opts.mode === 'dry') return;
     if (opts.mode === 'audit') {
       throw Error(`There are pending scripts changes`);
     }
-    if (opts.mode === 'confirm') {
-      return confirm(
-        { default: true, message: 'Continue?' },
-        write(pkgPath, pkg, { exists: 'overwrite' }),
-        null
-      );
+    if (opts.mode === 'fix') {
+      return write(pkgPath, pkg, { exists: 'overwrite' });
     }
+    return confirm(
+      { default: true, message: 'Continue?' },
+      write(pkgPath, pkg, { exists: 'overwrite' }),
+      null
+    );
   });
 }
 

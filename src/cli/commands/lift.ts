@@ -15,7 +15,7 @@ export async function lift(params: CLI.Extension.Params): Promise<Task> {
     Options:
       --purge             Purge all non-${params.options.bin} scripts
       --defaults          Lift default tasks and subtasks by their own
-      --mode <value>      Lift mode of operation (default, confirm, dry, audit)
+      --mode <value>      Lift mode of operation (confirm, fix, dry, audit)
       -h, --help          Show help
   `;
 
@@ -44,9 +44,9 @@ export async function lift(params: CLI.Extension.Params): Promise<Task> {
   }
 
   if (
-    !['default', 'confirm', 'dry', 'audit'].includes(cmd['--mode'] || 'default')
+    !['confirm', 'fix', 'dry', 'audit'].includes(cmd['--mode'] || 'confirm')
   ) {
-    return raises(Error(`Lift mode must be default, confirm, dry, or audit`));
+    return raises(Error(`Lift mode must be confirm, fix, dry, or audit`));
   }
 
   const tasks = await fetch({
@@ -61,7 +61,8 @@ export async function lift(params: CLI.Extension.Params): Promise<Task> {
       purge: cmd['--purge'],
       defaults: cmd['--defaults'],
       mode: cmd['--mode'] as any,
-      bin: params.options.bin
+      bin: params.options.bin,
+      multitask: params.options.multitask
     })
   );
 }
