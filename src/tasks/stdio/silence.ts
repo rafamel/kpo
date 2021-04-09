@@ -4,8 +4,8 @@ import { context } from '../creation/context';
 
 /**
  * Will suppress the context's stdio.
- * Logging levels equal or above debug will fallback
- * to `announce` and maintain the context's stdout and stderr.
+ * Logging levels equal or above debug will
+ * maintain the context's stdout and stderr.
  * @returns Task
  */
 export function silence(task: Task): Task.Async {
