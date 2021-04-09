@@ -1,3 +1,38 @@
+# [0.18.0](https://github.com/rafamel/kpo/compare/v0.17.1...v0.18.0) (2021-04-09)
+
+
+### Bug Fixes
+
+* **deps:** update ci-info to 3.1.1 ([9f360e8](https://github.com/rafamel/kpo/commit/9f360e88e1d8fd9a2df1b9181fee0091de9002dd))
+* **tasks:** catches and finalize stop on cancellation ([7527388](https://github.com/rafamel/kpo/commit/7527388957312b0e881855aeace902a485d4e2f3))
+* **tasks:** exec uses first argument for errors when executing node ([ffbd42c](https://github.com/rafamel/kpo/commit/ffbd42c4ba3a7f06c752c4a94bc17a86a7c9bf99))
+* **tasks:** fix select feedback messages ([0cf4fd8](https://github.com/rafamel/kpo/commit/0cf4fd8b9c560d64f7018ed2c4cbf927e91f19e8))
+* **utils:** run doesn't throw when cancelled ([f3cf37b](https://github.com/rafamel/kpo/commit/f3cf37b55ccac6bb10dfa7fda45014e79aa331cb))
+* fixes bin path in package.json ([95a0e18](https://github.com/rafamel/kpo/commit/95a0e18a5d64ce199e6b9e38bcc7d020a9a03b70))
+
+
+### Features
+
+* **cli:** rename bin function to cli, allow for command extensions and single/multi task modes ([1d26381](https://github.com/rafamel/kpo/commit/1d26381aa15fe23cb838bc05aa09ec4c54103510))
+* **tasks:** add confirm task ([ff3cecc](https://github.com/rafamel/kpo/commit/ff3cecc3559fb26224c974b4f69767bd91e69ef9))
+* **tasks:** add name option for announce ([6b32f6b](https://github.com/rafamel/kpo/commit/6b32f6bebaa23f60cdf0021f3ab3ac489d23c193))
+* **tasks:** add progress task ([a3709d8](https://github.com/rafamel/kpo/commit/a3709d8d1ba64027058ba5b86965ff5defc92dbf))
+* **tasks:** add prompt task ([1404baf](https://github.com/rafamel/kpo/commit/1404baf1ba44b8136f300d23126f229e0eb04fa6))
+* **tasks:** add repeat task ([67db390](https://github.com/rafamel/kpo/commit/67db390d2b9ad0b1c1d44ba4144675e10a4b888a))
+* **tasks:** add silence task ([ef894a2](https://github.com/rafamel/kpo/commit/ef894a2eb81b3ddd7ba01b2df5574f3fe825758d))
+* **tasks:** add timeout task ([df676d6](https://github.com/rafamel/kpo/commit/df676d62cf0011bb7c262725568163cd57dc5a24))
+* **tasks:** create pipes passed functions and checks for cancellation ([f28c215](https://github.com/rafamel/kpo/commit/f28c215e06de7e10b3356d177c13fe124ebb43ca))
+* **tasks:** suppress stdin on parallel tasks ([cd91867](https://github.com/rafamel/kpo/commit/cd918675950305a6b8fb5246bc1e2698b9539683))
+* allow for context stdio streams to be null; remove interactive option for context and bin ([2655d06](https://github.com/rafamel/kpo/commit/2655d06fc802880cf021402519782dc92196120a))
+* **tasks:** optionally log task success on announce ([8463a82](https://github.com/rafamel/kpo/commit/8463a823aecdc71ea9782e56b1a5e6b933e0de22))
+* **tasks,bin:** add fail option to watch task and command ([a329ad5](https://github.com/rafamel/kpo/commit/a329ad5851e2979ff2691c1ddfbf62de7cfb68d0))
+* improve logging format on unicode supporting environments; add success log level ([f410ac6](https://github.com/rafamel/kpo/commit/f410ac6eed8d4b14c513686526d5a57999cc0b39))
+* **utils:** export style util ([cc6bb50](https://github.com/rafamel/kpo/commit/cc6bb505dfdf39ebe9cf632ecf0891939b6eb620))
+* implement interactive/non-interactive contexts; add task and utils ([756fab7](https://github.com/rafamel/kpo/commit/756fab7e39042342c9f95238f3e2f44a6a7e73fe))
+* log all errors w/ trace level ([96425e0](https://github.com/rafamel/kpo/commit/96425e085c8385b730491acb4aa09a99f8e8245e))
+
+
+
 ## [0.17.1](https://github.com/rafamel/kpo/compare/v0.17.0...v0.17.1) (2021-04-04)
 
 
