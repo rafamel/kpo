@@ -12,6 +12,7 @@ import { raises } from '../exception/raises';
 import { create } from '../creation/create';
 import { print } from './print';
 import { log } from './log';
+import { addPrefix } from '~/helpers/prefix';
 
 export interface SelectOptions {
   /**
@@ -98,9 +99,14 @@ export function select(
       cleanup: true,
       values: names,
       ...(fallback >= 0 ? { defaultValue: fallback } : {}),
-      selected: getBadge('selected'),
-      unselected: getBadge('unselected'),
-      indentation: 4,
+      selected: addPrefix(getBadge('selected'), ' '.repeat(3), 'print', ctx),
+      unselected: addPrefix(
+        getBadge('unselected'),
+        ' '.repeat(3),
+        'print',
+        ctx
+      ),
+      indentation: 0,
       outputStream: ctx.stdio[1],
       inputStream: Object.create(stdin, {
         setRawMode: {

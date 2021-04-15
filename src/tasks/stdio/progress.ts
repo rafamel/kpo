@@ -1,7 +1,8 @@
-import { TypeGuard } from 'type-core';
+import { Empty, TypeGuard } from 'type-core';
 import isUnicodeSupported from 'is-unicode-supported';
 import ora from 'ora';
 import { Task } from '../../definitions';
+import { addPrefix } from '../../helpers/prefix';
 import { stringifyPrintRoute } from '../../helpers/stringify';
 import { getLogLevelPrefix, isLogLevelActive } from '../../helpers/logging';
 import { isInteractive } from '../../utils/is-interactive';
@@ -26,7 +27,10 @@ export interface ProgressOptions {
  * while maintaining the context's stdout and stderr.
  * @returns Task
  */
-export function progress(task: Task, options?: ProgressOptions): Task.Async {
+export function progress(
+  options: ProgressOptions | Empty,
+  task: Task
+): Task.Async {
   return create(async (ctx) => {
     const opts = options || {};
     const silent = silence(task);
@@ -40,12 +44,19 @@ export function progress(task: Task, options?: ProgressOptions): Task.Async {
     }
 
     const spinner = ora({
-      color: 'cyan',
+      color: undefined,
       indent: 0,
       stream: ctx.stdio[1],
       isEnabled: true,
       discardStdin: false,
-      hideCursor: true
+      hideCursor: true,
+      spinner: {
+        frames: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'].map(
+          (str) => {
+            return addPrefix(style(str, { color: 'cyan' }), null, 'print', ctx);
+          }
+        )
+      }
     });
 
     spinner.start(isUnicodeSupported() ? ' ' + message : message);
@@ -56,13 +67,18 @@ export function progress(task: Task, options?: ProgressOptions): Task.Async {
     } catch (err) {
       spinner.stopAndPersist({
         text: message,
-        symbol: getLogLevelPrefix('info')
+        symbol: addPrefix(getLogLevelPrefix('info'), null, 'print', ctx)
       });
       throw err;
     }
     spinner.stopAndPersist({
       text: message,
-      symbol: getLogLevelPrefix(wasCancelled ? 'info' : 'success')
+      symbol: addPrefix(
+        getLogLevelPrefix(wasCancelled ? 'info' : 'success'),
+        null,
+        'print',
+        ctx
+      )
     });
   });
 }

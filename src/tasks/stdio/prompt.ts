@@ -4,6 +4,7 @@ import { createInterface } from 'readline';
 import { into } from 'pipettes';
 import { Task } from '../../definitions';
 import { getBadge } from '../../helpers/badges';
+import { addPrefix } from '../../helpers/prefix';
 import { stringifyError } from '../../helpers/stringify';
 import { isInteractive } from '../../utils/is-interactive';
 import { isCancelled } from '../../utils/is-cancelled';
@@ -94,7 +95,7 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
       }),
       into(null, function read() {
         return new Promise<string | null>((resolve, reject) => {
-          readline.question(message, (res) => {
+          readline.question(addPrefix(message, null, 'print', ctx), (res) => {
             let valid = false;
             let error: [Error] | null = null;
             const response =
