@@ -104,6 +104,6 @@ Usage:
 Options:
   --purge             Purge all non-kpo scripts
   --defaults          Lift default tasks and subtasks by their own
-  --mode <value>      Lift mode of operation (default, confirm, dry, audit)
+  --mode <value>      Lift mode of operation (confirm, fix, dry, audit)
   -h, --help          Show help
 ```
