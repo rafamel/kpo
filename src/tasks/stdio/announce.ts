@@ -22,7 +22,7 @@ export interface AnnounceOptions {
  */
 export function announce(task: Task, options?: AnnounceOptions): Task.Async {
   return create((ctx) => {
-    const opts = shallow({ info: true, success: true }, options || undefined);
+    const opts = shallow({ info: true, success: false }, options || undefined);
 
     const message = TypeGuard.isString(opts.message)
       ? opts.message
