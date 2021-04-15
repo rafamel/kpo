@@ -1,3 +1,17 @@
+# [0.19.0](https://github.com/rafamel/kpo/compare/v0.18.0...v0.19.0) (2021-04-15)
+
+
+### Bug Fixes
+
+* **tasks:** prefix stdout for progress, prompt, select ([0e25098](https://github.com/rafamel/kpo/commit/0e25098b80856c12aec8be18cf178a2937df10aa))
+
+
+### Features
+
+* adapt lift for multitask; change lift mode names and default ([afb6efd](https://github.com/rafamel/kpo/commit/afb6efd5595388f4e2edffbce0ef8f9a8718b3a1))
+
+
+
 # [0.18.0](https://github.com/rafamel/kpo/compare/v0.17.1...v0.18.0) (2021-04-09)
 
 
