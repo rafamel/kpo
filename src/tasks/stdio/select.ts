@@ -20,15 +20,15 @@ export interface SelectOptions {
    */
   message?: string;
   /**
-   * A timeout for the select.
-   */
-  timeout?: number;
-  /**
    * A default selection.
    * Will be triggered on `timeout` expiration
    * and non-interactive contexts.
    */
   default?: string | null;
+  /**
+   * A timeout for the select.
+   */
+  timeout?: number;
 }
 
 /**
