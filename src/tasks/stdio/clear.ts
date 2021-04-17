@@ -1,12 +1,17 @@
 import { Task, Context } from '../../definitions';
 
 /**
- * Supresses the task output
- * and
+ * Clears stdout when a TTY
  * @returns Task
  */
 export function clear(): Task.Sync {
   return (ctx: Context): void => {
-    if (ctx.stdio[1]) ctx.stdio[1].write('\x1Bc');
+    const stdout = ctx.stdio[1];
+
+    if (!stdout) return;
+    if (!(stdout as NodeJS.WriteStream).isTTY) return;
+    if (ctx.env.TERM === 'dumb') return;
+
+    stdout.write('\x1Bc');
   };
 }
