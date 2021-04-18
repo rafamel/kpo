@@ -1,8 +1,11 @@
 import { Empty, Members, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
+import { Transform } from 'stream';
 import cliSelect from 'cli-select';
 import { Task } from '../../definitions';
 import { getBadge } from '../../helpers/badges';
+import { addPrefix } from '../../helpers/prefix';
+import { emitterIntercept } from '../../helpers/emitter-intercept';
 import { isInteractive } from '../../utils/is-interactive';
 import { isCancelled } from '../../utils/is-cancelled';
 import { style } from '../../utils/style';
@@ -12,7 +15,6 @@ import { raises } from '../exception/raises';
 import { create } from '../creation/create';
 import { print } from './print';
 import { log } from './log';
-import { addPrefix } from '~/helpers/prefix';
 
 export interface SelectOptions {
   /**
@@ -76,9 +78,12 @@ export function select(
           );
     }
 
-    const stdin = ctx.stdio[0];
+    const stdout = ctx.stdio[1];
+    const stdin = new Transform().pipe(ctx.stdio[0], { end: false });
+    const intercept = emitterIntercept(stdin);
+
     function cancel(): void {
-      stdin.emit('keypress', undefined, {
+      intercept.emit('keypress', {
         sequence: '\u001b',
         name: 'escape',
         ctrl: false,
@@ -107,22 +112,27 @@ export function select(
         ctx
       ),
       indentation: 0,
-      outputStream: ctx.stdio[1],
-      inputStream: Object.create(stdin, {
+      outputStream: stdout,
+      inputStream: Object.create(intercept.emitter, {
         setRawMode: {
           value(...args: any[]) {
-            return (stdin as any).setRawMode
-              ? (stdin as any).setRawMode.apply(this, args)
+            return (intercept.emitter as any).setRawMode
+              ? (intercept.emitter as any).setRawMode.apply(this, args)
               : () => undefined;
           }
         }
       })
-    }).then(
-      // User selection
-      ({ value }) => value,
-      // User cancellation
-      () => null
-    );
+    })
+      .then(
+        // User selection
+        ({ value }) => value,
+        // User cancellation
+        () => null
+      )
+      .finally(() => {
+        intercept.clear();
+        stdin.end();
+      });
 
     if (timeout) clearTimeout(timeout);
     if (await isCancelled(ctx)) return;
