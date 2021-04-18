@@ -1,3 +1,20 @@
+# [0.20.0](https://github.com/rafamel/kpo/compare/v0.19.0...v0.20.0) (2021-04-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([d74828f](https://github.com/rafamel/kpo/commit/d74828f842b6236cda17a80039fade16dba3010f))
+* **tasks:** add badge to prompt message ([3de514a](https://github.com/rafamel/kpo/commit/3de514a5fdd2d5567528060eb4b2f4d1ebe7767c))
+* **tasks:** clear listeners and input stream on select finalization ([048ca7d](https://github.com/rafamel/kpo/commit/048ca7ddb5357518910ac6ece53aa9ef4bf1a97e))
+* **tasks:** fix prompt block on windows ([38978d7](https://github.com/rafamel/kpo/commit/38978d7f8cfd9fcf80785c639360366788e3ce46))
+
+
+### Features
+
+* **cli:** add update notifier ([ab0d23f](https://github.com/rafamel/kpo/commit/ab0d23f9fd5c97816f1d316540febb4d6ffb2f8e))
+
+
+
 # [0.19.0](https://github.com/rafamel/kpo/compare/v0.18.0...v0.19.0) (2021-04-15)
 
 
