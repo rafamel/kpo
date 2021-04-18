@@ -81,7 +81,12 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
     let response: null | string = null;
     while (!(await isCancelled(ctx))) {
       response = await line(
-        addPrefix(opts.message + ' ', null, 'print', ctx),
+        addPrefix(
+          getBadge('prompt') + ' ' + opts.message + ' ',
+          null,
+          'print',
+          ctx
+        ),
         opts.timeout,
         ctx
       ).then((res) => {
