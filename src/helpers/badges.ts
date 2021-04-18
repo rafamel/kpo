@@ -13,12 +13,12 @@ interface BadgeProperties {
 // ⓘ, ⅈ, ℹ︎, 🅳, 🅓, ⓓ, », 🆃, 🅣, ⓣ, ⊗, ⊘
 const badges: Record<Badge, BadgeProperties> = {
   error: { symbol: ['🆇 ', '×'], color: 'red' },
-  warn: { symbol: ['‼ ', '‼'], color: 'yellow' },
+  warn: { symbol: ['!!', '‼'], color: 'yellow' },
   success: { symbol: ['✔︎✔︎', '√'], color: 'green' },
-  info: { symbol: ['ⅈ ', 'i'], color: 'blue' },
+  info: { symbol: ['ⓘ ', 'i'], color: 'blue' },
   debug: { symbol: ['🅳 ', '»'], color: 'magenta' },
   trace: { symbol: ['🆃 ', '*'], color: 'grey' },
-  prompt: { symbol: ['❯ ', '>'], color: 'yellow' },
+  prompt: { symbol: ['❯❯', '>'], color: 'yellow' },
   selected: { symbol: ['◉', '(*)'] },
   unselected: { symbol: ['◯', '( )'] }
 };
