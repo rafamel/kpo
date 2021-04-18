@@ -30,6 +30,22 @@ export declare namespace CLI {
      * Additional commands
      */
     extensions?: Extension[];
+    /**
+     * Package update notifications
+     */
+    update?: boolean | Update;
+  }
+
+  /** Update */
+  export interface Update {
+    /** Name of published package */
+    name: string;
+    /** Current version */
+    version: string;
+    /** Distribution tag to use to find the latest version */
+    tag?: string;
+    /** Include a -g argument in the install recommendation */
+    global?: boolean;
   }
 
   /** Command Extensions */

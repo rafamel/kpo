@@ -15,7 +15,10 @@ import { print, raises, series, create, context, log } from '../../tasks';
 import { constants } from '../../constants';
 import { run, style } from '../../utils';
 
-export function main(argv: string[], options: Required<CLI.Options>): Task {
+export function main(
+  argv: string[],
+  options: Required<Omit<CLI.Options, 'update'>>
+): Task {
   const extensions = into(
     options.extensions,
     (all) => all.map((item) => item.name),
