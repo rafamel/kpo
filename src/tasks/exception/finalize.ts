@@ -1,43 +1,49 @@
-import { into } from 'pipettes';
-import { Task, Context } from '../../definitions';
-import { isCancelled } from '../../utils/is-cancelled';
-import { series } from '../aggregate/series';
+import { Empty, Members } from 'type-core';
+import { Task } from '../../definitions';
 import { run } from '../../utils/run';
+import { flatten } from '../../helpers/flatten';
+import { series } from '../aggregate/series';
+import { create } from '../creation/create';
 import { log } from '../stdio/log';
+import { raises } from './raises';
 
 /**
- * Always executes a `final` task after another.
- * If the first throws an exception and the second
- * does not, it will finally throw the initial exception.
+ * Executes all tasks in series.
+ * If any of the tasks throws an exception,
+ * it will throw after all tasks have
+ * finalized with the latest thrown exception.
  * @returns Task
  */
-export function finalize(task: Task, final?: Task | null): Task.Async {
-  return async (ctx: Context): Promise<void> => {
+export function finalize(
+  task?: Task | Empty | Array<Task | Empty> | Members<Task | Empty>,
+  ...tasks: Array<Task | Empty>
+): Task.Async {
+  const items = flatten(task, ...tasks);
+
+  return create(() => {
     const errors: Error[] = [];
 
-    try {
-      await run(ctx, task);
-    } catch (err) {
-      errors.push(err);
-    }
+    return series(
+      ...items.map((item) => {
+        return item
+          ? create(async (ctx) => {
+              try {
+                await run(ctx, item);
+              } catch (err) {
+                errors.push(err);
+              }
+            })
+          : null;
+      }),
+      create(() => {
+        if (!errors.length) return;
 
-    if (await isCancelled(ctx)) return;
-
-    try {
-      if (final) await run(ctx, final);
-    } catch (err) {
-      errors.push(err);
-    }
-
-    if (!errors.length || (await isCancelled(ctx))) return;
-
-    const err = errors.pop();
-    await into(
-      errors,
-      (arr) => arr.map((err) => log('trace', err)),
-      (tasks) => series(...tasks),
-      (task) => run(ctx, task)
+        const err = errors.pop() as Error;
+        return series(
+          ...errors.map((error) => log('trace', error)),
+          raises(err)
+        );
+      })
     );
-    throw err;
-  };
+  });
 }
