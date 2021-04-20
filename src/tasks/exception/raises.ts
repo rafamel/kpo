@@ -1,5 +1,5 @@
-import { Task, Context } from '../../definitions';
 import { UnaryFn } from 'type-core';
+import { Task, Context } from '../../definitions';
 
 /**
  * Raises an error.

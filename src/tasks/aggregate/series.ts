@@ -1,8 +1,8 @@
+import { Empty, Members } from 'type-core';
 import { Task, Context } from '../../definitions';
 import { flatten } from '../../helpers/flatten';
 import { isCancelled } from '../../utils/is-cancelled';
 import { run } from '../../utils/run';
-import { Empty, Members } from 'type-core';
 
 /**
  * Returns a `Task` that will run in series

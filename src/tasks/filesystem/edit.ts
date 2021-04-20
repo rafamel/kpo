@@ -1,11 +1,11 @@
+import { Serial } from 'type-core';
+import { shallow } from 'merge-strategies';
+import fs from 'fs-extra';
 import { Task, Context } from '../../definitions';
 import { getPaths, useSource } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
 import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
-import { Serial } from 'type-core';
-import { shallow } from 'merge-strategies';
-import fs from 'fs-extra';
 
 export interface EditOptions {
   /** Parse globs in paths */

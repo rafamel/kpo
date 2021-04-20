@@ -1,7 +1,7 @@
+import { Empty, NullaryFn, Members } from 'type-core';
 import { Task, Context } from '../../definitions';
 import { flatten } from '../../helpers/flatten';
 import { run } from '../../utils/run';
-import { Empty, NullaryFn, Members } from 'type-core';
 
 /**
  * Returns a `Task` that will run in parallel

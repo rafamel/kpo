@@ -1,9 +1,9 @@
-import { Task } from '../definitions';
-import { constants } from '../constants';
-import { resolveProject } from '../helpers/resolve-project';
 import { TypeGuard } from 'type-core';
 import { into } from 'pipettes';
 import path from 'path';
+import { Task } from '../definitions';
+import { constants } from '../constants';
+import { resolveProject } from '../helpers/resolve-project';
 
 export interface FetchOptions {
   /** Tasks file name */

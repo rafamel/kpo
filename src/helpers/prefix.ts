@@ -1,8 +1,8 @@
+import { TypeGuard } from 'type-core';
+import { into } from 'pipettes';
 import { Context } from '../definitions';
 import { style } from '../utils/style';
 import { stringifyPrintRoute } from './stringify';
-import { into } from 'pipettes';
-import { TypeGuard } from 'type-core';
 
 export function getPrefix(
   extra: null | string,

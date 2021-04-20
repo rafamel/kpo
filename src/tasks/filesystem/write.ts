@@ -1,10 +1,10 @@
+import { Serial } from 'type-core';
+import { shallow } from 'merge-strategies';
+import fs from 'fs-extra';
 import { Task, Context } from '../../definitions';
 import { useDestination } from '../../helpers/paths';
 import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
-import { Serial } from 'type-core';
-import { shallow } from 'merge-strategies';
-import fs from 'fs-extra';
 
 export interface WriteOptions {
   /** Whether to error, ignore, or overwrite existing files */

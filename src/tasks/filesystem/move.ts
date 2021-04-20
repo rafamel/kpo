@@ -1,10 +1,10 @@
+import { shallow } from 'merge-strategies';
+import fs from 'fs-extra';
 import { Task, Context } from '../../definitions';
 import { getPathPairs, usePair } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
 import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
-import { shallow } from 'merge-strategies';
-import fs from 'fs-extra';
 
 export interface MoveOptions {
   /** Parse globs in paths */

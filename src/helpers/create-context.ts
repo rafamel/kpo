@@ -1,6 +1,6 @@
+import { into } from 'pipettes';
 import { Context } from '../definitions';
 import { constants } from '../constants';
-import { into } from 'pipettes';
 
 const cancellation = new Promise<void>(() => undefined);
 

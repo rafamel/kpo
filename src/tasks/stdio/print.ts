@@ -1,6 +1,6 @@
+import util from 'util';
 import { Task, Context } from '../../definitions';
 import { addPrefix } from '../../helpers/prefix';
-import util from 'util';
 
 /**
  * Writes a message or other data into a context's stdout.

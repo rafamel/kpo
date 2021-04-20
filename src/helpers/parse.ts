@@ -1,8 +1,8 @@
-import { Task } from '../definitions';
-import { constants } from '../constants';
-import { series } from '../tasks/aggregate/series';
-import { stringifyKeyRoute } from './stringify';
 import { Members, TypeGuard } from 'type-core';
+import { Task } from '../definitions';
+import { series } from '../tasks/aggregate/series';
+import { constants } from '../constants';
+import { stringifyKeyRoute } from './stringify';
 
 interface Item {
   name: string;

@@ -1,10 +1,10 @@
+import { Empty } from 'type-core';
 import { Task } from '../../definitions';
 import { isInteractive } from '../../utils/is-interactive';
 import { series } from '../aggregate/series';
 import { raises } from '../exception/raises';
 import { create } from '../creation/create';
 import { log } from './log';
-import { Empty } from 'type-core';
 
 /**
  * Marks a task as interactive.
