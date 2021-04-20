@@ -1,3 +1,15 @@
+# [0.21.0](https://github.com/rafamel/kpo/compare/v0.20.0...v0.21.0) (2021-04-20)
+
+
+### Features
+
+* **tasks:** take any number of tasks on finalize ([e0f1cc6](https://github.com/rafamel/kpo/commit/e0f1cc67cad6a4e40b44e50a3fc687b2ad0c114a))
+* all functions taking options and tasks take options as a parameter before tasks ([44f5479](https://github.com/rafamel/kpo/commit/44f54792fe8394ceeeb07da1aef029000544c04a))
+* **cli:** don't notify of updates when run in npm scripts by default ([4e4d542](https://github.com/rafamel/kpo/commit/4e4d542b51166223a32eef4c787c5753b6c2c293))
+* **utils:** add isLevelActive ([700ce5c](https://github.com/rafamel/kpo/commit/700ce5c07fa6ccec19fae1fef68214782e95d2c7))
+
+
+
 # [0.20.0](https://github.com/rafamel/kpo/compare/v0.19.0...v0.20.0) (2021-04-18)
 
 
