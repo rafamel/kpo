@@ -23,7 +23,7 @@ export async function cli(options?: CLI.Options): Promise<void> {
     notifier({
       pkg: { name: update.name, version: update.version },
       distTag: update.tag,
-      shouldNotifyInNpmScript: true,
+      shouldNotifyInNpmScript: false,
       updateCheckInterval: 1000 * 60 * 60 * 24
     }).notify({
       defer: false,
