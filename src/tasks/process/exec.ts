@@ -94,7 +94,7 @@ export function exec(
               ? ''
               : `: ${cmd}`;
 
-          await run(log('trace', err), ctx);
+          await run(ctx, log('trace', err));
           throw Error(message);
         });
       }

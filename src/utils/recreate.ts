@@ -1,9 +1,9 @@
-import { Task } from '../definitions';
-import { context } from '../tasks/creation/context';
-import { announce } from '../tasks/stdio/announce';
 import { Empty, NullaryFn, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
+import { Task } from '../definitions';
+import { context } from '../tasks/creation/context';
+import { announce } from '../tasks/stdio/announce';
 
 export interface RecreateOptions {
   /**
@@ -25,8 +25,8 @@ export interface RecreateMap {
  * Maps all tasks in a `Task.Record`.
  */
 export function recreate(
-  tasks: Task.Record | NullaryFn<Task.Record>,
-  options?: RecreateOptions | RecreateMap
+  options: RecreateOptions | RecreateMap | Empty,
+  tasks: Task.Record | NullaryFn<Task.Record>
 ): Task.Record {
   const record = TypeGuard.isFunction(tasks) ? tasks() : tasks;
 
@@ -42,7 +42,7 @@ export function recreate(
     return recreateHelper([], record, (task, route) => {
       return into(
         task,
-        (task) => (opts.announce ? announce(task) : task),
+        (task) => (opts.announce ? announce(null, task) : task),
         (task) => (opts.fix ? context({ route }, task) : task)
       );
     });

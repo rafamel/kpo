@@ -99,23 +99,25 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
           current = after
             .then(() => {
               i += 1;
-              return run(series(i > 0 && opts.clear ? clear() : null, task), {
-                ...ctx,
-                route: opts.parallel ? ctx.route.concat(String(i)) : ctx.route,
-                cancellation: new Promise((resolve) => {
-                  cbs.push(resolve);
-                })
-              });
+              return run(
+                {
+                  ...ctx,
+                  route: opts.parallel
+                    ? ctx.route.concat(String(i))
+                    : ctx.route,
+                  cancellation: new Promise((resolve) => {
+                    cbs.push(resolve);
+                  })
+                },
+                series(i > 0 && opts.clear ? clear() : null, task)
+              );
             })
             .catch((err) => {
               return opts.fail
                 ? onError(err)
                 : run(
-                    series(
-                      log('trace', err),
-                      log('error', stringifyError(err))
-                    ),
-                    ctx
+                    ctx,
+                    series(log('trace', err), log('error', stringifyError(err)))
                   );
             });
         },
@@ -127,14 +129,14 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
         if (opts.prime) {
           watcher.on('ready', () => {
             promises.push(
-              run(log('debug', 'Watch event:', 'prime'), ctx).catch(reject)
+              run(ctx, log('debug', 'Watch event:', 'prime')).catch(reject)
             );
             onEvent(reject);
           });
         }
         watcher.on('all', (event) => {
           promises.push(
-            run(log('debug', 'Watch event:', event), ctx).catch(reject)
+            run(ctx, log('debug', 'Watch event:', event)).catch(reject)
           );
           onEvent(reject);
         });

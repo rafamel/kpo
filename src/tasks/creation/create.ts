@@ -21,7 +21,7 @@ function pipe(...fns: Array<UnaryFn<any, MaybePromise<any>>>): Task.Async {
       if (await isCancelled(ctx)) break;
       value = await fn(value);
     }
-    if (value) await run(value, ctx);
+    if (value) await run(ctx, value);
   };
 }
 

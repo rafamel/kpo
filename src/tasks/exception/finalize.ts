@@ -16,7 +16,7 @@ export function finalize(task: Task, final?: Task | null): Task.Async {
     const errors: Error[] = [];
 
     try {
-      await run(task, ctx);
+      await run(ctx, task);
     } catch (err) {
       errors.push(err);
     }
@@ -24,7 +24,7 @@ export function finalize(task: Task, final?: Task | null): Task.Async {
     if (await isCancelled(ctx)) return;
 
     try {
-      if (final) await run(final, ctx);
+      if (final) await run(ctx, final);
     } catch (err) {
       errors.push(err);
     }
@@ -36,7 +36,7 @@ export function finalize(task: Task, final?: Task | null): Task.Async {
       errors,
       (arr) => arr.map((err) => log('trace', err)),
       (tasks) => series(...tasks),
-      (task) => run(task, ctx)
+      (task) => run(ctx, task)
     );
     throw err;
   };

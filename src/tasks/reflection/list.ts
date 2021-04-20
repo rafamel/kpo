@@ -1,4 +1,4 @@
-import { NullaryFn, TypeGuard } from 'type-core';
+import { Empty, NullaryFn, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import table from 'as-table';
 import { Task } from '../../definitions';
@@ -25,8 +25,8 @@ export interface ListOptions {
  * @returns Task
  */
 export function list(
-  tasks: Task.Record | NullaryFn<Task.Record>,
-  options?: ListOptions
+  options: ListOptions | Empty,
+  tasks: Task.Record | NullaryFn<Task.Record>
 ): Task.Async {
   return create(async () => {
     const opts = shallow(

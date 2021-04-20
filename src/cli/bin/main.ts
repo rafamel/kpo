@@ -180,9 +180,9 @@ export function main(
     (task) => {
       return async (ctx: Context): Promise<void> => {
         try {
-          await run(task, ctx);
+          await run(ctx, task);
         } catch (err) {
-          await run(log('trace', err), ctx);
+          await run(ctx, log('trace', err));
           throw err;
         }
       };

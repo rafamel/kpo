@@ -1,4 +1,4 @@
-import { Members, NullaryFn, TypeGuard } from 'type-core';
+import { Empty, Members, NullaryFn, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
@@ -50,8 +50,8 @@ export interface LiftOptions {
  * @returns Task
  */
 export function lift(
-  tasks: Task.Record | NullaryFn<Task.Record>,
-  options?: LiftOptions
+  options: LiftOptions | Empty,
+  tasks: Task.Record | NullaryFn<Task.Record>
 ): Task.Async {
   return create(async (ctx) => {
     const opts = shallow(
@@ -188,7 +188,7 @@ async function evaluateChanges(
     strArr.push(style('No pending scripts changes', { bold: true }));
   }
 
-  await run(print(strArr.join('\n')), context);
+  await run(context, print(strArr.join('\n')));
 
   return areChangesPending;
 }

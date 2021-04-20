@@ -33,13 +33,16 @@ export function parallel(
     try {
       await Promise.all(
         items.map((task) => {
-          return run(task, {
-            ...ctx,
-            stdio: [null, ctx.stdio[1], ctx.stdio[2]],
-            cancellation: new Promise((resolve) => {
-              cbs.push(resolve);
-            })
-          });
+          return run(
+            {
+              ...ctx,
+              stdio: [null, ctx.stdio[1], ctx.stdio[2]],
+              cancellation: new Promise((resolve) => {
+                cbs.push(resolve);
+              })
+            },
+            task
+          );
         })
       );
     } catch (err) {

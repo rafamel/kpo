@@ -37,7 +37,7 @@ export async function useSource(
   if (options.strict) {
     throw Error(`Source path doesn't exist: ${src}`);
   }
-  await run(log('debug', 'Ignore source:', src), context);
+  await run(context, log('debug', 'Ignore source:', src));
 }
 
 export async function useDestination(
@@ -55,7 +55,7 @@ export async function useDestination(
   if (!exists) return cb(dest);
 
   if (options.exists === 'ignore') {
-    await run(log('debug', 'Ignore destination:', dest), context);
+    await run(context, log('debug', 'Ignore destination:', dest));
   } else {
     throw Error(`Destination exists: ${dest}`);
   }

@@ -57,12 +57,15 @@ export async function lift(params: CLI.Extension.Params): Promise<Task> {
 
   return series(
     print(),
-    _lift(tasks, {
-      purge: cmd['--purge'],
-      defaults: cmd['--defaults'],
-      mode: cmd['--mode'] as any,
-      bin: params.options.bin,
-      multitask: params.options.multitask
-    })
+    _lift(
+      {
+        purge: cmd['--purge'],
+        defaults: cmd['--defaults'],
+        mode: cmd['--mode'] as any,
+        bin: params.options.bin,
+        multitask: params.options.multitask
+      },
+      tasks
+    )
   );
 }

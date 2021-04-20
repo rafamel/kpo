@@ -1,12 +1,12 @@
+import { Empty, NullaryFn } from 'type-core';
+import { shallow } from 'merge-strategies';
+import { into } from 'pipettes';
 import { Task } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
 import { recreate } from '../../utils/recreate';
 import { context } from '../creation/context';
 import { create } from '../creation/create';
 import { series } from './series';
-import { NullaryFn } from 'type-core';
-import { shallow } from 'merge-strategies';
-import { into } from 'pipettes';
 
 export interface CombineOptions {
   /**
@@ -32,8 +32,8 @@ export interface CombineOptions {
  * @returns Task
  */
 export function combine(
-  tasks: Task.Record | NullaryFn<Task.Record>,
-  options?: CombineOptions
+  options: CombineOptions | Empty,
+  tasks: Task.Record | NullaryFn<Task.Record>
 ): Task.Async {
   return create(() => {
     const opts: Required<CombineOptions> = shallow(
@@ -42,12 +42,12 @@ export function combine(
     );
 
     return into(
-      recreate(tasks, (task, route) => {
+      recreate((task, route) => {
         return context(
           (ctx) => ({ ...ctx, route: ctx.route.concat(route) }),
           task
         );
-      }),
+      }, tasks),
       parseToRecord.bind(null, {
         include: opts.include,
         exclude: opts.exclude,

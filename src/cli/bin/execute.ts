@@ -10,7 +10,7 @@ export async function execute(task: NullaryFn<Task>): Promise<void> {
     const cancellation = new Promise<void>((resolve) => cbs.push(resolve));
 
     const exits = await import('exits');
-    const promise = run(create(task), { cancellation });
+    const promise = run({ cancellation }, create(task));
 
     exits.attach();
     exits.options({
@@ -28,7 +28,7 @@ export async function execute(task: NullaryFn<Task>): Promise<void> {
 
     await promise;
   } catch (err) {
-    await run(log('error', stringifyError(err)));
+    await run(null, log('error', stringifyError(err)));
     return process.exit(1);
   }
 }

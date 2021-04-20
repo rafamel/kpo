@@ -22,7 +22,7 @@ export function series(
   return async (ctx: Context): Promise<void> => {
     for (const task of items) {
       if (await isCancelled(ctx)) break;
-      await run(task, ctx);
+      await run(ctx, task);
     }
   };
 }

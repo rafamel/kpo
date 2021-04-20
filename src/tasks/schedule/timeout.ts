@@ -26,18 +26,21 @@ export function timeout(
 
           let didTimeout = false;
           let timeout: NodeJS.Timeout | null = null;
-          await run(task, {
-            ...ctx,
-            cancellation: Promise.race([
-              new Promise<void>((resolve) => {
-                timeout = setTimeout(
-                  () => (didTimeout = true) && resolve(),
-                  ms
-                );
-              }),
-              ctx.cancellation.finally(() => timeout && clearTimeout(timeout))
-            ])
-          });
+          await run(
+            {
+              ...ctx,
+              cancellation: Promise.race([
+                new Promise<void>((resolve) => {
+                  timeout = setTimeout(
+                    () => (didTimeout = true) && resolve(),
+                    ms
+                  );
+                }),
+                ctx.cancellation.finally(() => timeout && clearTimeout(timeout))
+              ])
+            },
+            task
+          );
 
           if (timeout) clearTimeout(timeout);
           if (didTimeout) {

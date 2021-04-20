@@ -1,4 +1,4 @@
-import { TypeGuard } from 'type-core';
+import { Empty, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { Task } from '../../definitions';
 import { stringifyPrintRoute } from '../../helpers/stringify';
@@ -20,7 +20,10 @@ export interface AnnounceOptions {
  * Prints tasks route before execution and upon success.
  * @returns Task
  */
-export function announce(task: Task, options?: AnnounceOptions): Task.Async {
+export function announce(
+  options: AnnounceOptions | Empty,
+  task: Task
+): Task.Async {
   return create((ctx) => {
     const opts = shallow({ info: true, success: false }, options || undefined);
 

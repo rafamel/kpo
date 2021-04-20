@@ -19,7 +19,7 @@ export function repeat(times: number | null, task: Task): Task.Async {
       while (!isDone()) {
         i++;
         if (await isCancelled(ctx)) break;
-        await run(series(log('debug', 'Repeat task:', i), task), ctx);
+        await run(ctx, series(log('debug', 'Repeat task:', i), task));
       }
     }
   );

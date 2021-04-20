@@ -115,6 +115,7 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
       } else {
         response = null;
         await run(
+          ctx,
           series(
             error ? log('trace', error[0]) : null,
             log(
@@ -123,8 +124,7 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
                 ? style(stringifyError(error[0]), { bold: true })
                 : style('Invalid response', { bold: true })
             )
-          ),
-          ctx
+          )
         );
       }
     }
@@ -136,8 +136,8 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
     if (response === null) {
       if (TypeGuard.isString(opts.default) && opts.validate(opts.default)) {
         await run(
-          log('info', 'Timeout default:', style(opts.default, { bold: true })),
-          ctx
+          ctx,
+          log('info', 'Timeout default:', style(opts.default, { bold: true }))
         );
         response = opts.default;
       } else {

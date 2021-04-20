@@ -112,7 +112,7 @@ export async function watch(params: CLI.Extension.Params): Promise<Task> {
             stringifyArgvCommands(params.argv)
           );
         }),
-        combine(tasks, { include: names })
+        combine({ include: names }, tasks)
       )
     )
   );

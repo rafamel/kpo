@@ -40,7 +40,7 @@ export function progress(
       : style('task ', { bold: true }) + stringifyPrintRoute(ctx.route);
 
     if (!isInteractive(ctx) || isLogLevelActive('debug', ctx)) {
-      return announce(silent, { message, info: true, success: true });
+      return announce({ message, info: true, success: true }, silent);
     }
 
     const spinner = ora({
@@ -63,7 +63,7 @@ export function progress(
     let wasCancelled = false;
     ctx.cancellation.finally(() => (wasCancelled = true) && spinner.stop());
     try {
-      await run(silent, ctx);
+      await run(ctx, silent);
     } catch (err) {
       spinner.stopAndPersist({
         text: message,

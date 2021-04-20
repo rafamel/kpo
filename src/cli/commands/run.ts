@@ -18,5 +18,5 @@ export async function run(params: CLI.Extension.Params): Promise<Task> {
     directory: params.options.directory
   });
 
-  return context({ args }, combine(tasks, { include: names }));
+  return context({ args }, combine({ include: names }, tasks));
 }

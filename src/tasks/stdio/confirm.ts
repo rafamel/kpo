@@ -66,7 +66,7 @@ export function confirm(
         const response = (ctx.args[0] || '').toLowerCase();
         const task = response[0] === 'y' ? yes : no;
         if (!task) return;
-        await run(task, { ...ctx, args: ctx.args.slice(1) });
+        await run({ ...ctx, args: ctx.args.slice(1) }, task);
       }
     );
   });

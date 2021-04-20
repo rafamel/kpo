@@ -1,7 +1,7 @@
-import { Task, Context } from '../../definitions';
-import { run } from '../../utils/run';
 import { UnaryFn, Empty } from 'type-core';
 import { shallow } from 'merge-strategies';
+import { Task, Context } from '../../definitions';
+import { run } from '../../utils/run';
 
 /**
  * Modifies a task's context with a given `context`.
@@ -20,6 +20,6 @@ export function context(
 ): Task.Async {
   const fn = typeof context === 'function' ? context : () => context;
   return async (context: Context): Promise<void> => {
-    await run(task, shallow(context, fn(context) || undefined));
+    await run(shallow(context, fn(context) || undefined), task);
   };
 }

@@ -58,7 +58,7 @@ export function select(
       : -1;
     const message = getBadge('prompt') + ` ${opts.message}`;
 
-    await run(print(message), ctx);
+    await run(ctx, print(message));
     if (await isCancelled(ctx)) return;
 
     if (!isInteractive(ctx)) {
