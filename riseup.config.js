@@ -27,9 +27,7 @@ module.exports = library(
       types: true,
       dir: ['src/', 'test/'],
       highlight: ['fixme', 'todo', 'refactor'],
-      rules: {
-        'node/no-callback-literal': 0
-      }
+      rules: {}
     },
     lintmd: {
       include: './README.md',
