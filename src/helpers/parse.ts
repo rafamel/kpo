@@ -1,4 +1,4 @@
-import { Members, TypeGuard } from 'type-core';
+import { Dictionary, TypeGuard } from 'type-core';
 import { Task } from '../definitions';
 import { series } from '../tasks/aggregate/series';
 import { constants } from '../constants';
@@ -23,14 +23,14 @@ interface ParseToRecordOptions extends ParseToArrayOptions {
 export function parseToRecord(
   options: ParseToRecordOptions,
   record: Task.Record
-): Members<Task> {
+): Dictionary<Task> {
   const { include, exclude } = options;
   const arr = parseToArray(
     { roots: options.roots, defaults: options.defaults },
     record
   );
 
-  const members: Members<Task> = {};
+  const members: Dictionary<Task> = {};
   for (const item of arr) {
     if (exclude && exclude.includes(item.name)) continue;
     if (include && !include.includes(item.name)) continue;

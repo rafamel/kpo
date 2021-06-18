@@ -1,4 +1,4 @@
-import { Empty, NullaryFn, Members } from 'type-core';
+import { Empty, NullaryFn, Dictionary } from 'type-core';
 import { Task, Context } from '../../definitions';
 import { flatten } from '../../helpers/flatten';
 import { run } from '../../utils/run';
@@ -14,7 +14,7 @@ import { run } from '../../utils/run';
  * @returns Task
  */
 export function parallel(
-  task?: Task | Empty | Array<Task | Empty> | Members<Task | Empty>,
+  task?: Task | Empty | Array<Task | Empty> | Dictionary<Task | Empty>,
   ...tasks: Array<Task | Empty>
 ): Task.Async {
   const items = flatten(task, ...tasks);

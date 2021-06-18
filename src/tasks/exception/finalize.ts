@@ -1,4 +1,4 @@
-import { Empty, Members } from 'type-core';
+import { Empty, Dictionary } from 'type-core';
 import { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { flatten } from '../../helpers/flatten';
@@ -15,7 +15,7 @@ import { raises } from './raises';
  * @returns Task
  */
 export function finalize(
-  task?: Task | Empty | Array<Task | Empty> | Members<Task | Empty>,
+  task?: Task | Empty | Array<Task | Empty> | Dictionary<Task | Empty>,
   ...tasks: Array<Task | Empty>
 ): Task.Async {
   const items = flatten(task, ...tasks);

@@ -1,4 +1,4 @@
-import { Members } from 'type-core';
+import { Dictionary } from 'type-core';
 import { Writable, Readable } from 'stream';
 
 /**
@@ -29,7 +29,7 @@ export interface Context {
    * A task's evironment variables.
    * Used for spawned processes.
    */
-  readonly env: Members<string | undefined>;
+  readonly env: Dictionary<string | undefined>;
   /**
    * A task's arguments.
    * Used for spawned processes.

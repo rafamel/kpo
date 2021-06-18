@@ -1,4 +1,4 @@
-import { Members, VariadicFn } from 'type-core';
+import { Dictionary, VariadicFn } from 'type-core';
 
 export interface EmitterIntercept<T> {
   emitter: T;
@@ -9,7 +9,7 @@ export interface EmitterIntercept<T> {
 export function emitterIntercept<T extends NodeJS.EventEmitter>(
   emitter: NodeJS.EventEmitter
 ): EmitterIntercept<T> {
-  let members: Members<VariadicFn[]> = {};
+  let members: Dictionary<VariadicFn[]> = {};
 
   const proxy = new Proxy(emitter, {
     get(target, key, receiver) {

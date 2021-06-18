@@ -1,10 +1,10 @@
-import { Members, Empty, TypeGuard } from 'type-core';
+import { Dictionary, Empty, TypeGuard } from 'type-core';
 import { into } from 'pipettes';
 import { Task } from '../definitions';
 import { context } from '../tasks/creation/context';
 
 export function flatten(
-  task?: Task | Empty | Array<Task | Empty> | Members<Task | Empty>,
+  task?: Task | Empty | Array<Task | Empty> | Dictionary<Task | Empty>,
   ...tasks: Array<Task | Empty>
 ): Task[] {
   return into(

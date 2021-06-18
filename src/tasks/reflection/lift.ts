@@ -1,4 +1,4 @@
-import { Empty, Members, NullaryFn, TypeGuard } from 'type-core';
+import { Empty, Dictionary, NullaryFn, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
@@ -73,7 +73,7 @@ export function lift(
     }
     const content = await fs.readFile(pkgPath);
     const pkg = JSON.parse(content.toString());
-    const pkgScripts: Members<string> = pkg.scripts || {};
+    const pkgScripts: Dictionary<string> = pkg.scripts || {};
 
     const taskScripts = into(
       source,
@@ -86,7 +86,7 @@ export function lift(
       (record) => Object.keys(record),
       (keys) => {
         return keys.reduce(
-          (acc: Members<string>, name) => ({
+          (acc: Dictionary<string>, name) => ({
             ...acc,
             [name]: opts.bin + ' ' + name + (opts.multitask ? ' --' : '')
           }),
@@ -122,8 +122,8 @@ export function lift(
 }
 
 async function evaluateChanges(
-  pkgScripts: Members<string>,
-  taskScripts: Members<string>,
+  pkgScripts: Dictionary<string>,
+  taskScripts: Dictionary<string>,
   context: Context,
   options: { post: boolean; purge: boolean }
 ): Promise<boolean> {

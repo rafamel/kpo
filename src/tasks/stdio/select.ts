@@ -1,4 +1,4 @@
-import { Empty, Members, TypeGuard } from 'type-core';
+import { Empty, Dictionary, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { Transform } from 'stream';
 import cliSelect from 'cli-select';
@@ -40,7 +40,7 @@ export interface SelectOptions {
  */
 export function select(
   options: SelectOptions | Empty,
-  tasks: Members<Task | Empty>
+  tasks: Dictionary<Task | Empty>
 ): Task.Async {
   return create(async (ctx) => {
     const opts = shallow(
