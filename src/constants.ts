@@ -1,8 +1,10 @@
 import { into } from 'pipettes';
+import path from 'path';
 
 export const constants = into(
   { pkg: require('../package.json') },
   ({ pkg }) => ({
+    root: path.join(__dirname, '../'),
     cli: {
       bin: 'kpo',
       file: 'kpo.tasks.js',

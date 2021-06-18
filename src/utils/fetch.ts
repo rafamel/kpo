@@ -37,12 +37,14 @@ export async function fetch(options?: FetchOptions): Promise<Task.Record> {
 
   if (
     !Object.hasOwnProperty.call(data, 'default') ||
-    !TypeGuard.isRecord(data.default)
+    !(TypeGuard.isRecord(data.default) || TypeGuard.isFunction(data.default))
   ) {
     throw Error(`Default tasks export not found: ${filepath}`);
   }
 
-  const tasks = data.default;
+  const tasks = TypeGuard.isFunction(data.default)
+    ? data.default(await import(constants.root))
+    : data.default;
 
   const empty = Object.keys(tasks).filter((name) => !name);
   if (empty.length) {
