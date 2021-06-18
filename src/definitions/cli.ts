@@ -3,7 +3,7 @@ import { Context, Task } from './tasks';
 
 export declare namespace CLI {
   /** Global Options */
-  export interface Options {
+  interface Options {
     /**
      * Name of kpo's executable.
      */
@@ -37,7 +37,7 @@ export declare namespace CLI {
   }
 
   /** Update */
-  export interface Update {
+  interface Update {
     /** Name of published package */
     name: string;
     /** Current version */
@@ -49,22 +49,22 @@ export declare namespace CLI {
   }
 
   /** Command Extensions */
-  export interface Extension {
+  interface Extension {
     name: string;
     description: string;
     execute: Extension.Execute;
   }
-  export namespace Extension {
-    export type Execute = (
+  namespace Extension {
+    type Execute = (
       params: Params,
       context: Context
     ) => Task | Empty | Promise<Task | Empty>;
-    export interface Params {
+    interface Params {
       help: string;
       argv: string[];
       options: Options;
     }
-    export interface Options {
+    interface Options {
       /** Executable name */
       bin: string;
       /** Tasks file name */

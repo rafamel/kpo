@@ -1,8 +1,13 @@
 {
   "name": "kpo",
+  "description": "A task runner that goes where npm scripts won't, for the true capo",
   "version": "0.21.0",
   "author": "Rafa Mel",
-  "description": "A task runner that goes where npm scripts won't, for the true capo",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "task runner",
     "task",
@@ -14,45 +19,28 @@
     "monorepo",
     "lerna"
   ],
-  "engines": {
-    "node": ">=12"
-  },
+  "main": "pkg/dist/index.js",
+  "types": "pkg/dist/index.d.ts",
   "bin": {
     "kpo": "dist/cli/kpo.js"
   },
-  "main": "pkg/dist/index.js",
-  "types": "pkg/dist/index.d.ts",
-  "scripts": {
-    "commit": "kpo commit --",
-    "semantic": "kpo semantic --",
-    "fix": "kpo fix --",
-    "fix:scripts": "kpo fix:scripts --",
-    "lint": "kpo lint --",
-    "lint:md": "kpo lint:md --",
-    "lint:scripts": "kpo lint:scripts --",
-    "clean": "kpo clean --",
-    "clean:build": "kpo clean:build --",
-    "clean:modules": "kpo clean:modules --",
-    "prepublishOnly": "kpo prepublishOnly --",
-    "preversion": "kpo preversion --",
-    "version": "kpo version --",
-    "build": "kpo build --",
-    "build:transpile": "kpo build:transpile --",
-    "build:types": "kpo build:types --",
-    "fix:code": "kpo fix:code --",
-    "lint:code": "kpo lint:code --",
-    "lint:types": "kpo lint:types --",
-    "test": "kpo test --",
-    "verify": "kpo verify --",
-    "validate": "kpo validate --",
-    "docs": "kpo docs --",
-    "build:pack": "kpo build:pack --",
-    "build:static": "kpo build:static --",
-    "release": "kpo release --",
-    "watch": "kpo watch --",
-    "watch:test": "kpo watch:test --"
+  "engines": {
+    "node": ">=12"
   },
-  "license": "MIT",
+  "scripts": {
+    "node": "kpo node --",
+    "build": "kpo build --",
+    "docs": "kpo docs --",
+    "fix": "kpo fix --",
+    "lint": "kpo lint --",
+    "test": "kpo test --",
+    "commit": "kpo commit --",
+    "release": "kpo release --",
+    "distribute": "kpo distribute --",
+    "validate": "kpo validate --",
+    "prepare": "kpo prepare --",
+    "version": "kpo version --"
+  },
   "homepage": "https://github.com/rafamel/kpo",
   "repository": {
     "type": "git",
@@ -62,25 +50,16 @@
     "url": "https://github.com/rafamel/kpo/issues"
   },
   "devDependencies": {
-    "@pika/pack": "^0.4.0",
-    "@riseup/library": "^0.5.0",
-    "@riseup/tooling": "^0.5.0",
+    "@jest/globals": "^27.0.3",
+    "@riseup/library": "^0.6.0",
     "@types/common-tags": "^1.8.0",
     "@types/debounce": "^1.2.0",
     "@types/fs-extra": "^9.0.11",
-    "@types/jest": "^26.0.22",
     "@types/update-notifier": "^5.0.0",
-    "@zerollup/ts-transform-paths": "^1.7.18",
     "coveralls": "^3.1.0",
-    "husky": "^4.3.8",
-    "kpo": "^0.11.1",
-    "onchange": "^6.1.1",
-    "typescript": "^3.9.9"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "kpo verify"
-    }
+    "kpo": "^0.21.0",
+    "simple-git-hooks": "^2.4.1",
+    "typescript": "^4.2.3"
   },
   "dependencies": {
     "arg": "^5.0.0",
@@ -105,5 +84,8 @@
     "prefix-stream": "^1.0.1",
     "type-core": "^0.9.0",
     "update-notifier": "^5.1.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "kpo validate"
   }
 }

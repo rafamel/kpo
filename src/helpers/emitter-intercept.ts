@@ -17,7 +17,7 @@ export function emitterIntercept<T extends NodeJS.EventEmitter>(
         case 'on':
         case 'once':
         case 'addListener': {
-          return function(
+          return function (
             this: any,
             event: string,
             listener: VariadicFn,

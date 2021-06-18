@@ -8,9 +8,9 @@ import { Writable, Readable } from 'stream';
 export type Task = (context: Context) => Promise<void> | void;
 
 export declare namespace Task {
-  export type Sync = (context: Context) => void;
-  export type Async = (context: Context) => Promise<void>;
-  export interface Record {
+  type Sync = (context: Context) => void;
+  type Async = (context: Context) => Promise<void>;
+  interface Record {
     [key: string]: Task | Record;
   }
 }
@@ -62,7 +62,7 @@ export interface Context {
 }
 
 export declare namespace Context {
-  export interface Interactive extends Context {
+  interface Interactive extends Context {
     readonly stdio: [NodeJS.ReadStream, NodeJS.WriteStream, Writable | null];
   }
 }
@@ -73,6 +73,6 @@ export type Stdio = [Readable | null, Writable | null, Writable | null];
 
 export type LogLevel = LogLevel.None | LogLevel.Core;
 export declare namespace LogLevel {
-  export type None = 'silent';
-  export type Core = 'error' | 'warn' | 'success' | 'info' | 'debug' | 'trace';
+  type None = 'silent';
+  type Core = 'error' | 'warn' | 'success' | 'info' | 'debug' | 'trace';
 }

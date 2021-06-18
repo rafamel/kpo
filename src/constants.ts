@@ -12,7 +12,7 @@ export const constants = into(
     },
     defaults: {
       task: 'default',
-      level: 'info' as 'info'
+      level: 'info' as const
     },
     collections: {
       restrict: [':']
