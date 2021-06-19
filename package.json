@@ -77,7 +77,7 @@
     "find-up": "^5.0.0",
     "fs-extra": "^10.0.0",
     "glob": "^7.1.6",
-    "is-unicode-supported": "^0.1.0",
+    "is-unicode-supported": "^1.0.0",
     "merge-strategies": "^0.2.0",
     "ora": "^5.4.0",
     "pipettes": "^0.1.3",
