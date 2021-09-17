@@ -28,7 +28,7 @@ export function mkdir(
 
       for (const dir of dirs) {
         if (await isCancelled(ctx)) return;
-        opts.ensure ? fs.ensureDir(dir) : fs.mkdir(dir);
+        await (opts.ensure ? fs.ensureDir(dir) : fs.mkdir(dir));
       }
     }
   );
