@@ -19,8 +19,8 @@
     "monorepo",
     "lerna"
   ],
-  "main": "pkg/dist/index.js",
-  "types": "pkg/dist/index.d.ts",
+  "main": "pkg/dist",
+  "types": "pkg/dist",
   "bin": {
     "kpo": "dist/cli/kpo.js"
   },
@@ -30,6 +30,7 @@
   "scripts": {
     "node": "kpo node --",
     "build": "kpo build --",
+    "tarball": "kpo tarball --",
     "docs": "kpo docs --",
     "fix": "kpo fix --",
     "lint": "kpo lint --",
@@ -51,7 +52,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^27.0.3",
-    "@riseup/library": "^0.7.0",
+    "@riseup/library": "^0.12.0",
     "@types/common-tags": "^1.8.0",
     "@types/debounce": "^1.2.0",
     "@types/fs-extra": "^9.0.11",
@@ -59,7 +60,7 @@
     "coveralls": "^3.1.0",
     "kpo": "^0.22.0",
     "simple-git-hooks": "^2.4.1",
-    "typescript": "^4.2.3"
+    "typescript": "^4.3.4"
   },
   "dependencies": {
     "arg": "^5.0.0",

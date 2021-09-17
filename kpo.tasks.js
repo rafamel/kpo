@@ -12,6 +12,7 @@ const riseup = require('./riseup.config');
 const tasks = {
   node: riseup.node,
   build: riseup.build,
+  tarball: riseup.tarball,
   docs: riseup.docs,
   fix: riseup.fix,
   lint: series(riseup.lintmd, riseup.lint),

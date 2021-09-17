@@ -5,9 +5,8 @@ vendor
 lib
 dist
 out
+public
 coverage
-vendor-*
-workbox-*
 .vscode
 .cache
 node_modules
