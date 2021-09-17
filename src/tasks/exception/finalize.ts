@@ -1,4 +1,5 @@
 import { Empty, Dictionary } from 'type-core';
+import { ensure } from 'errorish';
 import { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { flatten } from '../../helpers/flatten';
@@ -30,7 +31,7 @@ export function finalize(
               try {
                 await run(ctx, item);
               } catch (err) {
-                errors.push(err);
+                errors.push(ensure(err));
               }
             })
           : null;

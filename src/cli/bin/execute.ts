@@ -1,4 +1,5 @@
 import { NullaryFn } from 'type-core';
+import { ensure } from 'errorish';
 import { stringifyError } from '../../helpers/stringify';
 import { create, log } from '../../tasks';
 import { Task } from '../../definitions';
@@ -28,7 +29,7 @@ export async function execute(task: NullaryFn<Task>): Promise<void> {
 
     await promise;
   } catch (err) {
-    await run(null, log('error', stringifyError(err)));
+    await run(null, log('error', stringifyError(ensure(err))));
     return process.exit(1);
   }
 }

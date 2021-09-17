@@ -1,6 +1,7 @@
 import { Empty, TypeGuard, UnaryFn, VariadicFn } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { createInterface } from 'readline';
+import { ensure } from 'errorish';
 import { Context, Task } from '../../definitions';
 import { getBadge } from '../../helpers/badges';
 import { addPrefix } from '../../helpers/prefix';
@@ -107,7 +108,7 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
       try {
         valid = opts.validate(response);
       } catch (err) {
-        error = [err];
+        error = [ensure(err)];
       }
 
       if (valid && !error) {

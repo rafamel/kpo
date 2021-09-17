@@ -1,5 +1,6 @@
 import { Empty } from 'type-core';
 import { shallow } from 'merge-strategies';
+import { ensure } from 'errorish';
 import { into } from 'pipettes';
 import { Task, Context, LogLevel } from '../../definitions';
 import { stringifyError } from '../../helpers/stringify';
@@ -36,7 +37,7 @@ export function catches(
       await into(
         series(
           log('trace', err),
-          log(opts.level, stringifyError(err)),
+          log(opts.level, stringifyError(ensure(err))),
           alternate
         ),
         (task) => run(ctx, task)
