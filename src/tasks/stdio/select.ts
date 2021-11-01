@@ -35,6 +35,7 @@ export interface SelectOptions {
 
 /**
  * Uses a context's stdio to prompt for input.
+ * Executes a task in response to user selection.
  * Takes in a record of `tasks`.
  * @returns Task
  */

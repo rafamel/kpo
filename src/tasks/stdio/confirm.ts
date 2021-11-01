@@ -26,6 +26,7 @@ export interface ConfirmOptions {
 
 /**
  * Uses a context's stdio to prompt for confirmation.
+ * Executes a task in response to user confirmation or rejection.
  * @returns Task
  */
 export function confirm(

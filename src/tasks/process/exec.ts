@@ -15,7 +15,7 @@ export type ExecOptions = execa.Options;
 
 /**
  * Spawns a process.
- * When no file is passed, it will execute node.
+ * When no file is passed, it will execute *node*.
  * @returns Task
  */
 export function exec(

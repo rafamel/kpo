@@ -17,7 +17,7 @@ export interface AnnounceOptions {
 }
 
 /**
- * Prints tasks route before execution and upon success.
+ * Logs task routes before execution and/or upon success.
  * @returns Task
  */
 export function announce(

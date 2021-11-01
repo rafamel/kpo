@@ -13,6 +13,8 @@ export interface WriteOptions {
 
 /**
  * Writes a file with a `content` at `path`.
+ * When `content` is an object, it will be
+ * stringified as JSON.
  * @returns Task
  */
 export function write(
