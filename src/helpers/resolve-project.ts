@@ -1,9 +1,8 @@
-import path from 'path';
+import path from 'node:path';
 import { find } from './find';
 
 export interface ResolveProjectOptions {
-  fail: boolean;
-  file: string;
+  files: string[];
   directory: string | null;
 }
 
@@ -12,29 +11,31 @@ export interface Project {
   directory: string;
 }
 
-export async function resolveProject(
+export async function resolveProject<A extends boolean>(
+  assert: A,
   options: ResolveProjectOptions
-): Promise<Project> {
+): Promise<A extends true ? Project : Project | null> {
+  if (!options.files.length) {
+    if (assert) throw Error(`No project file names specified`);
+    return null as A extends true ? Project : Project | null;
+  }
+
   const cwd = process.cwd();
   const directory = options.directory
     ? path.resolve(cwd, options.directory)
     : null;
 
   const filepath = await find({
-    file: options.file,
+    files: options.files,
     cwd: directory || cwd,
     exact: Boolean(directory)
   });
 
   if (!filepath) {
-    if (options.fail) {
-      throw Error(`File not found in path: ${options.file}`);
-    }
-    return {
-      file: options.file,
-      directory: directory || cwd
-    };
+    if (assert) throw Error(`File not found in path: ${options.files}`);
+    return null as A extends true ? Project : Project | null;
   }
+
   if (directory) {
     return {
       file: path.resolve(directory, filepath),

@@ -1,6 +1,7 @@
 import arg from 'arg';
 import { flags, safePairs } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
+
 import { Task, CLI } from '../../definitions';
 import { style, fetch } from '../../utils';
 import { list as _list, series, raises, print } from '../../tasks';
@@ -41,8 +42,9 @@ export async function list(params: CLI.Extension.Params): Promise<Task> {
 
   const tasks = await fetch({
     chdir: true,
-    file: params.options.file,
-    directory: params.options.directory
+    files: params.options.files,
+    directory: params.options.directory,
+    property: params.options.property
   });
 
   return series(

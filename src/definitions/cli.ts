@@ -1,4 +1,5 @@
 import { Empty } from 'type-core';
+
 import { Context, Task } from './tasks';
 
 export declare namespace CLI {
@@ -9,9 +10,13 @@ export declare namespace CLI {
      */
     bin?: string;
     /**
-     * Default tasks file name
+     * Default tasks file names
      */
-    file?: string;
+    files?: string[];
+    /**
+     * Default export object property for tasks
+     */
+    property?: string | number | null;
     /**
      * Executable version
      */
@@ -67,8 +72,10 @@ export declare namespace CLI {
     interface Options {
       /** Executable name */
       bin: string;
-      /** Tasks file name */
-      file: string;
+      /** Tasks file names */
+      files: string[];
+      /** Default export object property for tasks */
+      property: string | number | null;
       /** Project directory */
       directory: string;
       /** Allow running multiple tasks */

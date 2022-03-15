@@ -1,5 +1,6 @@
 import { shallow } from 'merge-strategies';
 import fs from 'fs-extra';
+
 import { Task, Context } from '../../definitions';
 import { getPaths } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';

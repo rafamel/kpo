@@ -1,6 +1,7 @@
 import { Empty, TypeGuard } from 'type-core';
 import isUnicodeSupported from 'is-unicode-supported';
 import ora from 'ora';
+
 import { Task } from '../../definitions';
 import { addPrefix } from '../../helpers/prefix';
 import { stringifyPrintRoute } from '../../helpers/stringify';

@@ -1,15 +1,18 @@
 import { TypeGuard } from 'type-core';
+import path from 'node:path';
 import { into } from 'pipettes';
-import path from 'path';
+
 import { Task } from '../definitions';
 import { constants } from '../constants';
 import { resolveProject } from '../helpers/resolve-project';
 
 export interface FetchOptions {
-  /** Tasks file name */
-  file?: string;
+  /** Tasks file names */
+  files?: string[];
   /** File directory */
   directory?: string;
+  /** Default export object property for tasks */
+  property?: string | number | null;
   /** Change the process cwd before an import */
   chdir?: boolean;
 }
@@ -20,31 +23,42 @@ export interface FetchOptions {
  */
 export async function fetch(options?: FetchOptions): Promise<Task.Record> {
   const opts = into(options || {}, (options) => ({
-    file: options.file || constants.cli.file,
+    files: options.files || constants.cli.files,
     directory: options.directory || null,
+    property: options.property || null,
     chdir: options.chdir || false
   }));
 
-  const project = await resolveProject({
-    fail: true,
-    file: opts.file,
+  const project = await resolveProject(true, {
+    files: opts.files,
     directory: opts.directory
   });
 
   if (opts.chdir) process.chdir(project.directory);
   const filepath = path.resolve(project.directory, project.file);
-  const data = await import(filepath);
+  const content = await import(filepath);
 
-  if (
-    !Object.hasOwnProperty.call(data, 'default') ||
-    !(TypeGuard.isRecord(data.default) || TypeGuard.isFunction(data.default))
-  ) {
+  if (!TypeGuard.isObject(content) || !content.default) {
     throw Error(`Default tasks export not found: ${filepath}`);
   }
+  if (
+    opts.property &&
+    (!TypeGuard.isObject(content.default) || !content.default[opts.property])
+  ) {
+    throw Error(
+      `Property ${opts.property} not found on default export: ${filepath}`
+    );
+  }
 
-  const tasks = TypeGuard.isFunction(data.default)
-    ? data.default(await import(constants.root))
-    : data.default;
+  const item =
+    opts.property === null ? content.default : content.default[opts.property];
+  if (!TypeGuard.isRecord(item) && !TypeGuard.isFunction(item)) {
+    throw Error(`Exported tasks must be a record or function: ${filepath}`);
+  }
+
+  const tasks = TypeGuard.isFunction(item)
+    ? item(await import(constants.root))
+    : item;
 
   const empty = Object.keys(tasks).filter((name) => !name);
   if (empty.length) {

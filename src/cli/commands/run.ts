@@ -1,4 +1,5 @@
 import { splitBy } from 'cli-belt';
+
 import { fetch } from '../../utils';
 import { Task, CLI } from '../../definitions';
 import { series, raises, print, context, combine } from '../../tasks';
@@ -14,8 +15,9 @@ export async function run(params: CLI.Extension.Params): Promise<Task> {
 
   const tasks = await fetch({
     chdir: true,
-    file: params.options.file,
-    directory: params.options.directory
+    files: params.options.files,
+    directory: params.options.directory,
+    property: params.options.property
   });
 
   return context({ args }, combine({ include: names }, tasks));

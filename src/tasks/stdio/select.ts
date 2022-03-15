@@ -1,7 +1,8 @@
 import { Empty, Dictionary, TypeGuard } from 'type-core';
+import { Transform } from 'node:stream';
 import { shallow } from 'merge-strategies';
-import { Transform } from 'stream';
 import cliSelect from 'cli-select';
+
 import { Task } from '../../definitions';
 import { getBadge } from '../../helpers/badges';
 import { addPrefix } from '../../helpers/prefix';

@@ -1,5 +1,5 @@
 import { Dictionary } from 'type-core';
-import { Writable, Readable } from 'stream';
+import { Writable, Readable } from 'node:stream';
 
 /**
  * A task, that being a `Context` receiving

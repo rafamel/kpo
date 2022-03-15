@@ -1,4 +1,5 @@
 import isUnicodeSupported from 'is-unicode-supported';
+
 import { LogLevel } from '../definitions';
 import { style, StyleColor } from '../utils/style';
 

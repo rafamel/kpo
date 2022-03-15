@@ -3,6 +3,7 @@ import table from 'as-table';
 import { into } from 'pipettes';
 import { flags, safePairs } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
+
 import { Task, LogLevel, CLI, Context } from '../../definitions';
 import { stringifyArgvCommands } from '../../helpers/stringify';
 import { resolveProject } from '../../helpers/resolve-project';
@@ -112,7 +113,7 @@ export function main(
   };
 
   return into(
-    create(async () => {
+    create(async (ctx) => {
       /* Preconditions */
       if (badEnvFormat) {
         return series(
@@ -144,15 +145,15 @@ export function main(
       }
 
       /* Resolve project */
-      const project = await resolveProject({
-        fail: false,
-        file: opts.file || options.file,
+      const project = await resolveProject(false, {
+        files: opts.file ? [opts.file] : options.files,
         directory: opts.directory || null
       });
+      const directory = project?.directory || opts.directory || ctx.cwd;
 
       /* Execute command */
       return series(
-        log('debug', 'Working directory:', project.directory),
+        log('debug', 'Working directory:', directory),
         log('debug', 'Arguments:', [':' + extension.name, ...cmd._]),
         log(
           'info',
@@ -161,15 +162,20 @@ export function main(
           stringifyArgvCommands(cmd._)
         ),
         context(
-          { cwd: project.directory },
+          { cwd: directory },
           create(
             extension.execute.bind(extension, {
               help,
               argv: cmd._,
               options: {
                 bin: options.bin,
-                file: project.file,
-                directory: project.directory,
+                files: project
+                  ? [project.file]
+                  : opts.file
+                  ? [opts.file]
+                  : options.files,
+                directory: directory,
+                property: options.property,
                 multitask: options.multitask
               }
             })

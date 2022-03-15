@@ -1,7 +1,8 @@
 import { UnaryFn } from 'type-core';
+import path from 'node:path';
 import fs from 'fs-extra';
-import path from 'path';
 import glob from 'glob';
+
 import { Context } from '../definitions';
 import { isCancelled } from '../utils/is-cancelled';
 import { log } from '../tasks/stdio/log';

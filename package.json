@@ -19,28 +19,31 @@
     "monorepo",
     "lerna"
   ],
-  "main": "pkg/dist",
-  "types": "pkg/dist",
+  "type": "module",
+  "types": "./build/index.d.ts",
+  "exports": "./build/index.js",
+  "files": [
+    "build/"
+  ],
   "bin": {
-    "kpo": "dist/cli/kpo.js"
+    "kpo": "build/kpo.js"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=16"
   },
   "scripts": {
-    "node": "kpo node --",
-    "build": "kpo build --",
-    "tarball": "kpo tarball --",
-    "docs": "kpo docs --",
-    "fix": "kpo fix --",
-    "lint": "kpo lint --",
-    "test": "kpo test --",
-    "commit": "kpo commit --",
-    "release": "kpo release --",
-    "distribute": "kpo distribute --",
-    "validate": "kpo validate --",
-    "prepare": "kpo prepare --",
-    "version": "kpo version --"
+    "node": "kpo --file kpo.tasks.cjs node --",
+    "build": "kpo --file kpo.tasks.cjs build --",
+    "tarball": "kpo --file kpo.tasks.cjs tarball --",
+    "docs": "kpo --file kpo.tasks.cjs docs --",
+    "fix": "kpo --file kpo.tasks.cjs fix --",
+    "lint": "kpo --file kpo.tasks.cjs lint --",
+    "test": "kpo --file kpo.tasks.cjs test --",
+    "commit": "kpo --file kpo.tasks.cjs commit --",
+    "release": "kpo --file kpo.tasks.cjs release --",
+    "distribute": "kpo --file kpo.tasks.cjs distribute --",
+    "validate": "kpo --file kpo.tasks.cjs validate --",
+    "version": "kpo --file kpo.tasks.cjs version --"
   },
   "homepage": "https://github.com/rafamel/kpo",
   "repository": {
@@ -59,7 +62,7 @@
     "@types/update-notifier": "^5.0.0",
     "coveralls": "^3.1.0",
     "kpo": "^0.22.0",
-    "simple-git-hooks": "^2.4.1",
+    "tsup": "^5.12.1",
     "typescript": "^4.3.4"
   },
   "dependencies": {
@@ -85,8 +88,5 @@
     "prefix-stream": "^1.0.1",
     "type-core": "^0.12.0",
     "update-notifier": "^5.1.0"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "kpo validate"
   }
 }

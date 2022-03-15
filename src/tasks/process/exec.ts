@@ -1,9 +1,10 @@
 import { Empty } from 'type-core';
+import path from 'node:path';
+import { WriteStream } from 'node:tty';
 import { shallow } from 'merge-strategies';
 import transform from 'prefix-stream';
-import { WriteStream } from 'tty';
 import execa from 'execa';
-import path from 'path';
+
 import { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { getPrefix } from '../../helpers/prefix';

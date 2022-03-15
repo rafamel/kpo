@@ -4,7 +4,7 @@ module.exports = library(
   {
     global: {
       // Build output directory
-      output: 'pkg/',
+      output: './',
       // Enable prettier
       prettier: true,
       // Path aliases -must be set in tsconfig too
@@ -50,7 +50,9 @@ module.exports = library(
       // Keywords that should output warnings
       highlight: ['fixme', 'todo', 'refactor'],
       // ESLint rules overwrites
-      rules: {}
+      rules: {
+        'import/no-unresolved': 0
+      }
     },
     lintmd: {
       // Glob of markdown files to lint

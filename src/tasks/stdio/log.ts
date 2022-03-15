@@ -1,4 +1,5 @@
-import util from 'util';
+import util from 'node:util';
+
 import { Task, LogLevel, Context } from '../../definitions';
 import { addPrefix } from '../../helpers/prefix';
 import {

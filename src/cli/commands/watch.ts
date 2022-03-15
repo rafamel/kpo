@@ -1,6 +1,7 @@
 import arg from 'arg';
 import { flags, safePairs, splitBy } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
+
 import { Task, CLI } from '../../definitions';
 import { style, fetch } from '../../utils';
 import { stringifyArgvCommands } from '../../helpers/stringify';
@@ -82,8 +83,9 @@ export async function watch(params: CLI.Extension.Params): Promise<Task> {
 
   const tasks = await fetch({
     chdir: true,
-    file: params.options.file,
-    directory: params.options.directory
+    files: params.options.files,
+    directory: params.options.directory,
+    property: params.options.property
   });
 
   return context(

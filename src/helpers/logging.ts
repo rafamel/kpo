@@ -1,4 +1,5 @@
 import isUnicodeSupported from 'is-unicode-supported';
+
 import { Context, LogLevel } from '../definitions';
 import { style } from '../utils/style';
 import { getBadge, getBadgeColor } from './badges';
