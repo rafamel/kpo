@@ -57,7 +57,7 @@ export async function fetch(options?: FetchOptions): Promise<Task.Record> {
   }
 
   const tasks = TypeGuard.isFunction(item)
-    ? item(await import(constants.root))
+    ? item(await import(constants.name))
     : item;
 
   const empty = Object.keys(tasks).filter((name) => !name);

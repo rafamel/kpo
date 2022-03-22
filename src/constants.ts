@@ -1,8 +1,7 @@
-import path from 'node:path';
 import pkg from '../package.json';
 
 export const constants = {
-  root: path.join(import.meta.url, '../../'),
+  name: pkg.name,
   cli: {
     bin: 'kpo',
     files: ['kpo.tasks.js', 'kpo.tasks.mjs', 'kpo.tasks.cjs'],
