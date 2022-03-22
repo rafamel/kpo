@@ -40,14 +40,14 @@ export async function lift(params: CLI.Extension.Params): Promise<Task> {
   if (cmd._.length) {
     return series(
       print(help + '\n'),
-      raises(Error(`Unknown subcommand: ${cmd._[0]}`))
+      raises(new Error(`Unknown subcommand: ${cmd._[0]}`))
     );
   }
 
   if (
     !['confirm', 'fix', 'dry', 'audit'].includes(cmd['--mode'] || 'confirm')
   ) {
-    return raises(Error(`Lift mode must be confirm, fix, dry, or audit`));
+    return raises(new Error(`Lift mode must be confirm, fix, dry, or audit`));
   }
 
   const tasks = await fetch({

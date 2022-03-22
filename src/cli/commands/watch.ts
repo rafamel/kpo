@@ -17,14 +17,14 @@ import {
 } from '../../tasks';
 
 export async function watch(params: CLI.Extension.Params): Promise<Task> {
-  const { bin, multitask } = params.options;
+  const bin = params.options.bin;
   const help = indent`
     ${style(`Watch a path and run tasks on change events`, {
       bold: true
     })}
 
     Usage:
-      $ ${bin} :watch [options]${multitask ? ' -- ' : ' '}[args]
+      $ ${bin} :watch [options]${params.options.multitask ? ' -- ' : ' '}[args]
 
     Options:
       -g, --glob              Parse globs in paths
@@ -41,7 +41,7 @@ export async function watch(params: CLI.Extension.Params): Promise<Task> {
       -h, --help              Show help
 
     Examples:
-      $ ${bin} :watch -i ./src ${multitask ? 'foo bar baz' : 'foo'}
+      $ ${bin} :watch -i ./src ${params.options.multitask ? 'foo bar' : 'foo'}
       $ ${bin} :watch -i ./src -i ./test foo
       $ ${bin} -e NODE_ENV=development :watch -i ./src bar
   `;
@@ -78,7 +78,7 @@ export async function watch(params: CLI.Extension.Params): Promise<Task> {
     : [cmd._.slice(0, 1), cmd._.slice(1)];
 
   if (!names.length) {
-    return series(print(help + '\n'), raises(Error(`A task is required`)));
+    return series(print(help + '\n'), raises(new Error(`A task is required`)));
   }
 
   const tasks = await fetch({

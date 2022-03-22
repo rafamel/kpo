@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/import-style */
 import chalk, { ForegroundColor, Chalk } from 'chalk';
 import { into } from 'pipettes';
 

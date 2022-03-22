@@ -74,7 +74,7 @@ export function select(
             tasks[opts.default]
           )
         : raises(
-            Error(
+            new Error(
               `Must provide a default selection for non-interactive contexts`
             )
           );
@@ -86,7 +86,7 @@ export function select(
 
     function cancel(): void {
       intercept.emit('keypress', {
-        sequence: '\u001b',
+        sequence: '\u001B',
         name: 'escape',
         ctrl: false,
         meta: true,
@@ -147,7 +147,7 @@ export function select(
       );
     }
     // No response and no timeout triggered
-    if (!didTimeout) throw Error(`User cancellation`);
+    if (!didTimeout) throw new Error(`User cancellation`);
     // No response and timeout triggered with a default selection available
     if (fallback >= 0 && opts.default) {
       return series(
@@ -160,6 +160,6 @@ export function select(
       );
     }
     // No response and timeout triggered without a default selection available
-    throw Error(`Select timeout: ${opts.timeout}ms`);
+    throw new Error(`Select timeout: ${opts.timeout}ms`);
   });
 }

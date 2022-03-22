@@ -39,13 +39,13 @@ export async function fetch(options?: FetchOptions): Promise<Task.Record> {
   const content = await import(filepath);
 
   if (!TypeGuard.isObject(content) || !content.default) {
-    throw Error(`Default tasks export not found: ${filepath}`);
+    throw new Error(`Default tasks export not found: ${filepath}`);
   }
   if (
     opts.property &&
     (!TypeGuard.isObject(content.default) || !content.default[opts.property])
   ) {
-    throw Error(
+    throw new Error(
       `Property ${opts.property} not found on default export: ${filepath}`
     );
   }
@@ -53,7 +53,7 @@ export async function fetch(options?: FetchOptions): Promise<Task.Record> {
   const item =
     opts.property === null ? content.default : content.default[opts.property];
   if (!TypeGuard.isRecord(item) && !TypeGuard.isFunction(item)) {
-    throw Error(`Exported tasks must be a record or function: ${filepath}`);
+    throw new Error(`Exported tasks must be a record or function: ${filepath}`);
   }
 
   const tasks = TypeGuard.isFunction(item)
@@ -62,7 +62,7 @@ export async function fetch(options?: FetchOptions): Promise<Task.Record> {
 
   const empty = Object.keys(tasks).filter((name) => !name);
   if (empty.length) {
-    throw Error(`Task record must not have empty string keys`);
+    throw new Error(`Task record must not have empty string keys`);
   }
 
   if (constants.collections.restrict.length) {
@@ -70,7 +70,7 @@ export async function fetch(options?: FetchOptions): Promise<Task.Record> {
       constants.collections.restrict.includes(name[0])
     );
     if (restricted.length) {
-      throw Error(
+      throw new Error(
         'Task names must not start with: "' +
           constants.collections.restrict.join('", "') +
           '"'

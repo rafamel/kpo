@@ -48,9 +48,9 @@ export function list(
     const rows = items.map((item) => {
       return [
         opts.bin + ' ' + style(item.name, { bold: true }) + ' '.repeat(4),
-        ...Array(item.route.length).fill(''),
+        ...Array.from({ length: item.route.length }).fill(''),
         item.route[item.route.length - 1],
-        ...Array(maxRouteLength - item.route.length).fill('')
+        ...Array.from({ length: maxRouteLength - item.route.length }).fill('')
       ];
     });
 

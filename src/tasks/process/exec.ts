@@ -89,14 +89,14 @@ export function exec(
             message += ' with ' + (err as NodeJS.ErrnoException).code;
           }
 
-          const cmd = file || fullArgs.filter((arg) => arg[0] !== '-')[0];
+          const cmd = file || fullArgs.find((arg) => arg[0] !== '-');
           message +=
             !cmd || cmd.includes(path.win32.sep) || cmd.includes(path.posix.sep)
               ? ''
               : `: ${cmd}`;
 
           await run(ctx, log('trace', err));
-          throw Error(message);
+          throw new Error(message);
         });
       }
     );

@@ -76,7 +76,9 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
           )
         : series(
             print(message),
-            raises(Error(`Must provide a default for non-interactive contexts`))
+            raises(
+              new Error(`Must provide a default for non-interactive contexts`)
+            )
           );
     }
 
@@ -143,7 +145,7 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
         );
         response = opts.default;
       } else {
-        throw Error(`Timeout: ${opts.timeout}ms`);
+        throw new Error(`Timeout: ${opts.timeout}ms`);
       }
     }
 
@@ -195,12 +197,12 @@ async function line(
     });
     readline.on('SIGINT', () => {
       close(true);
-      return reject(Error(`User cancellation`));
+      return reject(new Error(`User cancellation`));
     });
     listener = (_, item) => {
       if (item && item.name === 'escape') {
         close(true);
-        reject(Error(`User cancellation`));
+        reject(new Error(`User cancellation`));
       }
     };
     stdin.on('keypress', listener);

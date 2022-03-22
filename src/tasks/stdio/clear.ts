@@ -12,6 +12,6 @@ export function clear(): Task.Sync {
     if (!(stdout as NodeJS.WriteStream).isTTY) return;
     if (ctx.env.TERM === 'dumb') return;
 
-    stdout.write('\x1Bc');
+    stdout.write('\u001Bc');
   };
 }

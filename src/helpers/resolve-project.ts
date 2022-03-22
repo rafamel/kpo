@@ -16,7 +16,9 @@ export async function resolveProject<A extends boolean>(
   options: ResolveProjectOptions
 ): Promise<A extends true ? Project : Project | null> {
   if (!options.files.length) {
-    if (assert) throw Error(`No project file names specified`);
+    if (assert) {
+      throw new Error(`No project file names specified`);
+    }
     return null as A extends true ? Project : Project | null;
   }
 
@@ -32,7 +34,9 @@ export async function resolveProject<A extends boolean>(
   });
 
   if (!filepath) {
-    if (assert) throw Error(`File not found in path: ${options.files}`);
+    if (assert) {
+      throw new Error(`File not found in path: ${options.files}`);
+    }
     return null as A extends true ? Project : Project | null;
   }
 

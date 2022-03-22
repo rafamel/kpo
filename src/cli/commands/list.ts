@@ -36,7 +36,7 @@ export async function list(params: CLI.Extension.Params): Promise<Task> {
   if (cmd._.length) {
     return series(
       print(help + '\n'),
-      raises(Error(`Unknown subcommand: ${cmd._[0]}`))
+      raises(new Error(`Unknown subcommand: ${cmd._[0]}`))
     );
   }
 

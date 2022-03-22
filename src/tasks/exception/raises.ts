@@ -11,6 +11,6 @@ export function raises(
 ): Task.Sync {
   return (ctx: Context): void => {
     const err = typeof error === 'function' ? error(ctx) : error;
-    throw typeof err === 'string' ? Error(err) : err;
+    throw typeof err === 'string' ? new Error(err) : err;
   };
 }

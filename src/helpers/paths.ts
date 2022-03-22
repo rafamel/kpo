@@ -36,7 +36,7 @@ export async function useSource(
 
   if (exists) return cb(src);
   if (options.strict) {
-    throw Error(`Source path doesn't exist: ${src}`);
+    throw new Error(`Source path doesn't exist: ${src}`);
   }
   await run(context, log('debug', 'Ignore source:', src));
 }
@@ -58,7 +58,7 @@ export async function useDestination(
   if (options.exists === 'ignore') {
     await run(context, log('debug', 'Ignore destination:', dest));
   } else {
-    throw Error(`Destination exists: ${dest}`);
+    throw new Error(`Destination exists: ${dest}`);
   }
 }
 
@@ -73,7 +73,7 @@ export async function getPathPairs(
 
   if (options.single) {
     if (sources.length > 1) {
-      throw Error(`Multiple sources provided for single mode`);
+      throw new Error(`Multiple sources provided for single mode`);
     }
     return [[sources[0], dest]];
   }
@@ -83,7 +83,7 @@ export async function getPathPairs(
     ? await fs.stat(dest).then((x) => x.isDirectory())
     : false;
   if (!isDestDir) {
-    throw Error(`Destination path is not a directory: ${dest}`);
+    throw new Error(`Destination path is not a directory: ${dest}`);
   }
 
   return sources.map((source) => [
@@ -128,7 +128,7 @@ export async function getPaths(
           .then((arr) => arr.filter((x, i, arr) => arr.indexOf(x) === i));
 
   if (!response.length && options.strict) {
-    throw Error(`Empty source set: no available sources provided`);
+    throw new Error(`Empty source set: no available sources provided`);
   }
 
   return response;

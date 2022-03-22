@@ -24,7 +24,7 @@ export function interactive(task: Task, alternate: Task | Empty): Task.Async {
       ),
       interactive
         ? task
-        : alternate || raises(Error('Non-interactive environment detected'))
+        : alternate || raises(new Error('Non-interactive environment detected'))
     );
   });
 }

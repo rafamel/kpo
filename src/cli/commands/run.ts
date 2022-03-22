@@ -10,7 +10,7 @@ export async function run(params: CLI.Extension.Params): Promise<Task> {
     : [params.argv.slice(0, 1), params.argv.slice(1)];
 
   if (!names.length) {
-    return series(print(params.help), raises(Error(`A task is required`)));
+    return series(print(params.help), raises(new Error(`A task is required`)));
   }
 
   const tasks = await fetch({

@@ -25,11 +25,8 @@ export function parseToRecord(
   options: ParseToRecordOptions,
   record: Task.Record
 ): Dictionary<Task> {
-  const { include, exclude } = options;
-  const arr = parseToArray(
-    { roots: options.roots, defaults: options.defaults },
-    record
-  );
+  const { roots, defaults, include, exclude } = options;
+  const arr = parseToArray({ roots, defaults }, record);
 
   const members: Dictionary<Task> = {};
   for (const item of arr) {
@@ -41,7 +38,7 @@ export function parseToRecord(
   if (include) {
     for (const name of include) {
       if (!Object.hasOwnProperty.call(members, name)) {
-        throw Error(`Task not found: ${name}`);
+        throw new Error(`Task not found: ${name}`);
       }
     }
   }
@@ -60,10 +57,10 @@ export function parseToArray(
       const name = stringifyKeyRoute(route);
 
       if (names.includes(name)) {
-        throw Error(`Task name collusion on parse: ${name}`);
+        throw new Error(`Task name collusion on parse: ${name}`);
       }
       if (name.includes(' ')) {
-        throw Error(`Task name must not contain spaces: ${name}`);
+        throw new Error(`Task name must not contain spaces: ${name}`);
       }
 
       names.push(name);
@@ -72,9 +69,7 @@ export function parseToArray(
     .filter((item) => {
       return options.defaults
         ? Boolean(item.task)
-        : Boolean(
-            item.route.indexOf(constants.defaults.task) === -1 && item.task
-          );
+        : Boolean(!item.route.includes(constants.defaults.task) && item.task);
     });
 }
 

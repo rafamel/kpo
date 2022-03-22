@@ -1,3 +1,5 @@
+/* eslint-disable object-shorthand */
+/* eslint-disable unicorn/prefer-object-from-entries */
 import arg from 'arg';
 import table from 'as-table';
 import { into } from 'pipettes';
@@ -118,29 +120,33 @@ export function main(
       if (badEnvFormat) {
         return series(
           print(help),
-          raises(Error(`Environment variables must have format VARIABLE=value`))
+          raises(
+            new Error(`Environment variables must have format VARIABLE=value`)
+          )
         );
       }
       if (cmd['--level'] && cmd['--level'].toLowerCase() !== opts.level) {
         return series(
           print(help),
           raises(
-            Error(`Logging level must be one of: ` + getLogLevels().join(', '))
+            new Error(
+              `Logging level must be one of: ` + getLogLevels().join(', ')
+            )
           )
         );
       }
       if (!cmd._.length) {
-        return series(print(help), raises(Error(`A command is required`)));
+        return series(print(help), raises(new Error(`A command is required`)));
       }
 
       /* Parse extension */
       if (cmd._[0][0] !== ':') cmd._.unshift(':' + extensions[0].name);
       const name = (cmd._.shift() || ':').slice(1);
-      const extension = extensions.filter((item) => item.name === name)[0];
+      const extension = extensions.find((item) => item.name === name);
       if (!extension) {
         return series(
           print(help),
-          raises(Error('Unknown command' + name ? ': ' + name : ''))
+          raises(new Error('Unknown command' + name ? ': ' + name : ''))
         );
       }
 

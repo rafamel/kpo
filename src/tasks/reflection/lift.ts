@@ -70,7 +70,7 @@ export function lift(
     const pkgPath = getAbsolutePath('package.json', ctx);
     const pkgExists = await fs.pathExists(pkgPath);
     if (!pkgExists) {
-      throw Error(`Couldn't retrieve package.json on path: ${ctx.cwd}`);
+      throw new Error(`Couldn't retrieve package.json on path: ${ctx.cwd}`);
     }
     const content = await fs.readFile(pkgPath);
     const pkg = JSON.parse(content.toString());
@@ -86,12 +86,11 @@ export function lift(
       }),
       (record) => Object.keys(record),
       (keys) => {
-        return keys.reduce(
-          (acc: Dictionary<string>, name) => ({
-            ...acc,
-            [name]: opts.bin + ' ' + name + (opts.multitask ? ' --' : '')
-          }),
-          {}
+        return Object.fromEntries(
+          keys.map((name): [string, string] => [
+            name,
+            opts.bin + ' ' + name + (opts.multitask ? ' --' : '')
+          ])
         );
       }
     );
@@ -109,7 +108,7 @@ export function lift(
 
     if (opts.mode === 'dry') return;
     if (opts.mode === 'audit') {
-      throw Error(`There are pending scripts changes`);
+      throw new Error(`There are pending scripts changes`);
     }
     if (opts.mode === 'fix') {
       return write(pkgPath, pkg, { exists: 'overwrite' });

@@ -18,7 +18,7 @@ export async function run(
 
   if (await isCancelled(ctx)) return;
   if (!TypeGuard.isFunction(task)) {
-    throw Error(`Task is not a function: ${task}`);
+    throw new TypeError(`Task is not a function: ${task}`);
   }
 
   try {
