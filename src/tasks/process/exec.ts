@@ -3,7 +3,7 @@ import path from 'node:path';
 import { WriteStream } from 'node:tty';
 import { shallow } from 'merge-strategies';
 import transform from 'prefix-stream';
-import execa from 'execa';
+import { execa, Options as ExecaOptions, ExecaChildProcess } from 'execa';
 
 import { Task } from '../../definitions';
 import { run } from '../../utils/run';
@@ -12,7 +12,7 @@ import { series } from '../aggregate/series';
 import { create } from '../creation/create';
 import { log } from '../stdio/log';
 
-export type ExecOptions = execa.Options;
+export type ExecOptions = ExecaOptions;
 
 /**
  * Spawns a process.
@@ -23,7 +23,7 @@ export function exec(
   file: string | null,
   args?: string[] | Empty,
   options?: ExecOptions | Empty,
-  cb?: (ps: execa.ExecaChildProcess) => void
+  cb?: (ps: ExecaChildProcess) => void
 ): Task.Async {
   return create(async (ctx) => {
     const fullArgs = (args || []).concat(ctx.args || []);

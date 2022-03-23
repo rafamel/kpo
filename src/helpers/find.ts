@@ -1,6 +1,6 @@
 import path from 'node:path';
-import up from 'find-up';
 import fs from 'fs-extra';
+import { findUp } from 'find-up';
 
 export interface FindOptions {
   cwd: string;
@@ -10,7 +10,7 @@ export interface FindOptions {
 
 export async function find(options: FindOptions): Promise<string | null> {
   if (!options.exact) {
-    const file = await up(options.files, {
+    const file = await findUp(options.files, {
       cwd: options.cwd,
       type: 'file'
     });

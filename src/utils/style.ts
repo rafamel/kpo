@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/import-style */
-import chalk, { ForegroundColor, Chalk } from 'chalk';
+import chalk, { ForegroundColor, ChalkInstance } from 'chalk';
 import { into } from 'pipettes';
 
 export interface StyleOptions {
@@ -12,7 +12,7 @@ export interface StyleOptions {
   strikethrough?: boolean;
 }
 
-export type StyleColor = typeof ForegroundColor;
+export type StyleColor = ForegroundColor;
 
 /** Styles a string */
 export function style(str: string, options?: StyleOptions): string {
@@ -21,7 +21,7 @@ export function style(str: string, options?: StyleOptions): string {
   return into(
     chalk,
     (chalk) => (opts.color ? chalk[opts.color] : chalk),
-    (chalk): Chalk => {
+    (chalk): ChalkInstance => {
       return opts.bg
         ? (chalk as any)['bg' + opts.bg[0].toUpperCase() + opts.bg.slice(1)]
         : chalk;
