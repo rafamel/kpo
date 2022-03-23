@@ -1,21 +1,25 @@
-# [0.23.0](https://github.com/rafamel/kpo/compare/v0.21.0...v0.23.0) (2022-03-15)
+## [0.23.1](https://github.com/rafamel/kpo/compare/v0.23.0...v0.23.1) (2022-03-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([09d301c](https://github.com/rafamel/kpo/commit/09d301cccd66f7b4f71c622fd6e0af3401aebcd9))
+* use package name to import all kpo functions on fetch ([b7a9872](https://github.com/rafamel/kpo/commit/b7a9872a23d3acf36c82a6e71b6d7e1a902001ba))
+
+
+
+# [0.23.0](https://github.com/rafamel/kpo/compare/v0.22.0...v0.23.0) (2022-03-15)
 
 
 ### Bug Fixes
 
 * coerce unknown thrown objects into errors ([38b9e22](https://github.com/rafamel/kpo/commit/38b9e2216787bc860c71c8217f0304eaad6038a7))
-* **deps:** update dependencies ([e265161](https://github.com/rafamel/kpo/commit/e26516158f73b37cf8c13d13d19a9becae99952c))
 * **tasks:** mkdir rejects on failed operations ([660bcca](https://github.com/rafamel/kpo/commit/660bcca4e5b221163f2853211f0b0fd37a8380e6))
 
 
 ### Code Refactoring
 
 * rewrite for esm ([67e6b4d](https://github.com/rafamel/kpo/commit/67e6b4dfe3f11c113ff6f382945d6442fbc2b868))
-
-
-### Features
-
-* takes a task record or task record returning function as default export for kpo.tasks.js ([74b04cb](https://github.com/rafamel/kpo/commit/74b04cb26cfa5335c760bc8b7dcef852b5a57430))
 
 
 ### Reverts
@@ -26,6 +30,20 @@
 ### BREAKING CHANGES
 
 * Drops node <16 support
+
+
+
+# [0.22.0](https://github.com/rafamel/kpo/compare/v0.21.0...v0.22.0) (2021-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([e265161](https://github.com/rafamel/kpo/commit/e26516158f73b37cf8c13d13d19a9becae99952c))
+
+
+### Features
+
+* takes a task record or task record returning function as default export for kpo.tasks.js ([74b04cb](https://github.com/rafamel/kpo/commit/74b04cb26cfa5335c760bc8b7dcef852b5a57430))
 
 
 
