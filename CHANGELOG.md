@@ -1,3 +1,12 @@
+## [0.23.2](https://github.com/rafamel/kpo/compare/v0.23.1...v0.23.2) (2022-03-24)
+
+
+### Bug Fixes
+
+* export types ([943649a](https://github.com/rafamel/kpo/commit/943649af75158e9bf98df32c8fdd296c82da0676))
+
+
+
 ## [0.23.1](https://github.com/rafamel/kpo/compare/v0.23.0...v0.23.1) (2022-03-23)
 
 
