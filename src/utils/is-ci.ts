@@ -1,7 +1,7 @@
 import { TypeGuard } from 'type-core';
-
 import vendors from 'ci-info/vendors.json';
-import { Context } from '../definitions';
+
+import type { Context } from '../definitions';
 
 const envs = vendors.map((vendor) => vendor.env);
 

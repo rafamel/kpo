@@ -1,8 +1,10 @@
-import { Serial } from 'type-core';
+import { Buffer } from 'node:buffer';
+
+import type { Serial } from 'type-core';
 import { shallow } from 'merge-strategies';
 import fs from 'fs-extra';
 
-import { Task, Context } from '../../definitions';
+import type { Context, Task } from '../../definitions';
 import { useDestination } from '../../helpers/paths';
 import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
@@ -29,8 +31,8 @@ export function write(
       const data = Buffer.isBuffer(content)
         ? content
         : typeof content === 'object'
-        ? JSON.stringify(content, null, 2)
-        : String(content);
+          ? JSON.stringify(content, null, 2)
+          : String(content);
 
       await useDestination(
         path,

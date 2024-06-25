@@ -1,6 +1,6 @@
-import { Empty, Dictionary } from 'type-core';
+import type { Dictionary, Empty } from 'type-core';
 
-import { Task, Context } from '../../definitions';
+import type { Context, Task } from '../../definitions';
 import { flatten } from '../../helpers/flatten';
 import { isCancelled } from '../../utils/is-cancelled';
 import { run } from '../../utils/run';

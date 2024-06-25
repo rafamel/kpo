@@ -1,6 +1,6 @@
-import { Empty, TypeGuard } from 'type-core';
+import { type Empty, TypeGuard } from 'type-core';
 
-import { Task, Context } from '../definitions';
+import type { Context, Task } from '../definitions';
 import { createContext } from '../helpers/create-context';
 import { isCancelled } from './is-cancelled';
 

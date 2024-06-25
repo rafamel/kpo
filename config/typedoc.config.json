@@ -1,0 +1,11 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["../src"],
+  "includeVersion": true,
+  "excludeExternals": true,
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeReferences": false,
+  "exclude": ["**/__mocks__/**/*", "/**/*.{test,spec}.*"]
+}

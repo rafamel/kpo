@@ -1,4 +1,4 @@
 declare module 'prefix-stream' {
-  import { Transform } from 'node:stream';
-  export default function (str: string): Transform;
+  type Transform = import('node:stream').Transform;
+  export default function transform(str: string): Transform;
 }

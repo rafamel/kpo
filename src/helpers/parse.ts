@@ -1,6 +1,6 @@
-import { Dictionary, TypeGuard } from 'type-core';
+import { type Dictionary, TypeGuard } from 'type-core';
 
-import { Task } from '../definitions';
+import type { Task } from '../definitions';
 import { series } from '../tasks/aggregate/series';
 import { constants } from '../constants';
 import { stringifyKeyRoute } from './stringify';

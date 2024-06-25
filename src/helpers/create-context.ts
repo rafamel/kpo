@@ -1,6 +1,8 @@
+import process from 'node:process';
+
 import { into } from 'pipettes';
 
-import { Context } from '../definitions';
+import type { Context } from '../definitions';
 import { constants } from '../constants';
 
 const cancellation = new Promise<void>(() => undefined);

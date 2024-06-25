@@ -1,8 +1,8 @@
-import { Empty, NullaryFn, TypeGuard } from 'type-core';
+import { type Empty, type NullaryFn, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 
-import { Task } from '../definitions';
+import type { Task } from '../definitions';
 import { context } from '../tasks/creation/context';
 import { announce } from '../tasks/stdio/announce';
 

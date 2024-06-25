@@ -1,7 +1,7 @@
-import { Dictionary, Empty, TypeGuard } from 'type-core';
+import { type Dictionary, type Empty, TypeGuard } from 'type-core';
 import { into } from 'pipettes';
 
-import { Task } from '../definitions';
+import type { Task } from '../definitions';
 import { context } from '../tasks/creation/context';
 
 export function flatten(

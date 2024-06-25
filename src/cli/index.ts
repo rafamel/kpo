@@ -1,10 +1,12 @@
+import process from 'node:process';
+
 import { TypeGuard } from 'type-core';
 import notifier from 'update-notifier';
 
+import type { CLI } from '../definitions';
 import { constants } from '../constants';
-import { CLI } from '../definitions';
-import { main, execute } from './bin';
-import { run, watch, list, lift } from './commands';
+import { execute, main } from './bin';
+import { lift, list, run, watch } from './commands';
 
 /**
  * Runs *kpo* CLI.

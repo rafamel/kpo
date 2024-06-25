@@ -1,9 +1,10 @@
-import { Empty, Dictionary, TypeGuard } from 'type-core';
 import { Transform } from 'node:stream';
+
+import { type Dictionary, type Empty, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import cliSelect from 'cli-select';
 
-import { Task } from '../../definitions';
+import type { Task } from '../../definitions';
 import { getBadge } from '../../helpers/badges';
 import { addPrefix } from '../../helpers/prefix';
 import { emitterIntercept } from '../../helpers/emitter-intercept';

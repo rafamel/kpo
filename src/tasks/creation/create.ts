@@ -1,12 +1,12 @@
-import { Empty, MaybePromise, UnaryFn } from 'type-core';
+import type { Empty, MaybePromise, UnaryFn } from 'type-core';
 
-import { Task, Context } from '../../definitions';
+import type { Context, Task } from '../../definitions';
 import { run } from '../../utils/run';
 
 /**
- * Takes an optionally *Task* returning function
- * and turns the function itself and the returned
- * *Task* into a single sequential *Task*.
+ * Takes an optionally *Task* returning function and
+ * turns the function itself and the returned *Task*
+ * into a single sequential *Task*.
  * @returns Task
  */
 export function create(

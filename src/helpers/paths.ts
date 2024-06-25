@@ -1,9 +1,10 @@
-import { UnaryFn } from 'type-core';
 import path from 'node:path';
-import fs from 'fs-extra';
-import glob from 'glob';
 
-import { Context } from '../definitions';
+import type { UnaryFn } from 'type-core';
+import fs from 'fs-extra';
+import { glob } from 'glob';
+
+import type { Context } from '../definitions';
 import { isCancelled } from '../utils/is-cancelled';
 import { log } from '../tasks/stdio/log';
 import { run } from '../utils/run';
@@ -110,17 +111,9 @@ export async function getPaths(
       : await abs
           .reduce((acc: Promise<string[]>, pattern) => {
             return acc.then(async (arr) => {
-              const results = await new Promise<string[]>((resolve, reject) => {
-                glob(
-                  pattern,
-                  {
-                    absolute: true,
-                    nounique: true,
-                    nonull: false,
-                    nodir: false
-                  },
-                  (err, matches) => (err ? reject(err) : resolve(matches))
-                );
+              const results = await glob(pattern, {
+                nodir: false,
+                absolute: true
               });
               return arr.concat(results);
             });

@@ -2,18 +2,18 @@ import arg from 'arg';
 import { flags, safePairs, splitBy } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
 
-import { Task, CLI } from '../../definitions';
-import { style, fetch } from '../../utils';
+import type { CLI, Task } from '../../definitions';
+import { fetch, style } from '../../utils';
 import { stringifyArgvCommands } from '../../helpers/stringify';
 import {
   watch as _watch,
-  series,
-  raises,
-  print,
+  combine,
   context,
   create,
-  combine,
-  log
+  log,
+  print,
+  raises,
+  series
 } from '../../tasks';
 
 export async function watch(params: CLI.Extension.Params): Promise<Task> {

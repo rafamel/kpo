@@ -1,7 +1,7 @@
-import { Empty, Dictionary } from 'type-core';
+import type { Dictionary, Empty } from 'type-core';
 import { ensure } from 'errorish';
 
-import { Task } from '../../definitions';
+import type { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { flatten } from '../../helpers/flatten';
 import { series } from '../aggregate/series';

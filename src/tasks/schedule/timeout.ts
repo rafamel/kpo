@@ -1,6 +1,6 @@
-import { Empty } from 'type-core';
+import type { Empty } from 'type-core';
 
-import { Task } from '../../definitions';
+import type { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { log } from '../stdio/log';
 import { raises } from '../exception/raises';

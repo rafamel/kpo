@@ -1,4 +1,4 @@
-import { Task, Context } from '../../definitions';
+import type { Context, Task } from '../../definitions';
 
 /**
  * Clears stdout when a TTY

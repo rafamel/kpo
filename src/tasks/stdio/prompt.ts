@@ -1,9 +1,15 @@
-import { Empty, TypeGuard, UnaryFn, VariadicFn } from 'type-core';
 import { createInterface } from 'node:readline';
+
+import {
+  type Empty,
+  TypeGuard,
+  type UnaryFn,
+  type VariadicFn
+} from 'type-core';
 import { shallow } from 'merge-strategies';
 import { ensure } from 'errorish';
 
-import { Context, Task } from '../../definitions';
+import type { Context, Task } from '../../definitions';
 import { getBadge } from '../../helpers/badges';
 import { addPrefix } from '../../helpers/prefix';
 import { stringifyError } from '../../helpers/stringify';

@@ -1,6 +1,6 @@
-import { Empty, NullaryFn, Dictionary } from 'type-core';
+import type { Dictionary, Empty, NullaryFn } from 'type-core';
 
-import { Task, Context } from '../../definitions';
+import type { Context, Task } from '../../definitions';
 import { flatten } from '../../helpers/flatten';
 import { run } from '../../utils/run';
 

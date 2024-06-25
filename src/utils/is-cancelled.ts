@@ -1,4 +1,4 @@
-import { Context } from '../definitions';
+import type { Context } from '../definitions';
 
 /**
  * A promise returning function that will

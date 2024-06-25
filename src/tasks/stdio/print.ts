@@ -1,6 +1,6 @@
 import util from 'node:util';
 
-import { Task, Context } from '../../definitions';
+import type { Context, Task } from '../../definitions';
 import { addPrefix } from '../../helpers/prefix';
 
 /**

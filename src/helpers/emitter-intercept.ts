@@ -1,9 +1,9 @@
-import { Dictionary, VariadicFn } from 'type-core';
+import type { Dictionary, VariadicFn } from 'type-core';
 
 export interface EmitterIntercept<T> {
   emitter: T;
-  emit(event: string, ...args: any[]): void;
-  clear(): void;
+  emit: (event: string, ...args: any[]) => void;
+  clear: () => void;
 }
 
 export function emitterIntercept<T extends NodeJS.EventEmitter>(

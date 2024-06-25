@@ -1,11 +1,17 @@
-import { Empty } from 'type-core';
 import path from 'node:path';
+import process from 'node:process';
 import { WriteStream } from 'node:tty';
+
+import type { Empty } from 'type-core';
 import { shallow } from 'merge-strategies';
 import transform from 'prefix-stream';
-import { execa, Options as ExecaOptions, ExecaChildProcess } from 'execa';
+import {
+  type ExecaChildProcess,
+  type Options as ExecaOptions,
+  execa
+} from 'execa';
 
-import { Task } from '../../definitions';
+import type { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { getPrefix } from '../../helpers/prefix';
 import { series } from '../aggregate/series';

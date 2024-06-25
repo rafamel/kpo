@@ -1,9 +1,9 @@
-import { Empty } from 'type-core';
+import type { Empty } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { ensure } from 'errorish';
 import { into } from 'pipettes';
 
-import { Task, Context, LogLevel } from '../../definitions';
+import type { Context, LogLevel, Task } from '../../definitions';
 import { stringifyError } from '../../helpers/stringify';
 import { run } from '../../utils/run';
 import { series } from '../aggregate/series';

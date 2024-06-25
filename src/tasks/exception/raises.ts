@@ -1,6 +1,6 @@
-import { UnaryFn } from 'type-core';
+import type { UnaryFn } from 'type-core';
 
-import { Task, Context } from '../../definitions';
+import type { Context, Task } from '../../definitions';
 
 /**
  * Raises an error.

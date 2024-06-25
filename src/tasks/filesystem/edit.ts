@@ -1,8 +1,10 @@
-import { Serial } from 'type-core';
+import { Buffer } from 'node:buffer';
 
+import type { Serial } from 'type-core';
 import { shallow } from 'merge-strategies';
 import fs from 'fs-extra';
-import { Task, Context } from '../../definitions';
+
+import type { Context, Task } from '../../definitions';
 import { getPaths, useSource } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
 import { series } from '../aggregate/series';
@@ -56,8 +58,8 @@ export function edit(
           const data = Buffer.isBuffer(content)
             ? content
             : typeof content === 'object'
-            ? JSON.stringify(content, null, 2)
-            : String(content);
+              ? JSON.stringify(content, null, 2)
+              : String(content);
           await fs.writeFile(source, data);
         });
       }

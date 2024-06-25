@@ -1,7 +1,7 @@
-import { UnaryFn, Empty } from 'type-core';
+import type { Empty, UnaryFn } from 'type-core';
 import { shallow } from 'merge-strategies';
 
-import { Task, Context } from '../../definitions';
+import type { Context, Task } from '../../definitions';
 import { run } from '../../utils/run';
 
 /**

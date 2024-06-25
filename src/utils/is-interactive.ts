@@ -1,4 +1,4 @@
-import { Context } from '../definitions';
+import type { Context } from '../definitions';
 import { isCI } from './is-ci';
 
 /**

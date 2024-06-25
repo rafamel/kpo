@@ -1,7 +1,7 @@
 import isUnicodeSupported from 'is-unicode-supported';
 
-import { LogLevel } from '../definitions';
-import { style, StyleColor } from '../utils/style';
+import type { LogLevel } from '../definitions';
+import { type StyleColor, style } from '../utils/style';
 
 type Badge = LogLevel.Core | 'prompt' | 'selected' | 'unselected';
 

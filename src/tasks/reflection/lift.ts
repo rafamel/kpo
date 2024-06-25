@@ -1,9 +1,14 @@
-import { Empty, Dictionary, NullaryFn, TypeGuard } from 'type-core';
+import {
+  type Dictionary,
+  type Empty,
+  type NullaryFn,
+  TypeGuard
+} from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
 
-import { Task, Context } from '../../definitions';
+import type { Context, Task } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
 import { getAbsolutePath } from '../../helpers/paths';
 import { isCancelled } from '../../utils/is-cancelled';
@@ -22,10 +27,10 @@ export interface LiftOptions {
   purge?: boolean;
   /**
    * Lift mode of operation:
-   * * `'confirm'`: prints the changes and waits for confirmation before a write.
-   * * `'fix'`: produces an immediate write.
-   * * `'dry'`: prints the expected changes.
-   * * `'audit'`: prints the expected changes and fails if there are pending changes.
+   * - `'confirm'`: prints the changes and waits for confirmation before a write.
+   * - `'fix'`: produces an immediate write.
+   * - `'dry'`: prints the expected changes.
+   * - `'audit'`: prints the expected changes and fails if there are pending changes.
    */
   mode?: 'confirm' | 'fix' | 'dry' | 'audit';
   /**

@@ -1,12 +1,13 @@
 /* eslint-disable object-shorthand */
-/* eslint-disable unicorn/prefer-object-from-entries */
+import process from 'node:process';
+
 import arg from 'arg';
 import table from 'as-table';
 import { into } from 'pipettes';
 import { flags, safePairs } from 'cli-belt';
 import { stripIndent as indent } from 'common-tags';
 
-import { Task, LogLevel, CLI, Context } from '../../definitions';
+import type { CLI, Context, LogLevel, Task } from '../../definitions';
 import { stringifyArgvCommands } from '../../helpers/stringify';
 import { resolveProject } from '../../helpers/resolve-project';
 import {
@@ -14,7 +15,7 @@ import {
   isLogLevel,
   normalizeLogLevel
 } from '../../helpers/logging';
-import { print, raises, series, create, context, log } from '../../tasks';
+import { context, create, log, print, raises, series } from '../../tasks';
 import { constants } from '../../constants';
 import { run, style } from '../../utils';
 
@@ -178,8 +179,8 @@ export function main(
                 files: project
                   ? [project.file]
                   : opts.file
-                  ? [opts.file]
-                  : options.files,
+                    ? [opts.file]
+                    : options.files,
                 directory: directory,
                 property: options.property,
                 multitask: options.multitask

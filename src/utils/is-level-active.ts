@@ -1,4 +1,4 @@
-import { Context, LogLevel } from '../definitions';
+import type { Context, LogLevel } from '../definitions';
 import { isLogLevelActive } from '../helpers/logging';
 
 /**

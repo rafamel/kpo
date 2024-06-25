@@ -1,9 +1,11 @@
-import { NullaryFn } from 'type-core';
+import process from 'node:process';
+
+import type { NullaryFn } from 'type-core';
 import { ensure } from 'errorish';
 
 import { stringifyError } from '../../helpers/stringify';
+import type { Task } from '../../definitions';
 import { create, log } from '../../tasks';
-import { Task } from '../../definitions';
 import { run } from '../../utils';
 
 export async function execute(task: NullaryFn<Task>): Promise<void> {

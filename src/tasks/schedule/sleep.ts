@@ -1,4 +1,4 @@
-import { Task, Context } from '../../definitions';
+import type { Context, Task } from '../../definitions';
 import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
 

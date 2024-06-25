@@ -1,8 +1,10 @@
-import { TypeGuard } from 'type-core';
 import path from 'node:path';
+import process from 'node:process';
+
+import { TypeGuard } from 'type-core';
 import { into } from 'pipettes';
 
-import { Task } from '../definitions';
+import type { Task } from '../definitions';
 import { constants } from '../constants';
 import { resolveProject } from '../helpers/resolve-project';
 

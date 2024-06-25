@@ -1,10 +1,10 @@
-import { NullaryFn, UnaryFn, Empty } from 'type-core';
+import type { Empty, NullaryFn, UnaryFn } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import chokidar from 'chokidar';
 import debounce from 'debounce';
 
-import { Task } from '../../definitions';
+import type { Task } from '../../definitions';
 import { stringifyError } from '../../helpers/stringify';
 import { run } from '../../utils/run';
 import { log } from '../stdio/log';

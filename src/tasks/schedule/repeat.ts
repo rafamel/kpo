@@ -1,4 +1,4 @@
-import { Task } from '../../definitions';
+import type { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { isCancelled } from '../../utils/is-cancelled';
 import { series } from '../aggregate/series';

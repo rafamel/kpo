@@ -1,8 +1,8 @@
 import { splitBy } from 'cli-belt';
 
 import { fetch } from '../../utils';
-import { Task, CLI } from '../../definitions';
-import { series, raises, print, context, combine } from '../../tasks';
+import type { CLI, Task } from '../../definitions';
+import { combine, context, print, raises, series } from '../../tasks';
 
 export async function run(params: CLI.Extension.Params): Promise<Task> {
   const [names, args] = params.options.multitask

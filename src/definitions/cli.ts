@@ -1,6 +1,6 @@
-import { Empty } from 'type-core';
+import type { Empty } from 'type-core';
 
-import { Context, Task } from './tasks';
+import type { Context, Task } from './tasks';
 
 export declare namespace CLI {
   /** Global Options */

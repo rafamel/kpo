@@ -1,4 +1,4 @@
-import { Task } from '../../definitions';
+import type { Task } from '../../definitions';
 import { isLogLevelActive } from '../../helpers/logging';
 import { context } from '../creation/context';
 

@@ -1,7 +1,7 @@
 import { TypeGuard } from 'type-core';
 import { into } from 'pipettes';
 
-import { Context } from '../definitions';
+import type { Context } from '../definitions';
 import { style } from '../utils/style';
 import { stringifyPrintRoute } from './stringify';
 
@@ -16,8 +16,8 @@ export function getPrefix(
       policy: TypeGuard.isString(context.prefix)
         ? context.prefix
         : context.prefix
-        ? 'all'
-        : 'none'
+          ? 'all'
+          : 'none'
     },
     ({ prefix, policy }) => {
       if (!prefix || (policy !== target && policy !== 'all')) {

@@ -1,6 +1,6 @@
-import { Empty } from 'type-core';
+import type { Empty } from 'type-core';
 
-import { Task } from '../../definitions';
+import type { Task } from '../../definitions';
 import { isInteractive } from '../../utils/is-interactive';
 import { series } from '../aggregate/series';
 import { raises } from '../exception/raises';
