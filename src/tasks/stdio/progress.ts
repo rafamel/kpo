@@ -7,6 +7,7 @@ import { addPrefix } from '../../helpers/prefix';
 import { stringifyPrintRoute } from '../../helpers/stringify';
 import { getLogLevelPrefix, isLogLevelActive } from '../../helpers/logging';
 import { isInteractive } from '../../utils/is-interactive';
+import { onCancel } from '../../utils/cancellation';
 import { style } from '../../utils/style';
 import { run } from '../../utils/run';
 import { create } from '../creation/create';
@@ -62,7 +63,10 @@ export function progress(
 
     spinner.start(isUnicodeSupported() ? ' ' + message : message);
     let wasCancelled = false;
-    ctx.cancellation.finally(() => (wasCancelled = true) && spinner.stop());
+    const cleanup = onCancel(ctx, () => {
+      wasCancelled = true;
+      spinner.stop();
+    });
     try {
       await run(ctx, silent);
     } catch (err) {
@@ -71,6 +75,8 @@ export function progress(
         symbol: addPrefix(getLogLevelPrefix('info'), null, 'print', ctx)
       });
       throw err;
+    } finally {
+      cleanup();
     }
     spinner.stopAndPersist({
       text: message,

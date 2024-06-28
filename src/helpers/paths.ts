@@ -5,7 +5,7 @@ import fs from 'fs-extra';
 import { glob } from 'glob';
 
 import type { Context } from '../definitions';
-import { isCancelled } from '../utils/is-cancelled';
+import { isCancelled } from '../utils/cancellation';
 import { log } from '../tasks/stdio/log';
 import { run } from '../utils/run';
 
@@ -33,7 +33,7 @@ export async function useSource(
 ): Promise<void> {
   const src = getAbsolutePath(source, context);
   const exists = await fs.pathExists(src);
-  if (await isCancelled(context)) return;
+  if (isCancelled(context)) return;
 
   if (exists) return cb(src);
   if (options.strict) {
@@ -53,7 +53,7 @@ export async function useDestination(
 
   const exists = await fs.pathExists(dest);
 
-  if (await isCancelled(context)) return;
+  if (isCancelled(context)) return;
   if (!exists) return cb(dest);
 
   if (options.exists === 'ignore') {

@@ -2,6 +2,7 @@ import { createInterface } from 'node:readline';
 
 import {
   type Empty,
+  type NullaryFn,
   TypeGuard,
   type UnaryFn,
   type VariadicFn
@@ -14,7 +15,7 @@ import { getBadge } from '../../helpers/badges';
 import { addPrefix } from '../../helpers/prefix';
 import { stringifyError } from '../../helpers/stringify';
 import { isInteractive } from '../../utils/is-interactive';
-import { isCancelled } from '../../utils/is-cancelled';
+import { isCancelled, onCancel } from '../../utils/cancellation';
 import { style } from '../../utils/style';
 import { run } from '../../utils/run';
 import { context } from '../creation/context';
@@ -89,7 +90,7 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
     }
 
     let response: null | string = null;
-    while (!(await isCancelled(ctx))) {
+    while (!isCancelled(ctx)) {
       response = await line(
         addPrefix(
           getBadge('prompt') + ' ' + opts.message + ' ',
@@ -106,7 +107,7 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
       });
 
       /* Context was cancelled */
-      if (await isCancelled(ctx)) return;
+      if (isCancelled(ctx)) return;
 
       /* Response is null. Context is not cancelled. Must be timeout. */
       if (response === null) break;
@@ -140,7 +141,7 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
     }
 
     /* Context was cancelled */
-    if (await isCancelled(ctx)) return;
+    if (isCancelled(ctx)) return;
 
     /* Response is null. Context is not cancelled. Must be timeout. */
     if (response === null) {
@@ -184,11 +185,13 @@ async function line(
   readline.prompt();
 
   let timer: null | NodeJS.Timeout = null;
+  let cleanup: null | NullaryFn = null;
   let listener: null | VariadicFn = null;
   return new Promise<string | null>((resolve, reject) => {
     function close(write: boolean): void {
       readline.close();
       if (timer) clearTimeout(timer);
+      if (cleanup) cleanup();
       if (listener) stdin.removeListener('keypress', listener);
       if (write) stdout.write('\n');
     }
@@ -212,10 +215,11 @@ async function line(
       }
     };
     stdin.on('keypress', listener);
-    context.cancellation.finally(() => {
+    cleanup = onCancel(context, () => {
       close(true);
-      return resolve(null);
+      resolve(null);
     });
+
     timer =
       timeout < 0
         ? null

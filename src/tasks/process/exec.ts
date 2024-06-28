@@ -14,6 +14,7 @@ import {
 import type { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { getPrefix } from '../../helpers/prefix';
+import { onCancel } from '../../utils/cancellation';
 import { series } from '../aggregate/series';
 import { create } from '../creation/create';
 import { log } from '../stdio/log';
@@ -80,30 +81,34 @@ export function exec(
         if (cb) cb(ps);
 
         let cancelled = false;
-        ctx.cancellation.finally(() => {
+        const cleanup = onCancel(ctx, () => {
           cancelled = true;
           ps.cancel();
         });
 
-        await ps.catch(async (err) => {
-          if (cancelled) return undefined;
+        await ps
+          .catch(async (err) => {
+            if (cancelled) return undefined;
 
-          let message = 'Command failed';
-          if (err.exitCode) {
-            message += ' with exit code ' + err.exitCode;
-          } else if ((err as NodeJS.ErrnoException).code) {
-            message += ' with ' + (err as NodeJS.ErrnoException).code;
-          }
+            let message = 'Command failed';
+            if (err.exitCode) {
+              message += ' with exit code ' + err.exitCode;
+            } else if ((err as NodeJS.ErrnoException).code) {
+              message += ' with ' + (err as NodeJS.ErrnoException).code;
+            }
 
-          const cmd = file || fullArgs.find((arg) => arg[0] !== '-');
-          message +=
-            !cmd || cmd.includes(path.win32.sep) || cmd.includes(path.posix.sep)
-              ? ''
-              : `: ${cmd}`;
+            const cmd = file || fullArgs.find((arg) => arg[0] !== '-');
+            message +=
+              !cmd ||
+              cmd.includes(path.win32.sep) ||
+              cmd.includes(path.posix.sep)
+                ? ''
+                : `: ${cmd}`;
 
-          await run(ctx, log('trace', err));
-          throw new Error(message);
-        });
+            await run(ctx, log('trace', err));
+            throw new Error(message);
+          })
+          .finally(() => cleanup());
       }
     );
   });

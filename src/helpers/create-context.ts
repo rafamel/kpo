@@ -5,9 +5,8 @@ import { into } from 'pipettes';
 import type { Context } from '../definitions';
 import { constants } from '../constants';
 
-const cancellation = new Promise<void>(() => undefined);
-
 export function createContext(context?: Partial<Context>): Context {
+  const controller = new AbortController();
   return into(
     context || {},
     (context) => ({
@@ -18,9 +17,7 @@ export function createContext(context?: Partial<Context>): Context {
       level: context.level || constants.defaults.level,
       route: context.route || [],
       prefix: context.prefix || false,
-      cancellation: context.cancellation
-        ? context.cancellation.then(() => undefined)
-        : cancellation
+      cancellation: context.cancellation || controller.signal
     }),
     (context) => Object.freeze(context)
   );

@@ -11,7 +11,7 @@ import fs from 'fs-extra';
 import type { Context, Task } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
 import { getAbsolutePath } from '../../helpers/paths';
-import { isCancelled } from '../../utils/is-cancelled';
+import { isCancelled } from '../../utils/cancellation';
 import { style } from '../../utils/style';
 import { run } from '../../utils/run';
 import { constants } from '../../constants';
@@ -109,7 +109,7 @@ export function lift(
       { post: opts.mode === 'fix', purge: opts.purge }
     );
 
-    if (!areChangesPending || (await isCancelled(ctx))) return;
+    if (!areChangesPending || isCancelled(ctx)) return;
 
     if (opts.mode === 'dry') return;
     if (opts.mode === 'audit') {

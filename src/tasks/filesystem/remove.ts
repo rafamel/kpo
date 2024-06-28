@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 
 import type { Context, Task } from '../../definitions';
 import { getPaths, useSource } from '../../helpers/paths';
-import { isCancelled } from '../../utils/is-cancelled';
+import { isCancelled } from '../../utils/cancellation';
 import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
 
@@ -37,7 +37,7 @@ export function remove(
       });
 
       for (const source of sources) {
-        if (await isCancelled(ctx)) return;
+        if (isCancelled(ctx)) return;
 
         await useSource(source, ctx, { strict: opts.strict }, (source) => {
           return opts.recursive

@@ -6,7 +6,7 @@ import fs from 'fs-extra';
 
 import type { Context, Task } from '../../definitions';
 import { getPaths, useSource } from '../../helpers/paths';
-import { isCancelled } from '../../utils/is-cancelled';
+import { isCancelled } from '../../utils/cancellation';
 import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
 
@@ -47,13 +47,13 @@ export function edit(
       });
 
       for (const source of sources) {
-        if (await isCancelled(ctx)) return;
+        if (isCancelled(ctx)) return;
 
         await useSource(source, ctx, { strict: opts.strict }, async () => {
           const buffer = await fs.readFile(source);
           const content = await cb(buffer, source);
 
-          if (await isCancelled(ctx)) return;
+          if (isCancelled(ctx)) return;
 
           const data = Buffer.isBuffer(content)
             ? content

@@ -2,6 +2,7 @@ import type { Empty } from 'type-core';
 
 import type { Task } from '../../definitions';
 import { run } from '../../utils/run';
+import { onCancel } from '../../utils/cancellation';
 import { log } from '../stdio/log';
 import { raises } from '../exception/raises';
 import { create } from '../creation/create';
@@ -26,24 +27,23 @@ export function timeout(
           if (ms <= 0) return altTask;
 
           let didTimeout = false;
-          let timeout: NodeJS.Timeout | null = null;
-          await run(
-            {
-              ...ctx,
-              cancellation: Promise.race([
-                new Promise<void>((resolve) => {
-                  timeout = setTimeout(
-                    () => (didTimeout = true) && resolve(),
-                    ms
-                  );
-                }),
-                ctx.cancellation.finally(() => timeout && clearTimeout(timeout))
-              ])
-            },
-            task
+          const controller = new AbortController();
+          const timeout = setTimeout(() => {
+            didTimeout = true;
+            controller.abort();
+          }, ms);
+          const cleanup = onCancel(ctx, () => {
+            clearTimeout(timeout);
+            controller.abort();
+          });
+
+          await run({ ...ctx, cancellation: controller.signal }, task).finally(
+            () => {
+              cleanup();
+              clearTimeout(timeout);
+            }
           );
 
-          if (timeout) clearTimeout(timeout);
           if (didTimeout) {
             return series(log('debug', 'Task timeout'), altTask);
           }

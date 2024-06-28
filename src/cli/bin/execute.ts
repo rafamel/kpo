@@ -10,11 +10,9 @@ import { run } from '../../utils';
 
 export async function execute(task: NullaryFn<Task>): Promise<void> {
   try {
-    const cbs: NullaryFn[] = [];
-    const cancellation = new Promise<void>((resolve) => cbs.push(resolve));
-
     const exits = await import('exits');
-    const promise = run({ cancellation }, create(task));
+    const controller = new AbortController();
+    const promise = run({ cancellation: controller.signal }, create(task));
 
     exits.attach();
     exits.options({
@@ -26,8 +24,8 @@ export async function execute(task: NullaryFn<Task>): Promise<void> {
       }
     });
     exits.add(async () => {
-      cbs.map((cb) => cb());
-      await Promise.all([cancellation, promise]).catch(() => undefined);
+      controller.abort();
+      await promise.catch(() => undefined);
     });
 
     await promise;

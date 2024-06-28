@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 
 import type { Context, Task } from '../../definitions';
 import { getPaths } from '../../helpers/paths';
-import { isCancelled } from '../../utils/is-cancelled';
+import { isCancelled } from '../../utils/cancellation';
 import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
 
@@ -28,7 +28,7 @@ export function mkdir(
       const dirs = await getPaths(paths, ctx, { glob: false, strict: false });
 
       for (const dir of dirs) {
-        if (await isCancelled(ctx)) return;
+        if (isCancelled(ctx)) return;
         await (opts.ensure ? fs.ensureDir(dir) : fs.mkdir(dir));
       }
     }

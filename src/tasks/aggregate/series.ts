@@ -2,7 +2,7 @@ import type { Dictionary, Empty } from 'type-core';
 
 import type { Context, Task } from '../../definitions';
 import { flatten } from '../../helpers/flatten';
-import { isCancelled } from '../../utils/is-cancelled';
+import { isCancelled } from '../../utils/cancellation';
 import { run } from '../../utils/run';
 
 /**

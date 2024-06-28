@@ -7,6 +7,7 @@ import debounce from 'debounce';
 import type { Task } from '../../definitions';
 import { stringifyError } from '../../helpers/stringify';
 import { run } from '../../utils/run';
+import { onCancel } from '../../utils/cancellation';
 import { log } from '../stdio/log';
 import { clear } from '../stdio/clear';
 import { create } from '../creation/create';
@@ -81,11 +82,11 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
         followSymlinks: opts.symlinks
       });
 
-      const cbs: NullaryFn[] = [];
+      const controllers: AbortController[] = [];
       function cancel(): void {
-        while (cbs.length) {
-          const cb = cbs.shift();
-          if (cb) cb();
+        while (controllers.length) {
+          const controller = controllers.shift();
+          if (controller) controller.abort();
         }
       }
 
@@ -100,15 +101,15 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
           current = after
             .then(() => {
               i += 1;
+              const controller = new AbortController();
+              controllers.push(controller);
               return run(
                 {
                   ...ctx,
                   route: opts.parallel
                     ? ctx.route.concat(String(i))
                     : ctx.route,
-                  cancellation: new Promise((resolve) => {
-                    cbs.push(resolve);
-                  })
+                  cancellation: controller.signal
                 },
                 series(i > 0 && opts.clear ? clear() : null, task)
               );
@@ -125,6 +126,7 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
         opts.debounce >= 0 ? opts.debounce : 0
       );
 
+      let cleanup: null | NullaryFn = null;
       const promises: Array<Promise<void>> = [];
       await new Promise<void>((resolve, reject) => {
         if (opts.prime) {
@@ -135,15 +137,19 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
             onEvent(reject);
           });
         }
+
         watcher.on('all', (event) => {
           promises.push(
             run(ctx, log('debug', 'Watch event:', event)).catch(reject)
           );
           onEvent(reject);
         });
+
         watcher.on('error', reject);
-        ctx.cancellation.finally(resolve);
+
+        cleanup = onCancel(ctx, () => resolve());
       }).finally(() => {
+        if (cleanup) cleanup();
         watcher.close();
         cancel();
       });

@@ -1,7 +1,8 @@
-import type { Dictionary, Empty, NullaryFn } from 'type-core';
+import type { Dictionary, Empty } from 'type-core';
 
 import type { Context, Task } from '../../definitions';
 import { flatten } from '../../helpers/flatten';
+import { onCancel } from '../../utils/cancellation';
 import { run } from '../../utils/run';
 
 /**
@@ -21,26 +22,25 @@ export function parallel(
   const items = flatten(task, ...tasks);
 
   return async (ctx: Context): Promise<void> => {
-    const cbs: NullaryFn[] = [];
+    const controllers: AbortController[] = [];
     function cancel(): void {
-      while (cbs.length) {
-        const cb = cbs.shift();
-        if (cb) cb();
+      while (controllers.length) {
+        const controller = controllers.shift();
+        if (controller) controller.abort();
       }
     }
 
-    ctx.cancellation.finally(() => cancel());
-
+    const cleanup = onCancel(ctx, () => cancel());
     try {
       await Promise.all(
         items.map((task) => {
+          const controller = new AbortController();
+          controllers.push(controller);
           return run(
             {
               ...ctx,
               stdio: [null, ctx.stdio[1], ctx.stdio[2]],
-              cancellation: new Promise((resolve) => {
-                cbs.push(resolve);
-              })
+              cancellation: controller.signal
             },
             task
           );
@@ -49,6 +49,8 @@ export function parallel(
     } catch (err) {
       cancel();
       throw err;
+    } finally {
+      cleanup();
     }
   };
 }

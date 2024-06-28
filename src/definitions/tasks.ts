@@ -27,7 +27,7 @@ export interface Context {
    */
   readonly cwd: string;
   /**
-   * A task's evironment variables.
+   * A task's environment variables.
    * Used for spawned processes.
    */
   readonly env: Dictionary<string | undefined>;
@@ -55,11 +55,10 @@ export interface Context {
    */
   readonly prefix: PrefixPolicy | boolean;
   /**
-   * A *Promise* representing a task's
-   * cancellation token.
-   * Tasks should cancel when it resolves.
+   * An AbortSignal for task cancellation.
+   * Tasks should cancel when it emits.
    */
-  readonly cancellation: Promise<void>;
+  readonly cancellation: AbortSignal;
 }
 
 export declare namespace Context {

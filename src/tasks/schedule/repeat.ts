@@ -1,6 +1,6 @@
 import type { Task } from '../../definitions';
 import { run } from '../../utils/run';
-import { isCancelled } from '../../utils/is-cancelled';
+import { isCancelled } from '../../utils/cancellation';
 import { series } from '../aggregate/series';
 import { log } from '../stdio/log';
 
@@ -18,7 +18,7 @@ export function repeat(times: number | null, task: Task): Task.Async {
 
       while (!isDone()) {
         i++;
-        if (await isCancelled(ctx)) break;
+        if (isCancelled(ctx)) break;
         await run(ctx, series(log('debug', 'Repeat task:', i), task));
       }
     }

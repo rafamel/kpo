@@ -9,7 +9,7 @@ import { getBadge } from '../../helpers/badges';
 import { addPrefix } from '../../helpers/prefix';
 import { emitterIntercept } from '../../helpers/emitter-intercept';
 import { isInteractive } from '../../utils/is-interactive';
-import { isCancelled } from '../../utils/is-cancelled';
+import { isCancelled, onCancel } from '../../utils/cancellation';
 import { style } from '../../utils/style';
 import { run } from '../../utils/run';
 import { series } from '../aggregate/series';
@@ -62,7 +62,7 @@ export function select(
     const message = getBadge('prompt') + ` ${opts.message}`;
 
     await run(ctx, print(message));
-    if (await isCancelled(ctx)) return;
+    if (isCancelled(ctx)) return;
 
     if (!isInteractive(ctx)) {
       return fallback >= 0 && opts.default
@@ -101,8 +101,7 @@ export function select(
         ? null
         : setTimeout(() => (didTimeout = true) && cancel(), opts.timeout);
 
-    ctx.cancellation.finally(() => cancel());
-
+    const cleanup = onCancel(ctx, () => cancel());
     const response = await cliSelect({
       cleanup: true,
       values: names,
@@ -135,10 +134,11 @@ export function select(
       .finally(() => {
         intercept.clear();
         stdin.end();
+        cleanup();
+        if (timeout) clearTimeout(timeout);
       });
 
-    if (timeout) clearTimeout(timeout);
-    if (await isCancelled(ctx)) return;
+    if (isCancelled(ctx)) return;
 
     // Explicit response by user
     if (response !== null) {
@@ -147,8 +147,10 @@ export function select(
         tasks[response]
       );
     }
+
     // No response and no timeout triggered
     if (!didTimeout) throw new Error(`User cancellation`);
+
     // No response and timeout triggered with a default selection available
     if (fallback >= 0 && opts.default) {
       return series(
@@ -160,6 +162,7 @@ export function select(
         tasks[opts.default]
       );
     }
+
     // No response and timeout triggered without a default selection available
     throw new Error(`Select timeout: ${opts.timeout}ms`);
   });
