@@ -1,4 +1,4 @@
-import type { Empty } from 'type-core';
+import type { Empty, MaybePromise } from 'type-core';
 
 import type { Context, Task } from './tasks';
 
@@ -63,7 +63,7 @@ export declare namespace CLI {
     type Execute = (
       params: Params,
       context: Context
-    ) => Task | Empty | Promise<Task | Empty>;
+    ) => MaybePromise<Task | Empty>;
     interface Params {
       help: string;
       argv: string[];

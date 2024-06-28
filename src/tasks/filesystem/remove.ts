@@ -28,7 +28,7 @@ export function remove(
     log('debug', 'Remove:', paths),
     async (ctx: Context): Promise<void> => {
       const opts = shallow(
-        { glob: false, strict: false, exists: 'error' },
+        { glob: false, strict: false, recursive: false },
         options || undefined
       );
       const sources = await getPaths(paths, ctx, {

@@ -1,6 +1,6 @@
 import { Buffer } from 'node:buffer';
 
-import type { Serial } from 'type-core';
+import type { MaybePromise, Serial } from 'type-core';
 import { shallow } from 'merge-strategies';
 import fs from 'fs-extra';
 
@@ -28,10 +28,7 @@ export interface EditOptions {
  */
 export function edit(
   paths: string | string[],
-  cb: (
-    buffer: Buffer,
-    path: string
-  ) => Buffer | Serial.Type | Promise<Buffer | Serial.Type>,
+  cb: (buffer: Buffer, path: string) => MaybePromise<Buffer | Serial.Type>,
   options?: EditOptions
 ): Task.Async {
   return series(
