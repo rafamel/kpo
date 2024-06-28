@@ -67,16 +67,27 @@ export async function getPathPairs(
   paths: string | string[],
   destination: string,
   context: Context,
-  options: { single: boolean; glob: boolean; strict: boolean }
+  options: {
+    single: boolean;
+    glob: boolean;
+    strict: boolean;
+    from: string | null;
+  }
 ): Promise<Array<[string, string]>> {
+  const from = options.from;
   const dest = getAbsolutePath(destination, context);
-  const sources = await getPaths(paths, context, options);
+  const arr = Array.isArray(paths) ? paths : [paths];
+  const sources = await getPaths(
+    arr.map((x) => path.resolve(from || './', x)),
+    context,
+    options
+  );
 
   if (options.single) {
     if (sources.length > 1) {
       throw new Error(`Multiple sources provided for single mode`);
     }
-    return [[sources[0], dest]];
+    if (!from) return [[sources[0], dest]];
   }
 
   const destExists = await fs.pathExists(dest);
@@ -87,9 +98,25 @@ export async function getPathPairs(
     throw new Error(`Destination path is not a directory: ${dest}`);
   }
 
+  if (!from) {
+    return sources.map((source) => [
+      source,
+      path.join(dest, path.basename(source))
+    ]);
+  }
+
+  const fromExists = await fs.pathExists(from);
+  const isFromDir = fromExists
+    ? await fs.stat(from).then((x) => x.isDirectory())
+    : false;
+  if (!isFromDir) {
+    throw new Error(`Options.from path is not a directory: ${from}`);
+  }
+
+  const absoluteFrom = getAbsolutePath(from, context);
   return sources.map((source) => [
     source,
-    path.join(dest, path.basename(source))
+    path.join(dest, source.substring(absoluteFrom.length))
   ]);
 }
 

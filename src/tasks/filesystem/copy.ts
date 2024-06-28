@@ -16,6 +16,8 @@ export interface CopyOptions {
   strict?: boolean;
   /** Whether to error, ignore, or overwrite existing files */
   exists?: 'error' | 'ignore' | 'overwrite';
+  /** Absolute path, or relative to the cwd, to resolve paths from; if not null, the source folder structure will be replicated on destination */
+  from?: string | null;
 }
 
 /**
@@ -32,13 +34,20 @@ export function copy(
     log('debug', 'Copy', paths, 'to', destination),
     async (ctx: Context): Promise<void> => {
       const opts = shallow(
-        { glob: false, single: false, strict: false, exists: 'error' },
+        {
+          glob: false,
+          single: false,
+          strict: false,
+          exists: 'error',
+          from: null
+        },
         options || undefined
       );
       const pairs = await getPathPairs(paths, destination, ctx, {
         glob: opts.glob,
         single: opts.single,
-        strict: opts.strict
+        strict: opts.strict,
+        from: opts.from
       });
 
       for (const pair of pairs) {
