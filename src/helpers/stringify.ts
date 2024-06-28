@@ -1,6 +1,5 @@
 import { splitBy } from 'cli-belt';
 import { ensure } from 'errorish';
-import { into } from 'pipettes';
 
 import { style } from '../utils/style';
 import { constants } from '../constants';
@@ -19,9 +18,6 @@ export function stringifyArgvCommands(argv: string[]): string {
 }
 
 export function stringifyError(error: Error): string {
-  return into(
-    ensure(error, null, { normalize: true }).message,
-    (msg) => msg[0].toUpperCase() + msg.slice(1).toString(),
-    (msg) => style(msg, { bold: true })
-  );
+  const msg = ensure(error, null, { normalize: true }).message;
+  return style(msg, { bold: true });
 }
