@@ -2,14 +2,10 @@ import path from 'node:path';
 import process from 'node:process';
 import { WriteStream } from 'node:tty';
 
-import type { Empty } from 'type-core';
+import type { Empty, NullaryFn } from 'type-core';
 import { shallow } from 'merge-strategies';
 import transform from 'prefix-stream';
-import {
-  type ExecaChildProcess,
-  type Options as ExecaOptions,
-  execa
-} from 'execa';
+import { type Options as ExecaOptions, type Subprocess, execa } from 'execa';
 
 import type { Task } from '../../definitions';
 import { run } from '../../utils/run';
@@ -30,7 +26,7 @@ export function exec(
   file: string | null,
   args?: string[] | Empty,
   options?: ExecOptions | Empty,
-  cb?: (ps: ExecaChildProcess) => void
+  cb?: (ps: Subprocess) => void
 ): Task.Async {
   return create(async (ctx) => {
     const fullArgs = (args || []).concat(ctx.args || []);
@@ -41,7 +37,7 @@ export function exec(
           {
             cwd: ctx.cwd,
             localDir: ctx.cwd,
-            execPath: process.execPath,
+            nodePath: process.execPath,
             extendEnv: true,
             preferLocal: true
           },
@@ -55,8 +51,10 @@ export function exec(
         const pipeOutput = !opts.stdio && prefix;
         const forceColor = pipeOutput && isStdioTty;
 
-        const ps = execa(file || opts.execPath, fullArgs, {
+        const controller = new AbortController();
+        const ps = execa(file || opts.nodePath, fullArgs, {
           ...opts,
+          cancelSignal: controller.signal,
           extendEnv: false,
           env: Object.assign(
             forceColor ? { FORCE_COLOR: true } : {},
@@ -81,10 +79,17 @@ export function exec(
         if (cb) cb(ps);
 
         let cancelled = false;
-        const cleanup = onCancel(ctx, () => {
+        const listener = () => {
           cancelled = true;
-          ps.cancel();
-        });
+          controller.abort();
+        };
+        const cleanups: NullaryFn[] = [];
+        cleanups.push(onCancel(ctx, listener));
+        if (opts.cancelSignal) {
+          const signal = opts.cancelSignal;
+          signal.addEventListener('abort', listener, { once: true });
+          cleanups.push(() => signal.removeEventListener('abort', listener));
+        }
 
         await ps
           .catch(async (err) => {
@@ -108,7 +113,7 @@ export function exec(
             await run(ctx, log('trace', err));
             throw new Error(message);
           })
-          .finally(() => cleanup());
+          .finally(() => cleanups.map((fn) => fn()));
       }
     );
   });

@@ -21,7 +21,7 @@
   "types": "./dist/index.d.ts",
   "exports": "./dist/index.js",
   "bin": {
-    "kpo": "dist/cli/kpo.js"
+    "kpo": "./dist/cli/kpo.js"
   },
   "files": [
     "dist/"
@@ -40,9 +40,9 @@
     "test": "kpo test --",
     "commit": "kpo commit --",
     "release": "kpo release --",
+    "distribute": "kpo distribute --",
     "validate": "kpo validate --",
-    "version": "kpo version --",
-    "commitlint": "kpo commitlint --"
+    "version": "kpo version --"
   },
   "homepage": "https://github.com/rafamel/kpo",
   "repository": {
@@ -91,7 +91,7 @@
     "common-tags": "^1.8.0",
     "debounce": "^2.1.0",
     "errorish": "^1.0.0",
-    "execa": "^6.1.0",
+    "execa": "^9.3.0",
     "exits": "^2.0.1",
     "find-up": "^7.0.0",
     "fs-extra": "^11.2.0",
