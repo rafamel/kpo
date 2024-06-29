@@ -1,3 +1,26 @@
+# [0.24.0](https://github.com/rafamel/kpo/compare/v0.23.2...v0.24.0) (2024-06-29)
+
+
+### Bug Fixes
+
+* update dependencies ([75d0730](https://github.com/rafamel/kpo/commit/75d073078ca52f4a7f3e59690dbdd9aa9f099eae))
+* update setup and dependencies ([d94d5f9](https://github.com/rafamel/kpo/commit/d94d5f9c197ada8d07f838d8b043478f1ba361b0))
+
+
+### Features
+
+* add tmp task ([69bbdf2](https://github.com/rafamel/kpo/commit/69bbdf2d3c56679869c32babebdaf71b2692078a))
+* copy and move take a from option ([5a6a273](https://github.com/rafamel/kpo/commit/5a6a273855151aac4d12c4f2c81c5f1f35db229b))
+* does not force error capitalization ([52976dd](https://github.com/rafamel/kpo/commit/52976dd9e6a4a6aa4996874f4b887fa690573b98))
+* uses AbortSignal for cancellation ([0dc55a5](https://github.com/rafamel/kpo/commit/0dc55a5b4605abd4baa0a17e6aaf9b9de59cf47b))
+
+
+### BREAKING CHANGES
+
+* Context.cancellation is no longer a Promise, but an AbortSignal
+
+
+
 ## [0.23.2](https://github.com/rafamel/kpo/compare/v0.23.1...v0.23.2) (2022-03-24)
 
 

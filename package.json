@@ -1,7 +1,7 @@
 {
   "name": "kpo",
   "description": "A task runner that goes where npm scripts won't, for the true capo",
-  "version": "0.23.2",
+  "version": "0.24.0",
   "author": "rafamel",
   "license": "MIT",
   "private": false,
