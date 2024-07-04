@@ -114,10 +114,14 @@ export async function getPathPairs(
   }
 
   const absoluteFrom = getAbsolutePath(from, context);
-  return sources.map((source) => [
-    source,
-    path.join(dest, source.substring(absoluteFrom.length))
-  ]);
+  return sources.map((source) => {
+    if (!source.startsWith(absoluteFrom)) {
+      throw new Error(
+        `Sources must all be children of Options.from: ${source}`
+      );
+    }
+    return [source, path.join(dest, source.substring(absoluteFrom.length))];
+  });
 }
 
 export async function getPaths(
