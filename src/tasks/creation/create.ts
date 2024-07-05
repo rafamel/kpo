@@ -10,10 +10,10 @@ import { run } from '../../utils/run';
  * @returns Task
  */
 export function create(
-  fn: UnaryFn<Context, MaybePromise<Task | Empty>>
+  callback: UnaryFn<Context, MaybePromise<Task | Empty>>
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
-    const task = await fn(ctx);
+    const task = await callback(ctx);
     if (task) await run(ctx, task);
   };
 }

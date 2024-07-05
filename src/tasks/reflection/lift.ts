@@ -118,11 +118,9 @@ export function lift(
     if (opts.mode === 'fix') {
       return write(pkgPath, pkg, { exists: 'overwrite' });
     }
-    return confirm(
-      { default: true, message: 'Continue?' },
-      write(pkgPath, pkg, { exists: 'overwrite' }),
-      null
-    );
+    return confirm({ default: true, message: 'Continue?' }, (confirmation) => {
+      return confirmation ? write(pkgPath, pkg, { exists: 'overwrite' }) : null;
+    });
   });
 }
 

@@ -1,8 +1,7 @@
-import { type Empty, TypeGuard } from 'type-core';
+import { type Empty, type MaybePromise, TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 
 import type { Task } from '../../definitions';
-import { run } from '../../utils/run';
 import { isInteractive } from '../../utils/is-interactive';
 import { create } from '../creation/create';
 import { prompt } from './prompt';
@@ -27,13 +26,13 @@ export interface ConfirmOptions {
 
 /**
  * Uses a context's stdio to prompt for confirmation.
- * Executes a task in response to user confirmation or rejection.
+ * The `confirmation` will be passed to a `Task`
+ * returning `callback` as a boolean.
  * @returns Task
  */
 export function confirm(
   options: ConfirmOptions | Empty,
-  yes: Task | Empty,
-  no: Task | Empty
+  callback: (confirmation: boolean) => MaybePromise<Task | Empty>
 ): Task.Async {
   return create(async (ctx) => {
     const opts = shallow(
@@ -64,11 +63,10 @@ export function confirm(
           );
         }
       },
-      async (ctx) => {
-        const response = (ctx.args[0] || '').toLowerCase();
-        const task = response[0] === 'y' ? yes : no;
-        if (!task) return;
-        await run({ ...ctx, args: ctx.args.slice(1) }, task);
+      (str) => {
+        const response = (str.at(0) || '').toLowerCase();
+        const confirmation = response === 'y';
+        return callback(confirmation);
       }
     );
   });

@@ -2,6 +2,7 @@ import { createInterface } from 'node:readline';
 
 import {
   type Empty,
+  type MaybePromise,
   type NullaryFn,
   TypeGuard,
   type UnaryFn,
@@ -18,7 +19,6 @@ import { isInteractive } from '../../utils/is-interactive';
 import { isCancelled, onCancel } from '../../utils/cancellation';
 import { style } from '../../utils/style';
 import { run } from '../../utils/run';
-import { context } from '../creation/context';
 import { create } from '../creation/create';
 import { series } from '../aggregate/series';
 import { raises } from '../exception/raises';
@@ -50,11 +50,14 @@ export interface PromptOptions {
 
 /**
  * Uses a context's stdio to prompt for a user response.
- * The response will be prepended to the context arg array
- * for `task`, when valid.
+ * When valid, the `response` will be passed to a `Task`
+ * returning `callback`.
  * @returns Task
  */
-export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
+export function prompt(
+  options: PromptOptions | Empty,
+  callback: (response: string) => MaybePromise<Task | Empty>
+): Task.Async {
   return create(async (ctx) => {
     const opts = shallow(
       {
@@ -76,10 +79,7 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
               'Non-interactive default:',
               style(opts.default, { bold: true })
             ),
-            context(
-              (ctx) => ({ ...ctx, args: [opts.default || '', ...ctx.args] }),
-              task
-            )
+            create(() => callback(opts.default || ''))
           )
         : series(
             print(message),
@@ -158,13 +158,7 @@ export function prompt(options: PromptOptions | Empty, task: Task): Task.Async {
 
     /* Response is valid */
     const str = response;
-    return context(
-      (ctx) => ({
-        ...ctx,
-        args: [str, ...ctx.args]
-      }),
-      task
-    );
+    return create(() => callback(str));
   });
 }
 

@@ -1,6 +1,6 @@
 import { Transform } from 'node:stream';
 
-import { type Dictionary, type Empty, TypeGuard } from 'type-core';
+import type { Empty, MaybePromise } from 'type-core';
 import { shallow } from 'merge-strategies';
 import cliSelect from 'cli-select';
 
@@ -37,13 +37,14 @@ export interface SelectOptions {
 
 /**
  * Uses a context's stdio to prompt for input.
- * Executes a task in response to user selection.
- * Takes in a record of `tasks`.
+ * Offers `values` to select from and passes the
+ * user `selection` to a `Task` returning `callback`.
  * @returns Task
  */
 export function select(
   options: SelectOptions | Empty,
-  tasks: Dictionary<Task | Empty>
+  values: string[],
+  callback: (selection: string) => MaybePromise<Task | Empty>
 ): Task.Async {
   return create(async (ctx) => {
     const opts = shallow(
@@ -55,24 +56,22 @@ export function select(
       options || undefined
     );
 
-    const names = Object.keys(tasks);
-    const fallback: number = TypeGuard.isString(opts.default)
-      ? names.indexOf(opts.default)
-      : -1;
+    const names = Object.keys(values);
     const message = getBadge('prompt') + ` ${opts.message}`;
 
     await run(ctx, print(message));
     if (isCancelled(ctx)) return;
 
     if (!isInteractive(ctx)) {
-      return fallback >= 0 && opts.default
+      const value = opts.default;
+      return value
         ? series(
             log(
               'info',
               'Default selection [non-interactive]:',
-              style(opts.default, { bold: true })
+              style(value, { bold: true })
             ),
-            tasks[opts.default]
+            create(() => callback(value))
           )
         : raises(
             new Error(
@@ -105,7 +104,7 @@ export function select(
     const response = await cliSelect({
       cleanup: true,
       values: names,
-      ...(fallback >= 0 ? { defaultValue: fallback } : {}),
+      ...(opts.default ? { defaultValue: names.indexOf(opts.default) } : {}),
       selected: addPrefix(getBadge('selected'), ' '.repeat(3), 'print', ctx),
       unselected: addPrefix(
         getBadge('unselected'),
@@ -144,7 +143,7 @@ export function select(
     if (response !== null) {
       return series(
         log('info', 'Select:', style(response, { bold: true })),
-        tasks[response]
+        create(() => callback(response))
       );
     }
 
@@ -152,14 +151,15 @@ export function select(
     if (!didTimeout) throw new Error(`User cancellation`);
 
     // No response and timeout triggered with a default selection available
-    if (fallback >= 0 && opts.default) {
+    const value = opts.default;
+    if (value) {
       return series(
         log(
           'info',
           'Default selection [timeout]:',
-          style(opts.default, { bold: true })
+          style(value, { bold: true })
         ),
-        tasks[opts.default]
+        create(() => callback(value))
       );
     }
 
