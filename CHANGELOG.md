@@ -1,3 +1,22 @@
+# [0.25.0](https://github.com/rafamel/kpo/compare/v0.24.0...v0.25.0) (2024-07-05)
+
+
+### Bug Fixes
+
+* ensure path sources are children of options.from ([76fdddb](https://github.com/rafamel/kpo/commit/76fdddb625329fe04269e6472b91263c1f7f7372))
+
+
+### Features
+
+* tmp task creates a temporal directory and can create none or multiple temporal files ([e3334d5](https://github.com/rafamel/kpo/commit/e3334d593e4f1adf2ca98ff69a98bf261bb1da9a))
+
+
+### BREAKING CHANGES
+
+* Task tmp signature has changed. Review the latest documentation.
+
+
+
 # [0.24.0](https://github.com/rafamel/kpo/compare/v0.23.2...v0.24.0) (2024-06-29)
 
 
