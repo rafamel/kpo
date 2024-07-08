@@ -1,3 +1,29 @@
+# [0.26.0](https://github.com/rafamel/kpo/compare/v0.25.0...v0.26.0) (2024-07-08)
+
+
+### Code Refactoring
+
+* more strict function signatures and internal types for exported functions ([440b86e](https://github.com/rafamel/kpo/commit/440b86ee7f52fdd98b93c52caab79b842f07aa84))
+
+
+### Features
+
+* add atValue util to assist on new confirm, prompt, select api ([6e79ea0](https://github.com/rafamel/kpo/commit/6e79ea023db477a2e4160b30c093136df6674704))
+* confirm, prompt, and select take a callback to pass responses ([1e83846](https://github.com/rafamel/kpo/commit/1e838463da4566fa130a3d57becc143f3757aeab))
+* tmp task passes directory and files to callback ([d8bd3d2](https://github.com/rafamel/kpo/commit/d8bd3d269101fed6adfa4d6b76ebffbbca8bcbb5))
+
+
+### BREAKING CHANGES
+
+* Exported functions taking Empty type (void | undefined | null) only take explicit
+null values in most cases. Additionally, the function signatures for the edit and tmp tasks have
+changed significantly. Review the latest documentation.
+* tmp task callback takes an object as an argument, with fields files and directory
+* Tasks confirm, prompt, and select, have a different signature. Review the lastest
+documentation.
+
+
+
 # [0.25.0](https://github.com/rafamel/kpo/compare/v0.24.0...v0.25.0) (2024-07-05)
 
 
