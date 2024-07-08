@@ -69,7 +69,7 @@ Tasks can be used in an exclusively programmatic manner or with *kpo*'s CLI. The
   * [`style`](https://rafamel.github.io/kpo/functions/style): styles a string.
   * [`fetch`](https://rafamel.github.io/kpo/functions/fetch): fetches a file with a tasks record as a default export.
   * [`recreate`](https://rafamel.github.io/kpo/functions/recreate): maps all tasks in a tasks record.
-  * [`isCi`](https://rafamel.github.io/kpo/functions/isCi): indicates whether a context environment variables indicate it's running in a CI.
+  * [`isCI`](https://rafamel.github.io/kpo/functions/isCI): indicates whether a context environment variables indicate it's running in a CI.
   * [`isCancelled`](https://rafamel.github.io/kpo/functions/isCancelled): resolves with the current cancellation state for a context.
   * [`isInteractive`](https://rafamel.github.io/kpo/functions/isInteractive): indicates whether a context is that of an interactive environment.
   * [`isLevelActive`](https://rafamel.github.io/kpo/functions/isLevelActive): indicates whether a logging level is enabled for a context.
