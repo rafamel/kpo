@@ -5,7 +5,15 @@
   "excludeExternals": true,
   "excludeInternal": true,
   "excludePrivate": true,
-  "excludeProtected": true,
   "excludeReferences": false,
-  "exclude": ["**/__mocks__/**/*", "/**/*.{test,spec}.*"]
+  "excludeNotDocumented": false,
+  "excludeProtected": true,
+  "exclude": ["**/__mocks__/**/*", "/**/*.{test,spec}.*"],
+  "plugin": ["typedoc-plugin-missing-exports"],
+  "internalModule": "Internal",
+  "externalPattern": [
+    "**/node_modules/@types/node/**",
+    "**/node_modules/typescript/**",
+    "**/node_modules/**"
+  ]
 }
