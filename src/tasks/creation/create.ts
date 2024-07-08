@@ -1,5 +1,4 @@
-import type { Empty, MaybePromise, UnaryFn } from 'type-core';
-
+import type { Callable, Promisable } from '../../types';
 import type { Context, Task } from '../../definitions';
 import { run } from '../../utils/run';
 
@@ -10,9 +9,11 @@ import { run } from '../../utils/run';
  * @returns Task
  */
 export function create(
-  callback: UnaryFn<Context, MaybePromise<Task | Empty>>
+  callback?: null | Callable<Context, Promisable<void | null | Task>>
 ): Task.Async {
   return async (ctx: Context): Promise<void> => {
+    if (!callback) return;
+
     const task = await callback(ctx);
     if (task) await run(ctx, task);
   };

@@ -9,12 +9,12 @@ import { log } from '../stdio/log';
  * or indefinitely otherwise.
  * @returns Task
  */
-export function repeat(times: number | null, task: Task): Task.Async {
+export function repeat(times: number, task: Task): Task.Async {
   return series(
     log('debug', 'Task repetition set at', times, 'times'),
     async (ctx) => {
       let i = 0;
-      const isDone = (): boolean => times !== null && times >= 0 && i >= times;
+      const isDone = (): boolean => times >= 0 && i >= times;
 
       while (!isDone()) {
         i++;

@@ -1,9 +1,9 @@
 import { Buffer } from 'node:buffer';
 
-import type { MaybePromise, Serial } from 'type-core';
 import { shallow } from 'merge-strategies';
 import fs from 'fs-extra';
 
+import type { Callable, Promisable, Serial } from '../../types';
 import type { Context, Task } from '../../definitions';
 import { getPaths, useSource } from '../../helpers/paths';
 import { isCancelled } from '../../utils/cancellation';
@@ -17,6 +17,11 @@ export interface EditOptions {
   strict?: boolean;
 }
 
+export interface EditParams {
+  file: string;
+  buffer: Buffer;
+}
+
 /**
  * Reads files as specified in `paths`, calling the `cb`
  * callback with a Buffer for each file read.
@@ -28,7 +33,7 @@ export interface EditOptions {
  */
 export function edit(
   paths: string | string[],
-  cb: (buffer: Buffer, path: string) => MaybePromise<Buffer | Serial.Type>,
+  callback: Callable<EditParams, Promisable<Buffer | Serial>>,
   options?: EditOptions
 ): Task.Async {
   return series(
@@ -48,7 +53,7 @@ export function edit(
 
         await useSource(source, ctx, { strict: opts.strict }, async () => {
           const buffer = await fs.readFile(source);
-          const content = await cb(buffer, source);
+          const content = await callback({ buffer, file: source });
 
           if (isCancelled(ctx)) return;
 

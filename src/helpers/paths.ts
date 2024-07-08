@@ -1,6 +1,5 @@
 import path from 'node:path';
 
-import type { UnaryFn } from 'type-core';
 import fs from 'fs-extra';
 import { glob } from 'glob';
 
@@ -13,14 +12,14 @@ export async function usePair(
   pair: [string, string],
   context: Context,
   options: { strict: boolean; exists: 'error' | 'ignore' | 'overwrite' },
-  cb: UnaryFn<[string, string], Promise<void>>
+  callback: (pair: [string, string]) => Promise<void>
 ): Promise<void> {
   return useSource(pair[0], context, { strict: options.strict }, (source) => {
     return useDestination(
       pair[1],
       context,
       { exists: options.exists },
-      (destination) => cb([source, destination])
+      (destination) => callback([source, destination])
     );
   });
 }
@@ -29,13 +28,13 @@ export async function useSource(
   source: string,
   context: Context,
   options: { strict: boolean },
-  cb: UnaryFn<string, Promise<void>>
+  callback: (source: string) => Promise<void>
 ): Promise<void> {
   const src = getAbsolutePath(source, context);
   const exists = await fs.pathExists(src);
   if (isCancelled(context)) return;
 
-  if (exists) return cb(src);
+  if (exists) return callback(src);
   if (options.strict) {
     throw new Error(`Source path doesn't exist: ${src}`);
   }
@@ -46,7 +45,7 @@ export async function useDestination(
   destination: string,
   context: Context,
   options: { exists: 'error' | 'ignore' | 'overwrite' },
-  cb: UnaryFn<string, Promise<void>>
+  cb: (destination: string) => Promise<void>
 ): Promise<void> {
   const dest = getAbsolutePath(destination, context);
   if (options.exists === 'overwrite') return cb(dest);

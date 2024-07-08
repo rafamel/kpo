@@ -40,9 +40,9 @@ export function addPrefix(
   return prefix
     ? str
         .split('\n')
-        .map((x, i, arr) =>
-          i === arr.length - 1 && !x.trim() ? x : prefix + x
-        )
+        .map((x, i, arr) => {
+          return i === arr.length - 1 && !x.trim() ? x : prefix + x;
+        })
         .join('\n')
     : str;
 }

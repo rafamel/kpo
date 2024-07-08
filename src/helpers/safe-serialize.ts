@@ -1,4 +1,6 @@
-import { type Serial, TypeGuard } from 'type-core';
+import { TypeGuard } from 'type-core';
+
+import type { Serial } from '../types';
 
 export function safeSerialize(value: any): string {
   if (TypeGuard.isUndefined(value) || TypeGuard.isString(value)) {
@@ -8,7 +10,7 @@ export function safeSerialize(value: any): string {
   }
 }
 
-function walk(value: any): Serial.Type {
+function walk(value: any): Serial {
   if (
     TypeGuard.isNullish(value) ||
     TypeGuard.isBoolean(value) ||

@@ -1,18 +1,21 @@
 import process from 'node:process';
 
-import type { NullaryFn } from 'type-core';
 import { ensure } from 'errorish';
 
-import { stringifyError } from '../../helpers/stringify';
+import type { Callable } from '../../types';
 import type { Task } from '../../definitions';
+import { stringifyError } from '../../helpers/stringify';
 import { create, log } from '../../tasks';
 import { run } from '../../utils';
 
-export async function execute(task: NullaryFn<Task>): Promise<void> {
+export async function execute(task: Callable<void, Task>): Promise<void> {
   try {
     const exits = await import('exits');
     const controller = new AbortController();
-    const promise = run({ cancellation: controller.signal }, create(task));
+    const promise = run(
+      { cancellation: controller.signal },
+      create(() => task())
+    );
 
     exits.attach();
     exits.options({

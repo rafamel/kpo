@@ -1,16 +1,10 @@
 import { createInterface } from 'node:readline';
 
-import {
-  type Empty,
-  type MaybePromise,
-  type NullaryFn,
-  TypeGuard,
-  type UnaryFn,
-  type VariadicFn
-} from 'type-core';
+import { TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { ensure } from 'errorish';
 
+import type { Callable, Promisable } from '../../types';
 import type { Context, Task } from '../../definitions';
 import { getBadge } from '../../helpers/badges';
 import { addPrefix } from '../../helpers/prefix';
@@ -45,18 +39,18 @@ export interface PromptOptions {
    * Returns `true` for valid responses,
    * `false` for non-valid ones.
    */
-  validate?: UnaryFn<string, boolean>;
+  validate?: Callable<string, boolean>;
 }
 
 /**
  * Uses a context's stdio to prompt for a user response.
- * When valid, the `response` will be passed to a `Task`
+ * When valid, the response will be passed to a `Task`
  * returning `callback`.
  * @returns Task
  */
 export function prompt(
-  options: PromptOptions | Empty,
-  callback: (response: string) => MaybePromise<Task | Empty>
+  options: PromptOptions | null,
+  callback: Callable<string, Promisable<Task | null>>
 ): Task.Async {
   return create(async (ctx) => {
     const opts = shallow(
@@ -179,8 +173,8 @@ async function line(
   readline.prompt();
 
   let timer: null | NodeJS.Timeout = null;
-  let cleanup: null | NullaryFn = null;
-  let listener: null | VariadicFn = null;
+  let cleanup: null | Callable = null;
+  let listener: null | ((...args: any[]) => void) = null;
   return new Promise<string | null>((resolve, reject) => {
     function close(write: boolean): void {
       readline.close();

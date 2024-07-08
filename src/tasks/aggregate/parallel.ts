@@ -1,5 +1,4 @@
-import type { Dictionary, Empty } from 'type-core';
-
+import type { Dictionary } from '../../types';
 import type { Context, Task } from '../../definitions';
 import { flatten } from '../../helpers/flatten';
 import { onCancel } from '../../utils/cancellation';
@@ -15,9 +14,10 @@ import { run } from '../../utils/run';
  * index or key name for their route.
  * @returns Task
  */
+
 export function parallel(
-  task?: Task | Empty | Array<Task | Empty> | Dictionary<Task | Empty>,
-  ...tasks: Array<Task | Empty>
+  task?: null | Task | Array<null | Task> | Dictionary<null | Task>,
+  ...tasks: Array<null | Task>
 ): Task.Async {
   const items = flatten(task, ...tasks);
 

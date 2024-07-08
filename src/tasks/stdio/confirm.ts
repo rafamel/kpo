@@ -1,6 +1,7 @@
-import { type Empty, type MaybePromise, TypeGuard } from 'type-core';
+import { TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 
+import type { Callable, Promisable } from '../../types';
 import type { Task } from '../../definitions';
 import { isInteractive } from '../../utils/is-interactive';
 import { create } from '../creation/create';
@@ -31,8 +32,8 @@ export interface ConfirmOptions {
  * @returns Task
  */
 export function confirm(
-  options: ConfirmOptions | Empty,
-  callback: (confirmation: boolean) => MaybePromise<Task | Empty>
+  options: ConfirmOptions | null,
+  callback: Callable<boolean, Promisable<Task | null>>
 ): Task.Async {
   return create(async (ctx) => {
     const opts = shallow(

@@ -23,7 +23,9 @@ export interface FetchOptions {
  * Fetch a tasks file that's expected to have
  * a `Task.Record` as a default export.
  */
-export async function fetch(options?: FetchOptions): Promise<Task.Record> {
+export async function fetch(
+  options?: FetchOptions | null
+): Promise<Task.Record> {
   const opts = into(options || {}, (options) => ({
     files: options.files || constants.cli.files,
     directory: options.directory || null,

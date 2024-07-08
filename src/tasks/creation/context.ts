@@ -1,6 +1,7 @@
-import type { Empty, UnaryFn } from 'type-core';
+import { TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 
+import type { Callable, Promisable } from '../../types';
 import type { Context, Task } from '../../definitions';
 import { run } from '../../utils/run';
 
@@ -14,13 +15,14 @@ import { run } from '../../utils/run';
  */
 export function context(
   context:
-    | Empty
+    | null
     | Partial<Context>
-    | UnaryFn<Context, Partial<Context> | Empty>,
+    | Callable<Context, Promisable<null | Partial<Context>>>,
   task: Task
 ): Task.Async {
-  const fn = typeof context === 'function' ? context : () => context;
+  const fn = TypeGuard.isFunction(context) ? context : () => context;
   return async (context: Context): Promise<void> => {
-    await run(shallow(context, fn(context) || undefined), task);
+    const ctx = await fn(context);
+    await run(shallow(context, ctx || undefined), task);
   };
 }

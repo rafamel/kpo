@@ -1,5 +1,3 @@
-import type { Empty } from 'type-core';
-
 import type { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { onCancel } from '../../utils/cancellation';
@@ -16,7 +14,7 @@ import { series } from '../aggregate/series';
 export function timeout(
   ms: number,
   task: Task,
-  alternate: Task | Empty
+  alternate?: Task | null
 ): Task.Async {
   return ms < 0
     ? series(log('debug', 'Timeout disabled:', ms), task)

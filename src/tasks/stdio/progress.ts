@@ -1,4 +1,4 @@
-import { type Empty, TypeGuard } from 'type-core';
+import { TypeGuard } from 'type-core';
 import isUnicodeSupported from 'is-unicode-supported';
 import ora from 'ora';
 
@@ -30,7 +30,7 @@ export interface ProgressOptions {
  * @returns Task
  */
 export function progress(
-  options: ProgressOptions | Empty,
+  options: ProgressOptions | null,
   task: Task
 ): Task.Async {
   return create(async (ctx) => {

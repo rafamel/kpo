@@ -1,9 +1,9 @@
-import type { Empty, NullaryFn, UnaryFn } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import chokidar from 'chokidar';
 import debounce from 'debounce';
 
+import type { Callable } from '../../types';
 import type { Task } from '../../definitions';
 import { stringifyError } from '../../helpers/stringify';
 import { run } from '../../utils/run';
@@ -43,7 +43,7 @@ export interface WatchOptions {
  * `task` for every change event.
  * @returns Task
  */
-export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
+export function watch(options: WatchOptions | null, task: Task): Task.Async {
   return create((ctx) => {
     const opts = into(
       {
@@ -93,7 +93,7 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
       let i = -1;
       let current: Promise<void> = Promise.resolve();
       const onEvent = debounce(
-        (onError: UnaryFn<Error>): void => {
+        (onError: Callable<Error>): void => {
           if (!opts.parallel) cancel();
 
           const after = opts.parallel ? Promise.resolve() : current;
@@ -126,7 +126,7 @@ export function watch(options: WatchOptions | Empty, task: Task): Task.Async {
         opts.debounce >= 0 ? opts.debounce : 0
       );
 
-      let cleanup: null | NullaryFn = null;
+      let cleanup: null | Callable = null;
       const promises: Array<Promise<void>> = [];
       await new Promise<void>((resolve, reject) => {
         if (opts.prime) {

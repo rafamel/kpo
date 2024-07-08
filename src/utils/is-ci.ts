@@ -2,6 +2,7 @@
 import { TypeGuard } from 'type-core';
 
 import type { Context } from '../definitions';
+
 import vendors from '../../node_modules/ci-info/vendors.json';
 
 const envs = vendors.map((vendor) => vendor.env);

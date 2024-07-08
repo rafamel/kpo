@@ -1,9 +1,9 @@
 import { Transform } from 'node:stream';
 
-import type { Empty, MaybePromise } from 'type-core';
 import { shallow } from 'merge-strategies';
 import cliSelect from 'cli-select';
 
+import type { Callable, Promisable } from '../../types';
 import type { Task } from '../../definitions';
 import { getBadge } from '../../helpers/badges';
 import { addPrefix } from '../../helpers/prefix';
@@ -38,13 +38,13 @@ export interface SelectOptions {
 /**
  * Uses a context's stdio to prompt for input.
  * Offers `values` to select from and passes the
- * user `selection` to a `Task` returning `callback`.
+ * user selection to a `Task` returning `callback`.
  * @returns Task
  */
 export function select(
-  options: SelectOptions | Empty,
+  options: SelectOptions | null,
   values: string[],
-  callback: (selection: string) => MaybePromise<Task | Empty>
+  callback: Callable<string, Promisable<Task | null>>
 ): Task.Async {
   return create(async (ctx) => {
     const opts = shallow(

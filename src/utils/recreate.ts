@@ -1,7 +1,8 @@
-import { type Empty, type NullaryFn, TypeGuard } from 'type-core';
+import { TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 
+import type { Callable } from '../types';
 import type { Task } from '../definitions';
 import { context } from '../tasks/creation/context';
 import { announce } from '../tasks/stdio/announce';
@@ -9,7 +10,7 @@ import { announce } from '../tasks/stdio/announce';
 export interface RecreateOptions {
   /**
    * Fixes current routes for tasks according to their
-   * current paths, so they won't be dinamically reassigned.
+   * current paths so they won't be dynamically reassigned.
    */
   fix?: boolean;
   /**
@@ -18,16 +19,14 @@ export interface RecreateOptions {
   announce?: boolean;
 }
 
-export interface RecreateMap {
-  (task: Task, route: string[]): Task | Empty;
-}
+export type RecreateIdentities = (task: Task, route: string[]) => Task | null;
 
 /**
  * Maps all tasks in a `Task.Record`.
  */
 export function recreate(
-  options: RecreateOptions | RecreateMap | Empty,
-  tasks: Task.Record | NullaryFn<Task.Record>
+  options: RecreateOptions | RecreateIdentities | null,
+  tasks: Task.Record | Callable<void, Task.Record>
 ): Task.Record {
   const record = TypeGuard.isFunction(tasks) ? tasks() : tasks;
 
@@ -53,14 +52,14 @@ export function recreate(
 function recreateHelper(
   route: string[],
   tasks: Task.Record,
-  map: (task: Task, route: string[]) => Task | Empty
+  identity: (task: Task, route: string[]) => Task | null
 ): Task.Record {
   return Object.entries(tasks).reduce((acc, [key, value]) => {
     if (typeof value === 'function') {
-      const task = map(value, route.concat(key));
+      const task = identity(value, route.concat(key));
       return task ? { ...acc, [key]: task } : acc;
     } else {
-      const record = recreateHelper(route.concat(key), value, map);
+      const record = recreateHelper(route.concat(key), value, identity);
       return Object.keys(record).length ? { ...acc, [key]: record } : acc;
     }
   }, {} as Task.Record);

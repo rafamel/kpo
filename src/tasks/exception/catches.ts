@@ -1,4 +1,3 @@
-import type { Empty } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { ensure } from 'errorish';
 import { into } from 'pipettes';
@@ -25,7 +24,7 @@ export interface CatchesOptions {
  * @returns Task
  */
 export function catches(
-  options: CatchesOptions | Empty,
+  options: CatchesOptions | null,
   task: Task,
   alternate?: Task | null
 ): Task.Async {
@@ -39,7 +38,7 @@ export function catches(
         series(
           log('trace', err),
           log(opts.level, stringifyError(ensure(err))),
-          alternate
+          alternate || null
         ),
         (task) => run(ctx, task)
       );

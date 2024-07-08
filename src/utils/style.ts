@@ -1,4 +1,4 @@
-import chalk, { type ChalkInstance, type ForegroundColorName } from 'chalk';
+import chalk, { type ChalkInstance } from 'chalk';
 import { into } from 'pipettes';
 
 export interface StyleOptions {
@@ -11,7 +11,24 @@ export interface StyleOptions {
   strikethrough?: boolean;
 }
 
-export type StyleColor = ForegroundColorName;
+export type StyleColor =
+  | 'grey'
+  | 'black'
+  | 'red'
+  | 'green'
+  | 'yellow'
+  | 'blue'
+  | 'cyan'
+  | 'magenta'
+  | 'white'
+  | 'blackBright'
+  | 'redBright'
+  | 'greenBright'
+  | 'yellowBright'
+  | 'blueBright'
+  | 'cyanBright'
+  | 'magentaBright'
+  | 'whiteBright';
 
 /** Styles a string */
 export function style(str: string, options?: StyleOptions): string {

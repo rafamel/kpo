@@ -1,4 +1,4 @@
-import type { NullaryFn } from 'type-core';
+import type { Callable } from '../types';
 import type { Context } from '../definitions';
 
 /**
@@ -15,13 +15,13 @@ export function isCancelled(context: Context): boolean {
  * `callback` will also be asynchronously executed.
  * Returns a cleanup function to stop waiting on cancellation.
  */
-export function onCancel(context: Context, cb: NullaryFn): NullaryFn {
+export function onCancel(context: Context, callback: Callable): Callable {
   if (isCancelled(context)) {
-    setTimeout(() => cb(), 0);
+    setTimeout(() => callback(), 0);
     return () => {};
   }
 
-  const listener = () => cb();
+  const listener = () => callback();
   context.cancellation.addEventListener('abort', listener, { once: true });
   return () => context.cancellation.removeEventListener('abort', listener);
 }

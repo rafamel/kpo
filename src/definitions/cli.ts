@@ -1,5 +1,4 @@
-import type { Empty, MaybePromise } from 'type-core';
-
+import type { Promisable } from '../types';
 import type { Context, Task } from './tasks';
 
 export declare namespace CLI {
@@ -63,7 +62,7 @@ export declare namespace CLI {
     type Execute = (
       params: Params,
       context: Context
-    ) => MaybePromise<Task | Empty>;
+    ) => Promisable<Task | null>;
     interface Params {
       help: string;
       argv: string[];

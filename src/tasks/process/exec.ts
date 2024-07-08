@@ -2,11 +2,11 @@ import path from 'node:path';
 import process from 'node:process';
 import { WriteStream } from 'node:tty';
 
-import type { Empty, NullaryFn } from 'type-core';
 import { shallow } from 'merge-strategies';
 import transform from 'prefix-stream';
 import { type Options as ExecaOptions, type Subprocess, execa } from 'execa';
 
+import type { Callable } from '../../types';
 import type { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { getPrefix } from '../../helpers/prefix';
@@ -24,9 +24,9 @@ export type ExecOptions = ExecaOptions;
  */
 export function exec(
   file: string | null,
-  args?: string[] | Empty,
-  options?: ExecOptions | Empty,
-  cb?: (ps: Subprocess) => void
+  args?: string[] | null,
+  options?: ExecOptions | null,
+  callback?: Callable<Subprocess, void>
 ): Task.Async {
   return create(async (ctx) => {
     const fullArgs = (args || []).concat(ctx.args || []);
@@ -76,14 +76,14 @@ export function exec(
           }
         }
 
-        if (cb) cb(ps);
+        if (callback) callback(ps);
 
         let cancelled = false;
         const listener = () => {
           cancelled = true;
           controller.abort();
         };
-        const cleanups: NullaryFn[] = [];
+        const cleanups: Callable[] = [];
         cleanups.push(onCancel(ctx, listener));
         if (opts.cancelSignal) {
           const signal = opts.cancelSignal;

@@ -1,7 +1,7 @@
-import type { Empty, NullaryFn } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 
+import type { Callable } from '../../types';
 import type { Task } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
 import { recreate } from '../../utils/recreate';
@@ -33,8 +33,8 @@ export interface CombineOptions {
  * @returns Task
  */
 export function combine(
-  options: CombineOptions | Empty,
-  tasks: Task.Record | NullaryFn<Task.Record>
+  options: CombineOptions | null,
+  tasks: Task.Record | Callable<void, Task.Record>
 ): Task.Async {
   return create(() => {
     const opts: Required<CombineOptions> = shallow(

@@ -1,4 +1,4 @@
-import { type Empty, TypeGuard } from 'type-core';
+import { TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 
 import type { Task } from '../../definitions';
@@ -22,7 +22,7 @@ export interface AnnounceOptions {
  * @returns Task
  */
 export function announce(
-  options: AnnounceOptions | Empty,
+  options: AnnounceOptions | null,
   task: Task
 ): Task.Async {
   return create((ctx) => {

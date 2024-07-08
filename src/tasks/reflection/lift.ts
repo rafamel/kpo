@@ -1,13 +1,9 @@
-import {
-  type Dictionary,
-  type Empty,
-  type NullaryFn,
-  TypeGuard
-} from 'type-core';
+import { TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
 
+import type { Callable, Dictionary } from '../../types';
 import type { Context, Task } from '../../definitions';
 import { parseToRecord } from '../../helpers/parse';
 import { getAbsolutePath } from '../../helpers/paths';
@@ -56,8 +52,8 @@ export interface LiftOptions {
  * @returns Task
  */
 export function lift(
-  options: LiftOptions | Empty,
-  tasks: Task.Record | NullaryFn<Task.Record>
+  options: LiftOptions | null,
+  tasks: Task.Record | Callable<void, Task.Record>
 ): Task.Async {
   return create(async (ctx) => {
     const opts = shallow(

@@ -1,7 +1,8 @@
-import { type Empty, type NullaryFn, TypeGuard } from 'type-core';
+import { TypeGuard } from 'type-core';
 import { shallow } from 'merge-strategies';
 import table from 'as-table';
 
+import type { Callable } from '../../types';
 import type { Task } from '../../definitions';
 import { parseToArray } from '../../helpers/parse';
 import { constants } from '../../constants';
@@ -26,8 +27,8 @@ export interface ListOptions {
  * @returns Task
  */
 export function list(
-  options: ListOptions | Empty,
-  tasks: Task.Record | NullaryFn<Task.Record>
+  options: ListOptions | null,
+  tasks: Task.Record | Callable<void, Task.Record>
 ): Task.Async {
   return create(async () => {
     const opts = shallow(

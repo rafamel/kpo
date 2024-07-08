@@ -1,5 +1,6 @@
-import type { UnaryFn } from 'type-core';
+import { TypeGuard } from 'type-core';
 
+import type { Callable } from '../../types';
 import type { Context, Task } from '../../definitions';
 
 /**
@@ -7,10 +8,10 @@ import type { Context, Task } from '../../definitions';
  * @returns Task
  */
 export function raises(
-  error: Error | string | UnaryFn<Context, Error | string>
+  error?: null | string | Error | Callable<Context, null | string | Error>
 ): Task.Sync {
   return (ctx: Context): void => {
-    const err = typeof error === 'function' ? error(ctx) : error;
-    throw typeof err === 'string' ? new Error(err) : err;
+    const err = TypeGuard.isFunction(error) ? error(ctx) : error;
+    throw TypeGuard.isString(err) || !err ? new Error(err || '') : err;
   };
 }

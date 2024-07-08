@@ -1,5 +1,4 @@
-import type { Dictionary, Serial } from 'type-core';
-
+import type { Callable, Dictionary, Serial } from '../types';
 import type { Task } from '../definitions';
 import { safeSerialize } from '../helpers/safe-serialize';
 
@@ -12,7 +11,7 @@ import { safeSerialize } from '../helpers/safe-serialize';
  */
 export function atValue(
   tasks: Dictionary<Task>
-): (value: Serial.Type) => Task | null {
+): Callable<Serial, Task | null> {
   return (value) => {
     const field = safeSerialize(value);
     return Object.hasOwnProperty.call(tasks, field) ? tasks[field] : null;

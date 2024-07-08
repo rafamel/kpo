@@ -1,5 +1,4 @@
-import type { Dictionary, Empty } from 'type-core';
-
+import type { Dictionary } from '../../types';
 import type { Context, Task } from '../../definitions';
 import { flatten } from '../../helpers/flatten';
 import { isCancelled } from '../../utils/cancellation';
@@ -15,14 +14,14 @@ import { run } from '../../utils/run';
  * @returns Task
  */
 export function series(
-  task?: Task | Empty | Array<Task | Empty> | Dictionary<Task | Empty>,
-  ...tasks: Array<Task | Empty>
+  task?: null | Task | Array<null | Task> | Dictionary<null | Task>,
+  ...tasks: Array<null | Task>
 ): Task.Async {
   const items = flatten(task, ...tasks);
 
   return async (ctx: Context): Promise<void> => {
     for (const task of items) {
-      if (await isCancelled(ctx)) break;
+      if (isCancelled(ctx)) break;
       await run(ctx, task);
     }
   };

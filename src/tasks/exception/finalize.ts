@@ -1,6 +1,6 @@
-import type { Dictionary, Empty } from 'type-core';
 import { ensure } from 'errorish';
 
+import type { Dictionary } from '../../types';
 import type { Task } from '../../definitions';
 import { run } from '../../utils/run';
 import { flatten } from '../../helpers/flatten';
@@ -17,8 +17,8 @@ import { raises } from './raises';
  * @returns Task
  */
 export function finalize(
-  task?: Task | Empty | Array<Task | Empty> | Dictionary<Task | Empty>,
-  ...tasks: Array<Task | Empty>
+  task?: null | Task | Array<null | Task> | Dictionary<null | Task>,
+  ...tasks: Array<null | Task>
 ): Task.Async {
   const items = flatten(task, ...tasks);
 

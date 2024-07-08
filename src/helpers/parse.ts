@@ -1,5 +1,6 @@
-import { type Dictionary, TypeGuard } from 'type-core';
+import { TypeGuard } from 'type-core';
 
+import type { Dictionary } from '../types';
 import type { Task } from '../definitions';
 import { series } from '../tasks/aggregate/series';
 import { constants } from '../constants';

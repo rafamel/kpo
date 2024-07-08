@@ -1,5 +1,3 @@
-import type { Empty } from 'type-core';
-
 import type { Task } from '../../definitions';
 import { isInteractive } from '../../utils/is-interactive';
 import { series } from '../aggregate/series';
@@ -13,7 +11,7 @@ import { log } from './log';
  * unless an `alternate` task is provided.
  * @returns Task
  */
-export function interactive(task: Task, alternate: Task | Empty): Task.Async {
+export function interactive(task: Task, alternate?: Task | null): Task.Async {
   return create(async (ctx) => {
     const interactive = isInteractive(ctx);
     return series(

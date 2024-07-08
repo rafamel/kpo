@@ -1,12 +1,12 @@
 import type { Readable, Writable } from 'node:stream';
 
-import type { Dictionary } from 'type-core';
+import type { Dictionary, Promisable } from '../types';
 
 /**
  * A task, that being a `Context` receiving
  * function, optionally async.
  */
-export type Task = (context: Context) => Promise<void> | void;
+export type Task = (context: Context) => Promisable<void>;
 
 export declare namespace Task {
   type Sync = (context: Context) => void;
@@ -30,7 +30,7 @@ export interface Context {
    * A task's environment variables.
    * Used for spawned processes.
    */
-  readonly env: Dictionary<string | undefined>;
+  readonly env: Dictionary<string | null>;
   /**
    * A task's arguments.
    * Used for spawned processes.

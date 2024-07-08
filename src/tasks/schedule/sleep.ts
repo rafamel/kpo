@@ -1,5 +1,4 @@
-import type { NullaryFn } from 'type-core';
-
+import type { Callable } from '../../types';
 import type { Context, Task } from '../../definitions';
 import { onCancel } from '../../utils/cancellation';
 import { series } from '../aggregate/series';
@@ -14,7 +13,7 @@ export function sleep(ms: number): Task.Async {
     log('debug', `Sleep for ${ms}ms`),
     async (ctx: Context): Promise<void> => {
       let timeout: null | NodeJS.Timeout = null;
-      let cleanup: null | NullaryFn = null;
+      let cleanup: null | Callable = null;
       return new Promise<void>((resolve) => {
         timeout = setTimeout(() => resolve(), ms);
         cleanup = onCancel(ctx, () => resolve());

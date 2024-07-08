@@ -1,9 +1,9 @@
 import { Buffer } from 'node:buffer';
 
-import type { Serial } from 'type-core';
 import { shallow } from 'merge-strategies';
 import fs from 'fs-extra';
 
+import type { Serial } from '../../types';
 import type { Context, Task } from '../../definitions';
 import { useDestination } from '../../helpers/paths';
 import { series } from '../aggregate/series';
@@ -22,7 +22,7 @@ export interface WriteOptions {
  */
 export function write(
   path: string,
-  content: Buffer | Serial.Type,
+  content: Buffer | Serial,
   options?: WriteOptions
 ): Task.Async {
   return series(

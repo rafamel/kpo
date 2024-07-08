@@ -1,5 +1,6 @@
 import process from 'node:process';
 
+import { TypeGuard } from 'type-core';
 import { into } from 'pipettes';
 
 import type { Context } from '../definitions';
@@ -11,7 +12,14 @@ export function createContext(context?: Partial<Context>): Context {
     context || {},
     (context) => ({
       cwd: context.cwd || process.cwd(),
-      env: context.env || { ...process.env },
+      env:
+        context.env ||
+        Object.fromEntries(
+          Object.entries(process.env).map(([key, value]) => [
+            key,
+            TypeGuard.isUndefined(value) ? null : value
+          ])
+        ),
       args: context.args || [],
       stdio: context.stdio || [process.stdin, process.stdout, process.stderr],
       level: context.level || constants.defaults.level,

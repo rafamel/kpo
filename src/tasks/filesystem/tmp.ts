@@ -2,11 +2,12 @@ import type { Buffer } from 'node:buffer';
 import path from 'node:path';
 import os from 'node:os';
 
-import type { Empty, MaybePromise, Serial } from 'type-core';
+import { TypeGuard } from 'type-core';
 import { nanoid } from 'nanoid';
 import fs from 'fs-extra';
 
-import type { Context, Task } from '../../definitions';
+import type { Callable, Promisable, Serial } from '../../types';
+import type { Task } from '../../definitions';
 import { constants } from '../../constants';
 import { isCancelled, onCancel } from '../../utils/cancellation';
 import { create } from '../creation/create';
@@ -17,7 +18,12 @@ import { mkdir } from './mkdir';
 
 export interface TmpFile {
   name: string;
-  content: Buffer | Serial.Type;
+  content: Buffer | Serial;
+}
+
+export interface TmpParams {
+  files: string[];
+  directory: string;
 }
 
 /**
@@ -30,14 +36,15 @@ export interface TmpFile {
  * @returns Task
  */
 export function tmp(
-  files: (context: Context) => MaybePromise<null | TmpFile | TmpFile[]>,
-  callback: (args: {
-    files: string[];
-    directory: string;
-  }) => MaybePromise<Task | Empty>
+  files:
+    | null
+    | TmpFile
+    | TmpFile[]
+    | Callable<void, Promisable<null | TmpFile | TmpFile[]>>,
+  callback: Callable<TmpParams, Promisable<Task | null>>
 ): Task.Async {
   return create(async (ctx) => {
-    const response = await files(ctx);
+    const response = TypeGuard.isFunction(files) ? await files() : files;
     if (isCancelled(ctx)) return;
 
     const tmpdir = path.join(os.tmpdir(), constants.name, 'tmp-' + nanoid());
