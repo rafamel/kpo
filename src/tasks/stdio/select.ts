@@ -56,7 +56,6 @@ export function select(
       options || undefined
     );
 
-    const names = Object.keys(values);
     const message = getBadge('prompt') + ` ${opts.message}`;
 
     await run(ctx, print(message));
@@ -103,8 +102,8 @@ export function select(
     const cleanup = onCancel(ctx, () => cancel());
     const response = await cliSelect({
       cleanup: true,
-      values: names,
-      ...(opts.default ? { defaultValue: names.indexOf(opts.default) } : {}),
+      values,
+      ...(opts.default ? { defaultValue: values.indexOf(opts.default) } : {}),
       selected: addPrefix(getBadge('selected'), ' '.repeat(3), 'print', ctx),
       unselected: addPrefix(
         getBadge('unselected'),
