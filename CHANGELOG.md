@@ -1,3 +1,23 @@
+# [0.27.0](https://github.com/rafamel/kpo/compare/v0.26.0...v0.27.0) (2024-07-09)
+
+
+### Bug Fixes
+
+* print correct values on select ([55f8e95](https://github.com/rafamel/kpo/commit/55f8e950fb1a5b57f0c39065756e435a4721e3ed))
+* update dependencies ([035280b](https://github.com/rafamel/kpo/commit/035280b28361dbd95a658830509838ec019d8459))
+
+
+### Features
+
+* edit callback param file changed to location ([801c52d](https://github.com/rafamel/kpo/commit/801c52dde1ede3e5b7549d61f1f68c042117c23f))
+
+
+### BREAKING CHANGES
+
+* edit task callback params have changed: file has been replaced by location.
+
+
+
 # [0.26.0](https://github.com/rafamel/kpo/compare/v0.25.0...v0.26.0) (2024-07-08)
 
 
