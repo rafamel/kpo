@@ -18,8 +18,8 @@ export interface EditOptions {
 }
 
 export interface EditParams {
-  file: string;
   buffer: Buffer;
+  location: string;
 }
 
 /**
@@ -53,7 +53,7 @@ export function edit(
 
         await useSource(source, ctx, { strict: opts.strict }, async () => {
           const buffer = await fs.readFile(source);
-          const content = await callback({ buffer, file: source });
+          const content = await callback({ buffer, location: source });
 
           if (isCancelled(ctx)) return;
 
