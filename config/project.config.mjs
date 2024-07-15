@@ -1,9 +1,9 @@
 export default {
   build: {
-    directory: './dist'
+    destination: './build'
   },
   extensions: {
-    source: ['cjs', 'mjs', 'js', 'jsx', 'ts', 'tsx'],
+    source: ['cjs', 'mjs', 'js', 'jsx', 'cts', 'mts', 'ts', 'tsx'],
     content: ['json']
   }
 };

@@ -7,7 +7,7 @@
     // Specify ECMAScript target version.
     "target": "ES2022",
     // Base directory to resolve non-absolute module names.
-    "baseUrl": "./",
+    "baseUrl": null,
     // Entries to re-map imports relative to 'baseUrl'.
     "paths": {},
     // Support TC39 stage 2 draft decorators.

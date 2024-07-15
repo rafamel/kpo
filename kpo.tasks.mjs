@@ -3,27 +3,33 @@ import { pathToFileURL } from 'node:url';
 
 import { resolve } from 'import-meta-resolve';
 
-import riseup from './config/riseup.config.mjs';
 import project from './config/project.config.mjs';
+import riseup from './config/riseup.config.mjs';
 
-const { build } = project;
 export default Promise.resolve(import.meta.dirname)
   .then((dir) => pathToFileURL(path.join(dir, 'node_modules', 'kpo')))
   .then((parent) => import(resolve('kpo', parent.toString())))
   .then(({ catches, create, exec, finalize, lift, recreate, series }) => {
     return recreate({ announce: true }, () => {
       const tasks = {
-        start: exec('node', [build.directory]),
+        start: exec('node', [project.build.destination]),
         watch: exec('tsx', ['--watch', './src']),
-        build: exec('tsup', ['--config', './config/tsup.config.ts']),
-        tarball: exec('npm', ['pack']),
+        build: series(
+          riseup.tasks.contents,
+          exec('tsup', ['--config', './config/tsup.config.mts'])
+        ),
+        tarball: riseup.tasks.tarball,
         docs: exec('typedoc', ['--options', './config/typedoc.config.json']),
-        lint: finalize(exec('eslint', ['.']), exec('tsc', ['--noEmit'])),
-        fix: exec('eslint', ['.', '--fix']),
-        test: exec('jest', [
-          ...['--passWithNoTests', '--detectOpenHandles'],
-          ...['-c', './config/jest.config.mjs']
-        ]),
+        lint: finalize(
+          exec('eslint', ['.']),
+          exec('tsc', ['--noEmit']),
+          exec('prettier', ['.', '--log-level', 'warn', '--cache', '--check'])
+        ),
+        fix: series(
+          exec('eslint', ['.', '--fix']),
+          exec('prettier', ['.', '--log-level', 'warn', '--write'])
+        ),
+        test: exec('vitest', ['-c', './config/vitest.config.mts']),
         commit: riseup.tasks.commit,
         release: riseup.tasks.release,
         distribute: riseup.tasks.distribute,
@@ -37,7 +43,7 @@ export default Promise.resolve(import.meta.dirname)
         version: series(
           create(() => tasks.validate),
           create(() => tasks.build),
-          create(() => tasks.docs)
+          create(() => series(tasks.docs, exec('git', ['add', '.'])))
         )
       };
       return tasks;

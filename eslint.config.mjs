@@ -1,11 +1,11 @@
+import path from 'node:path';
+
 import afc from '@antfu/eslint-config';
-import jest from 'eslint-plugin-jest';
-import prettier from 'eslint-plugin-prettier/recommended';
 
 export default afc({
   /* Files */
   ignores: ['docs/*'],
-  gitignore: true,
+  gitignore: { files: path.join(import.meta.dirname, '.gitignore') },
   /* Languages & Features */
   javascript: true,
   typescript: true,
@@ -14,13 +14,11 @@ export default afc({
   jsonc: true,
   markdown: true,
   /* Frameworks & Libraries */
+  test: true,
   react: false,
-  test: false,
   stylistic: false
 }).then((opts) => [
   ...opts,
-  prettier,
-  jest.configs['flat/recommended'],
   {
     rules: {
       /* ROOT */
@@ -30,6 +28,17 @@ export default afc({
         1,
         { terms: ['fixme', 'todo', 'refactor', 'xxx'] }
       ],
+      /* Import */
+      'import/order': [
+        2,
+        {
+          groups: [
+            ...['builtin', 'external'],
+            ...['internal', 'parent', 'sibling', 'index']
+          ],
+          pathGroups: [{ pattern: '@/**', group: 'internal' }]
+        }
+      ],
       /* JSONC */
       'jsonc/sort-keys': 0,
       /* Typescript */
@@ -37,7 +46,9 @@ export default afc({
       'ts/no-namespace': [
         2,
         { allowDeclarations: true, allowDefinitionFiles: true }
-      ]
+      ],
+      /* Test */
+      'test/consistent-test-it': [2, { fn: 'test' }]
     }
   }
 ]);
