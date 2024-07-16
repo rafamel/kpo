@@ -40,22 +40,23 @@ export async function fetch(
 
   if (opts.chdir) process.chdir(project.directory);
   const filepath = path.resolve(project.directory, project.file);
-  const content = await import(filepath);
+  const exports = await import(filepath);
 
-  if (!TypeGuard.isObject(content) || !content.default) {
+  if (!TypeGuard.isObject(exports) || !exports.default) {
     throw new Error(`Default tasks export not found: ${filepath}`);
   }
+
+  const content = await exports.default;
   if (
     opts.property &&
-    (!TypeGuard.isObject(content.default) || !content.default[opts.property])
+    (!TypeGuard.isObject(content) || !content[opts.property])
   ) {
     throw new Error(
       `Property ${opts.property} not found on default export: ${filepath}`
     );
   }
 
-  const item =
-    opts.property === null ? content.default : content.default[opts.property];
+  const item = opts.property === null ? content : content[opts.property];
   if (!TypeGuard.isRecord(item) && !TypeGuard.isFunction(item)) {
     throw new Error(`Exported tasks must be a record or function: ${filepath}`);
   }
