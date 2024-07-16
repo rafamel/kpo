@@ -1,5 +1,4 @@
 import { TypeGuard } from 'type-core';
-import { shallow } from 'merge-strategies';
 import { into } from 'pipettes';
 import fs from 'fs-extra';
 
@@ -20,7 +19,7 @@ export interface LiftOptions {
   /**
    * Remove all non lifted scripts
    */
-  purge?: boolean;
+  purge?: boolean | LiftPurgeOptions;
   /**
    * Lift mode of operation:
    * - `'confirm'`: prints the changes and waits for confirmation before a write.
@@ -43,6 +42,13 @@ export interface LiftOptions {
   multitask?: boolean;
 }
 
+export interface LiftPurgeOptions {
+  /**
+   * Keep package tasks as they are.
+   */
+  keep?: string[];
+}
+
 /**
  * Lifts all tasks on a `tasks` record to a package.json file,
  * which is expected to be available at the context's working directory.
@@ -56,16 +62,17 @@ export function lift(
   tasks: Task.Record | Callable<void, Task.Record>
 ): Task.Async {
   return create(async (ctx) => {
-    const opts = shallow(
-      {
-        purge: false,
-        mode: 'confirm',
-        defaults: false,
-        bin: constants.cli.bin,
-        multitask: constants.cli.multitask
-      },
-      options || undefined
-    );
+    const opts = {
+      purge: options?.purge
+        ? TypeGuard.isBoolean(options.purge)
+          ? { keep: [] }
+          : { keep: options.purge.keep || [] }
+        : null,
+      mode: options?.mode || 'confirm',
+      defaults: options?.defaults || false,
+      bin: options?.bin || constants.cli.bin,
+      multitask: options?.multitask || constants.cli.multitask
+    };
 
     const source = TypeGuard.isFunction(tasks) ? tasks() : tasks;
     const pkgPath = getAbsolutePath('package.json', ctx);
@@ -96,7 +103,16 @@ export function lift(
       }
     );
 
-    pkg.scripts = opts.purge ? taskScripts : { ...pkg.scripts, ...taskScripts };
+    pkg.scripts = opts.purge
+      ? {
+          ...taskScripts,
+          ...Object.fromEntries(
+            Object.entries(pkg.scripts).filter(([key]) => {
+              return opts.purge?.keep.includes(key);
+            })
+          )
+        }
+      : { ...pkg.scripts, ...taskScripts };
 
     const areChangesPending = await evaluateChanges(
       pkgScripts,
@@ -124,7 +140,7 @@ async function evaluateChanges(
   pkgScripts: Dictionary<string>,
   taskScripts: Dictionary<string>,
   context: Context,
-  options: { post: boolean; purge: boolean }
+  options: { post: boolean; purge: Required<LiftPurgeOptions> | null }
 ): Promise<boolean> {
   const pkgScriptNames = Object.keys(pkgScripts);
   const taskScriptNames = Object.keys(taskScripts);
@@ -135,7 +151,9 @@ async function evaluateChanges(
   const removeScriptNames: string[] = [];
 
   for (const name of pkgScriptNames) {
-    if (!taskScriptNames.includes(name)) {
+    if (options.purge && options.purge.keep.includes(name)) {
+      keepScriptNames.push(name);
+    } else if (!taskScriptNames.includes(name)) {
       options.purge ? removeScriptNames.push(name) : keepScriptNames.push(name);
     } else {
       const pkgValue = pkgScripts[name];
