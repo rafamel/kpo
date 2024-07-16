@@ -1,3 +1,17 @@
+
+
+# [0.28.0](https://github.com/rafamel/kpo/compare/v0.27.0...v0.28.0) (2024-07-16)
+
+
+### Bug Fixes
+
+* fetch with property doesn't fail when tasks file exports a Promise ([fb1c39d](https://github.com/rafamel/kpo/commit/fb1c39d86f5655d179e4152bd1a050b89a8f809c))
+
+
+### Features
+
+* add option to keep package tasks as they are on lift purge ([71feaa7](https://github.com/rafamel/kpo/commit/71feaa7e990acec11720aff7cf5bfa70cd72806e))
+
 # [0.27.0](https://github.com/rafamel/kpo/compare/v0.26.0...v0.27.0) (2024-07-09)
 
 
@@ -820,6 +834,3 @@ containing an object, even when a js file; kpo file can't export a default funct
 * **utils:** adds memoize ([24212ed](https://github.com/rafamel/kpo/commit/24212eddeb6fc5b2c9ad11450268d9eb61f7aa81))
 * **utils:** adds open ([4ceb22b](https://github.com/rafamel/kpo/commit/4ceb22bbfb9ca93acc6f808b93e58a4ca5bcef12))
 * **utils:** substitutes memoize w/ cache; cache now takes a getId function to identify state ([d2cc870](https://github.com/rafamel/kpo/commit/d2cc870dcecd67b1d8084e668a614d10c81e81ca))
-
-
-
